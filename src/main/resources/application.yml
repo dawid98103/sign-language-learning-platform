@@ -1,0 +1,22 @@
+server:
+  port: 4090
+  error:
+    include-message: always
+    include-stacktrace: never
+    include-binding-errors: never
+  servlet:
+    context-path: /signlearning
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sign_language_platform
+    username: sign_language_learn_platform_user
+    password: sign_language_learn_platform_password
+    hikari:
+      pool-name: 10
+  flyway:
+    url: jdbc:postgresql://localhost:5432/sign_language_platform
+    user: sign_language_learn_platform_user
+    password: sign_language_learn_platform_password
+    table: schema_history
+    baseline-on-migrate: true
