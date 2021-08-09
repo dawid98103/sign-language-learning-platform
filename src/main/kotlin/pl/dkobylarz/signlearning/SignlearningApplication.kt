@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class SignlearningApplication
 
 fun main(args: Array<String>) {
-	runApplication<SignlearningApplication>(*args)
+    runApplication<SignlearningApplication>(*args)
 }

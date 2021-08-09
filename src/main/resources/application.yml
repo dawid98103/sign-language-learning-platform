@@ -20,3 +20,5 @@ spring:
     password: sign_language_learn_platform_password
     table: schema_history
     baseline-on-migrate: true
+  jpa:
+    show-sql: true
