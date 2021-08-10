@@ -25,11 +25,6 @@ class AuthorizationController(
     private val jwtTokenUtils: JwtTokenUtils
 ) {
 
-    @GetMapping("/{username}")
-    fun getByUsername(@PathVariable username: String): ResponseEntity<User>{
-        return ResponseEntity.ok(userFacade.getUserByUsername(username))
-    }
-
     @PostMapping("/signin")
     fun authenticateUser(@RequestBody loginCommand: LoginCommand): ResponseEntity<JwtResponse> {
         val authentication: Authentication = authenticationManager.authenticate(

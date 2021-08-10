@@ -1,6 +1,7 @@
 package pl.dkobylarz.signlearning.domain.user.infrastructure
 
 import pl.dkobylarz.signlearning.domain.user.core.model.User
+import pl.dkobylarz.signlearning.domain.user.core.model.UserPlatform
 
 class UserDatabaseAdapter(private val userRepository: UserRepository) : UserDatabase {
 
@@ -9,7 +10,16 @@ class UserDatabaseAdapter(private val userRepository: UserRepository) : UserData
     }
 
     override fun getUserByUsername(username: String): User {
-        return userRepository.findByUsername(username).orElseThrow()
+        val userPlatform: UserPlatform = userRepository.findUserPlatformByUsername(username).orElseThrow()
+        return User(
+            userPlatform.id,
+            userPlatform.username,
+            userPlatform.password,
+            userPlatform.name,
+            userPlatform.surname,
+            userPlatform.email,
+            userPlatform.roleId
+        )
     }
 
     override fun existsByUsername(username: String): Boolean {
