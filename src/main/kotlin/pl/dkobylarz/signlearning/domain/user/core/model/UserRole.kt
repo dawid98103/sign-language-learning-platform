@@ -1,8 +1,8 @@
 package pl.dkobylarz.signlearning.domain.user.core.model
 
-enum class UserRole(private val roleId: Int, private val roleName: String) {
-    USER(1, "USER"),
-    ADMIN(2, "ADMIN");
+enum class UserRole(val roleId: Int, val roleName: String) {
+    USER(1, "ROLE_USER"),
+    ADMIN(2, "ROLE_ADMIN");
 
     companion object {
         fun roleByRoleId(roleId: Int): UserRole? {
