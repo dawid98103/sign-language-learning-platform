@@ -13,7 +13,7 @@ spring:
     username: sign_language_learn_platform_user
     password: sign_language_learn_platform_password
     hikari:
-      pool-name: 10
+      maximum-pool-size: 10
   flyway:
     url: jdbc:postgresql://localhost:5432/sign_language_platform
     user: sign_language_learn_platform_user
