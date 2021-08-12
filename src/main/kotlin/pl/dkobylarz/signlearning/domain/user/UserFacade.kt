@@ -1,8 +1,7 @@
-package pl.dkobylarz.signlearning.domain.user.core
+package pl.dkobylarz.signlearning.domain.user
 
-import pl.dkobylarz.signlearning.domain.user.core.model.command.AddUserCommand
 import pl.dkobylarz.signlearning.domain.user.core.model.User
-import pl.dkobylarz.signlearning.domain.user.core.model.UserService
+import pl.dkobylarz.signlearning.domain.user.core.model.command.AddUserCommand
 
 class UserFacade(private val userService: UserService) {
 

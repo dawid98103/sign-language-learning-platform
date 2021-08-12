@@ -22,3 +22,9 @@ spring:
     baseline-on-migrate: true
   jpa:
     show-sql: true
+
+signlearning:
+  db:
+    mock: false
+  api:
+    version: 1.0.0

@@ -7,7 +7,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
-import pl.dkobylarz.signlearning.domain.user.core.UserFacade
+import pl.dkobylarz.signlearning.domain.user.UserFacade
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse

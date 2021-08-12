@@ -1,8 +1,6 @@
 package pl.dkobylarz.signlearning.domain.authorization.application
 
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.annotation.Secured
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -11,13 +9,11 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 import pl.dkobylarz.signlearning.domain.authorization.core.model.JwtResponse
 import pl.dkobylarz.signlearning.domain.authorization.core.model.MessageResponse
-import pl.dkobylarz.signlearning.domain.authorization.core.model.Role
 import pl.dkobylarz.signlearning.domain.authorization.core.model.command.LoginCommand
 import pl.dkobylarz.signlearning.domain.authorization.core.model.command.SignupCommand
-import pl.dkobylarz.signlearning.domain.user.core.UserFacade
+import pl.dkobylarz.signlearning.domain.user.UserFacade
 import pl.dkobylarz.signlearning.domain.user.core.model.User
 import pl.dkobylarz.signlearning.infrastructure.security.JwtTokenUtils
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/auth")

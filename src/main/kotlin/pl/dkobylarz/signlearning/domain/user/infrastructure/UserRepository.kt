@@ -14,5 +14,5 @@ interface UserRepository : CrudRepository<User, Int> {
     fun findByUsername(@Param("username") username: String): Optional<User>
 
     @Query("SELECT * FROM platform_user u WHERE u.username = :username")
-    fun findUserPlatformByUsername(@Param("username") username: String): Optional<UserPlatform>
+    fun findUserPlatformByUsername(@Param("username") username: String): UserPlatform?
 }

@@ -6,6 +6,7 @@ import org.springframework.data.relational.core.mapping.Table
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import pl.dkobylarz.signlearning.domain.user.core.model.UserRole
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
@@ -27,28 +28,6 @@ class User(
     @Transient
     private val authorities: MutableCollection<out GrantedAuthority> = Collections.emptyList()
 ) : UserDetails {
-
-    companion object {
-        fun build(user: User): User {
-            val authorities: MutableCollection<GrantedAuthority> =
-                arrayListOf(SimpleGrantedAuthority(user.roleId?.let { UserRole.roleByRoleId(it)?.name }))
-
-            return User(
-                user.id,
-                user.username,
-                user.password,
-                user.name,
-                user.surname,
-                user.email,
-                user.roleId,
-                user.points,
-                user.active,
-                user.avatarUrl,
-                user.creationDate,
-                authorities
-            )
-        }
-    }
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val authoritiesList: MutableCollection<GrantedAuthority> = ArrayList()

@@ -1,5 +1,6 @@
-package pl.dkobylarz.signlearning.domain.user.core.model
+package pl.dkobylarz.signlearning.domain.user
 
+import pl.dkobylarz.signlearning.domain.user.core.model.User
 import pl.dkobylarz.signlearning.domain.user.core.model.command.AddUserCommand
 import pl.dkobylarz.signlearning.domain.user.infrastructure.UserDatabase
 import java.time.LocalDateTime
