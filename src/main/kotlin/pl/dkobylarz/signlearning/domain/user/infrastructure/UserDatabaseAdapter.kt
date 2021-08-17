@@ -1,7 +1,7 @@
 package pl.dkobylarz.signlearning.domain.user.infrastructure
 
-import pl.dkobylarz.signlearning.domain.user.core.model.User
-import pl.dkobylarz.signlearning.domain.user.core.model.exception.UserNotFoundException
+import pl.dkobylarz.signlearning.domain.user.domain.User
+import pl.dkobylarz.signlearning.domain.user.domain.exception.UserNotFoundException
 
 class UserDatabaseAdapter(private val userRepository: UserRepository) : UserDatabase {
 
@@ -12,7 +12,7 @@ class UserDatabaseAdapter(private val userRepository: UserRepository) : UserData
     override fun getUserByUsername(username: String): User {
         return userRepository.findUserPlatformByUsername(username)?.let { userPlatform ->
             User(
-                userPlatform.id,
+                userPlatform.userId,
                 userPlatform.username,
                 userPlatform.password,
                 userPlatform.name,

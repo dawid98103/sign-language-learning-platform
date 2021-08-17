@@ -6,13 +6,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.*
-import pl.dkobylarz.signlearning.domain.authorization.core.model.JwtResponse
-import pl.dkobylarz.signlearning.domain.authorization.core.model.MessageResponse
-import pl.dkobylarz.signlearning.domain.authorization.core.model.command.LoginCommand
-import pl.dkobylarz.signlearning.domain.authorization.core.model.command.SignupCommand
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import pl.dkobylarz.signlearning.domain.authorization.domain.JwtResponse
+import pl.dkobylarz.signlearning.domain.authorization.domain.MessageResponse
+import pl.dkobylarz.signlearning.domain.authorization.domain.command.LoginCommand
+import pl.dkobylarz.signlearning.domain.authorization.domain.command.SignupCommand
 import pl.dkobylarz.signlearning.domain.user.UserFacade
-import pl.dkobylarz.signlearning.domain.user.core.model.User
+import pl.dkobylarz.signlearning.domain.user.domain.User
 import pl.dkobylarz.signlearning.infrastructure.security.JwtTokenUtils
 
 @RestController
@@ -34,12 +37,12 @@ class AuthorizationController(
         val jwt: String = jwtTokenUtils.generateJwtToken(authentication)
 
         val user: User = authentication.principal as User
-        var roles: List<String> = user.authorities.map { item -> item.authority }
+        val roles: List<String> = user.authorities.map { item -> item.authority }
 
         return ResponseEntity.ok(
             JwtResponse(
                 jwt,
-                user.id,
+                user.userId,
                 user.username,
                 user.email,
                 roles
@@ -57,6 +60,8 @@ class AuthorizationController(
         val user = User(
             username = signupCommand.username,
             password = passwordEncoder.encode(signupCommand.password),
+            name = signupCommand.name,
+            surname = signupCommand.surname,
             email = signupCommand.email,
             avatarUrl = signupCommand.avatarUrl,
             roleId = 1

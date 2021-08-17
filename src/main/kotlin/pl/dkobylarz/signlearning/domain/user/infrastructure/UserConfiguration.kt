@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import pl.dkobylarz.signlearning.domain.user.UserFacade
-import pl.dkobylarz.signlearning.domain.user.UserService
+import pl.dkobylarz.signlearning.domain.user.domain.UserService
 
 @Configuration
 class UserConfiguration {

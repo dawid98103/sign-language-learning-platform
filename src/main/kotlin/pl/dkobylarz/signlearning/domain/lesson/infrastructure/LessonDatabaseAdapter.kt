@@ -1,4 +1,4 @@
 package pl.dkobylarz.signlearning.domain.lesson.infrastructure
 
-class LessonDatabaseAdapter {
+class LessonDatabaseAdapter(private val lessonRepository: LessonRepository) : LessonDatabase{
 }

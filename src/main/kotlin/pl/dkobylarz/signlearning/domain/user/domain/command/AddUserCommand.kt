@@ -1,4 +1,4 @@
-package pl.dkobylarz.signlearning.domain.user.core.model.command
+package pl.dkobylarz.signlearning.domain.user.domain.command
 
 data class AddUserCommand(
     val username: String,

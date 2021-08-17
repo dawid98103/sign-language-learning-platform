@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import pl.dkobylarz.signlearning.domain.user.core.model.exception.UserNotFoundException
+import pl.dkobylarz.signlearning.domain.user.domain.exception.UserNotFoundException
 import pl.dkobylarz.signlearning.infrastructure.errorhandling.SignLearningAppError
 
 @RestControllerAdvice

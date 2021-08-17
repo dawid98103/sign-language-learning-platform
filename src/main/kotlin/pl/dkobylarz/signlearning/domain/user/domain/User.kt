@@ -1,4 +1,4 @@
-package pl.dkobylarz.signlearning.domain.user.core.model
+package pl.dkobylarz.signlearning.domain.user.domain
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.Transient
@@ -6,25 +6,32 @@ import org.springframework.data.relational.core.mapping.Table
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import pl.dkobylarz.signlearning.domain.user.core.model.UserRole
+import pl.dkobylarz.signlearning.domain.lesson.domain.Lesson
+import pl.dkobylarz.signlearning.domain.lesson.domain.LessonCompleted
 import java.time.LocalDateTime
 import java.util.*
+import javax.validation.constraints.Email
+import javax.validation.constraints.Size
 import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
 
 @Table("platform_user")
 class User(
     @Id
-    var id: Int? = null,
+    var userId: Int? = null,
     private val username: String = "",
     private val password: String = "",
-    var name: String? = "",
-    var surname: String? = "",
-    var email: String? = "",
-    var roleId: Int? = null,
-    var points: Int? = 0,
-    var active: Boolean? = false,
-    var avatarUrl: String? = "",
-    var creationDate: LocalDateTime? = LocalDateTime.now(),
+    val name: String? = "",
+    val surname: String? = "",
+    @Email
+    val email: String? = "",
+    val roleId: Int? = null,
+    val points: Int? = 0,
+    val active: Boolean? = false,
+    @Size(max = 2083, message = "url should have max 2083 chars!")
+    val avatarUrl: String? = "",
+    private val lessonsCompleted: MutableSet<LessonCompleted>? = HashSet(),
+    val creationDate: LocalDateTime? = LocalDateTime.now(),
     @Transient
     private val authorities: MutableCollection<out GrantedAuthority> = Collections.emptyList()
 ) : UserDetails {
@@ -64,6 +71,14 @@ class User(
 
     override fun isEnabled(): Boolean {
         return true
+    }
+
+    fun addCompletedLesson(lesson: Lesson) {
+        this.lessonsCompleted?.add(LessonCompleted(lessonId = lesson.lessonId, completionDate = LocalDateTime.now()))
+    }
+
+    fun getCompletedLessonsIds(): List<Int>? {
+        return this.lessonsCompleted?.map { it.lessonId }?.toList()
     }
 
 }

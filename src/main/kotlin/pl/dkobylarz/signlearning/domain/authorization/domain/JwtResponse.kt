@@ -1,4 +1,4 @@
-package pl.dkobylarz.signlearning.domain.authorization.core.model
+package pl.dkobylarz.signlearning.domain.authorization.domain
 
 data class JwtResponse(
     val token: String,

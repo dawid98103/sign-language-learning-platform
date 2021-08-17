@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "signlearning.db.mock",
+      "type": "java.lang.String",
+      "description": "Description for signlearning.db.mock."
+    },
+    {
+      "name": "signlearning.api.version",
+      "type": "java.lang.String",
+      "description": "Description for signlearning.api.version."
+    }
+  ] }

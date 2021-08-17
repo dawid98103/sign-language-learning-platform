@@ -1,6 +1,6 @@
 package pl.dkobylarz.signlearning.domain.user.infrastructure
 
-import pl.dkobylarz.signlearning.domain.user.core.model.User
+import pl.dkobylarz.signlearning.domain.user.domain.User
 
 interface UserDatabase {
     fun saveUser(user: User)

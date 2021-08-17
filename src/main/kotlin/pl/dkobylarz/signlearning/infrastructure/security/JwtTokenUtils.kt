@@ -3,13 +3,13 @@ package pl.dkobylarz.signlearning.infrastructure.security
 import io.jsonwebtoken.*
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
-import pl.dkobylarz.signlearning.domain.user.core.model.User
+import pl.dkobylarz.signlearning.domain.user.domain.User
 import java.util.*
 
 @Service
 class JwtTokenUtils {
 
-    val secretKey: String = "zstlD3JK81m6wTTgsNFhqzwqP";
+    val secretKey: String = "zstlD3JK81m6wTTgsNFhqzwqP"
 
     fun generateJwtToken(authentication: Authentication): String {
         val userPrincipal: User = authentication.principal as User

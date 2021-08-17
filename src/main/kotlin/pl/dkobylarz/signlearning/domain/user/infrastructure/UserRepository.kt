@@ -3,8 +3,8 @@ package pl.dkobylarz.signlearning.domain.user.infrastructure
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.query.Param
-import pl.dkobylarz.signlearning.domain.user.core.model.User
-import pl.dkobylarz.signlearning.domain.user.core.model.UserPlatform
+import pl.dkobylarz.signlearning.domain.user.domain.User
+import pl.dkobylarz.signlearning.domain.user.domain.UserPlatform
 import java.util.*
 
 interface UserRepository : CrudRepository<User, Int> {
