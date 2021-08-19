@@ -13,4 +13,4 @@ import pl.dkobylarz.signlearning.domain.user.domain.exception.UserNotFoundExcept
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
-class UserController(private val userFacade: UserFacade) {}
+class UserController(private val userFacade: UserFacade)

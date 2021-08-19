@@ -22,6 +22,9 @@ spring:
     baseline-on-migrate: true
   jpa:
     show-sql: true
+  thymeleaf:
+    prefix: file:\\\\D:\Programowanie\Uczelnia\signlearning\target\classes\static\
+    suffix: .html
 
 signlearning:
   db:
