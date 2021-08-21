@@ -10,7 +10,7 @@ const NavButton = styled.div`
     filter: invert(50%);
     transition-duration: 0.6s;
     &:hover {
-        filter: invert(0%);
+        filter: invert(0%); 
     }
 `
 
@@ -37,8 +37,8 @@ const NavLogo = styled.div`
 `
 function AppNavbar() {
     return (
-        <Navbar bg="light" >
-            <Container style={{ minWidth: 1550 }}>
+        <Navbar bg="light" expand="lg">
+            <Container>
                 <NavLogo>
                     <img
                         alt=""
@@ -51,7 +51,8 @@ function AppNavbar() {
                         <h4>Migawka</h4>
                     </div>
                 </NavLogo>
-                <Navbar.Collapse>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavLink>
                             <NavButton href="">
@@ -111,17 +112,19 @@ function AppNavbar() {
                         </NavLink>
                     </Nav>
                 </Navbar.Collapse>
-                <Navbar.Collapse className="justify-content-end">
-                    <NavIcon
-                        alt=""
-                        src={process.env.PUBLIC_URL + "/icons/user.svg"}
-                        className="d-inline-block align-top"
-                    >
-                    </NavIcon>
+                {/* <Navbar.Collapse className="justify-content-end">
+                    <NavButton>
+                        <NavIcon
+                            alt=""
+                            src={process.env.PUBLIC_URL + "/icons/user.svg"}
+                            className="d-inline-block align-top"
+                        >
+                        </NavIcon>
+                    </NavButton>
                     <Navbar.Text>
                         username
                     </Navbar.Text>
-                </Navbar.Collapse>
+                </Navbar.Collapse> */}
             </Container>
         </Navbar>
     )
