@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Navbar, Container, Nav } from 'react-bootstrap'
+import { Link } from 'react-router-dom';
+import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap'
 
 const NavButton = styled.div`
     display:flex;
@@ -12,6 +13,16 @@ const NavButton = styled.div`
     &:hover {
         filter: invert(0%); 
     }
+`
+
+const NavDropdownBlack = styled(NavDropdown)`
+    color: black;
+    &:focus {
+        color: black;
+    };
+    &:hover {
+        color: black;
+    };
 `
 
 const MenuText = styled.span`
@@ -112,7 +123,12 @@ function AppNavbar() {
                         </NavLink>
                     </Nav>
                 </Navbar.Collapse>
-                {/* <Navbar.Collapse className="justify-content-end">
+                <Navbar.Collapse className="justify-content-end">
+                    <Link to="/login">
+                        <NavDropdownBlack title="" id="navbarScrollingDropdown">
+                            <NavDropdown.Item href="#action3">Zaloguj się</NavDropdown.Item>
+                        </NavDropdownBlack>
+                    </Link>
                     <NavButton>
                         <NavIcon
                             alt=""
@@ -121,10 +137,7 @@ function AppNavbar() {
                         >
                         </NavIcon>
                     </NavButton>
-                    <Navbar.Text>
-                        username
-                    </Navbar.Text>
-                </Navbar.Collapse> */}
+                </Navbar.Collapse>
             </Container>
         </Navbar>
     )

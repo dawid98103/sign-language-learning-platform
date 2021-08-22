@@ -1,4 +1,9 @@
 package pl.dkobylarz.signlearning.domain.lesson.infrastructure
 
-class LessonDatabaseAdapter(private val lessonRepository: LessonRepository) : LessonDatabase{
+import pl.dkobylarz.signlearning.domain.lesson.domain.Lesson
+
+class LessonDatabaseAdapter(private val lessonRepository: LessonRepository) : LessonDatabase {
+    override fun findAll(): MutableList<Lesson> {
+        return lessonRepository.findAll().toMutableList()
+    }
 }

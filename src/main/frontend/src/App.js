@@ -1,33 +1,36 @@
 import LearnPage from './page/LearnPage';
 import HomePage from './page/HomePage';
 import RegisterPage from './page/RegisterPage';
-import AppNavbar from './component/Navbar';
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import LoginPage from './page/LoginPage';
+import AppNavbar from './component/AppNavbar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 function App() {
   return (
     <>
-      <Router>
+      <Router basename="/signlearning">
         <Switch>
-          <Route path="/" exact component={NoNavRoutes} />
-          <Route path="/register" component={NoNavRoutes} />
-          <Route component={NavRoutes} />
+          <Route path="/" exact component={RoutesWithoutNav} />
+          <Route path="/register" exact component={RoutesWithoutNav} />
+          <Route path="/login" exact component={RoutesWithoutNav} />
+          <Route component={RoutesWithNav} />
         </Switch>
       </Router>
     </>
   );
 }
 
-const NoNavRoutes = () => {
+const RoutesWithoutNav = () => {
   return (
     <>
       <Route path="/" exact component={HomePage}></Route>
-      <Route path="/register" component={RegisterPage}></Route>
+      <Route path="/register" exact component={RegisterPage}></Route>
+      <Route path="/login" exact component={LoginPage}></Route>
     </>
   )
 }
 
-const NavRoutes = () => {
+const RoutesWithNav = () => {
   return (
     <>
       <AppNavbar />

@@ -8,10 +8,11 @@ import org.springframework.data.relational.core.mapping.Table
 @Table("lesson")
 class Lesson(
     @Id
-    @Column("id")
+    @Column("lesson_id")
     val lessonId: Int,
     val lessonGroupId: Int,
-    val lessonName: String,
-    @MappedCollection(keyColumn = "LESSON_ID", idColumn = "LESSON_ID")
+    val name: String,
+    val loginRequired: Boolean,
+    @MappedCollection(idColumn = "lesson_id")
     val lessonStages: Set<LessonStage>
 )

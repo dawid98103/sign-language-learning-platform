@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import pl.dkobylarz.signlearning.domain.lesson.domain.Lesson
-import pl.dkobylarz.signlearning.domain.lesson.domain.LessonCompleted
+import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageCompleted
 import java.time.LocalDateTime
 import java.util.*
 import javax.validation.constraints.Email
@@ -30,7 +30,7 @@ class User(
     val active: Boolean? = false,
     @Size(max = 2083, message = "url should have max 2083 chars!")
     val avatarUrl: String? = "",
-    private val lessonsCompleted: MutableSet<LessonCompleted>? = HashSet(),
+    private val lessonsStageCompleted: MutableSet<LessonStageCompleted>? = HashSet(),
     val creationDate: LocalDateTime? = LocalDateTime.now(),
     @Transient
     private val authorities: MutableCollection<out GrantedAuthority> = Collections.emptyList()
@@ -74,11 +74,11 @@ class User(
     }
 
     fun addCompletedLesson(lesson: Lesson) {
-        this.lessonsCompleted?.add(LessonCompleted(lessonId = lesson.lessonId, completionDate = LocalDateTime.now()))
+        this.lessonsStageCompleted?.add(LessonStageCompleted(lessonStageId = lesson.lessonId, completionDate = LocalDateTime.now()))
     }
 
     fun getCompletedLessonsIds(): List<Int>? {
-        return this.lessonsCompleted?.map { it.lessonId }?.toList()
+        return this.lessonsStageCompleted?.map { it.lessonStageId }?.toList()
     }
 
 }

@@ -13,6 +13,10 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import pl.dkobylarz.signlearning.domain.authorization.domain.UserDetailsServiceImpl
 
 @Configuration
@@ -39,7 +43,7 @@ class WebSecurityConfigKt(
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/static/**",
-            "/",
+            "/**",
             "/auth/**"
         )
     }
@@ -66,5 +70,12 @@ class WebSecurityConfigKt(
     @Bean
     override fun authenticationManagerBean(): AuthenticationManager {
         return super.authenticationManagerBean()
+    }
+
+    @Bean
+    fun corsConfigurationSource() : CorsConfigurationSource {
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
+        return source
     }
 }
