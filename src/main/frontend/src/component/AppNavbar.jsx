@@ -1,7 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react';
+import styled from 'styled-components';
+import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
-import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap'
+import { useHistory } from 'react-router-dom';
+import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
 const NavButton = styled.div`
     display:flex;
@@ -46,7 +48,24 @@ const NavLogo = styled.div`
     align-items: center;
     padding: 0 1.5rem 0 1.5rem;
 `
+
 function AppNavbar() {
+    const { state, dispatch } = useContext(GlobalContext);
+    const history = useHistory();
+
+
+    function logout() {
+        dispatch({
+            type: "LOGOUT"
+        });
+        alert("Pomyślnie wylogowano")
+        history.push("/");
+    }
+
+    function pushToLogin() {
+        history.push("/login");
+    }
+
     return (
         <Navbar bg="light" expand="lg">
             <Container>
@@ -126,10 +145,13 @@ function AppNavbar() {
                 <Navbar.Collapse className="justify-content-end">
                     <Link to="/login">
                         <NavDropdownBlack title="" id="navbarScrollingDropdown">
-                            <NavDropdown.Item href="#action3">Zaloguj się</NavDropdown.Item>
+                            <NavDropdown.Item onClick={() => state.isAuthenticated ? logout() : pushToLogin()}>
+                                {state.isAuthenticated ? "Wyloguj" : "Zaloguj"}
+                            </NavDropdown.Item>
                         </NavDropdownBlack>
                     </Link>
                     <NavButton>
+                        {state.user}
                         <NavIcon
                             alt=""
                             src={process.env.PUBLIC_URL + "/icons/user.svg"}

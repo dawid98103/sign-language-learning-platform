@@ -39,10 +39,10 @@ class User(
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
         val authoritiesList: MutableCollection<GrantedAuthority> = ArrayList()
         when (this.roleId) {
-            1 -> authoritiesList.add(SimpleGrantedAuthority(UserRole.USER.roleName))
+            1 -> authoritiesList.add(SimpleGrantedAuthority(UserRole.ROLE_USER.roleName))
             2 -> {
-                authoritiesList.add(SimpleGrantedAuthority(UserRole.USER.roleName))
-                authoritiesList.add(SimpleGrantedAuthority(UserRole.ADMIN.roleName))
+                authoritiesList.add(SimpleGrantedAuthority(UserRole.ROLE_USER.roleName))
+                authoritiesList.add(SimpleGrantedAuthority(UserRole.ROLE_ADMIN.roleName))
             }
         }
 

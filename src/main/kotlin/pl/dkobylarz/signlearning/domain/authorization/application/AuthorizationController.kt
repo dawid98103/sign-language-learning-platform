@@ -11,8 +11,10 @@ import pl.dkobylarz.signlearning.domain.authorization.domain.JwtResponse
 import pl.dkobylarz.signlearning.domain.authorization.domain.MessageResponse
 import pl.dkobylarz.signlearning.domain.authorization.domain.command.LoginCommand
 import pl.dkobylarz.signlearning.domain.authorization.domain.command.SignupCommand
+import pl.dkobylarz.signlearning.domain.authorization.domain.command.TokenValidationCommand
 import pl.dkobylarz.signlearning.domain.user.UserFacade
 import pl.dkobylarz.signlearning.domain.user.domain.User
+import pl.dkobylarz.signlearning.domain.user.domain.UserRole
 import pl.dkobylarz.signlearning.infrastructure.security.JwtTokenUtils
 
 @RestController
@@ -34,7 +36,7 @@ class AuthorizationController(
         val jwt: String = jwtTokenUtils.generateJwtToken(authentication)
 
         val user: User = authentication.principal as User
-        val roles: List<String> = user.authorities.map { item -> item.authority }
+        val roles: List<UserRole> = user.authorities.map { item -> UserRole.valueOf(item.authority) }
 
         return ResponseEntity.ok(
             JwtResponse(
@@ -67,5 +69,10 @@ class AuthorizationController(
 
         userFacade.saveUser(user)
         return ResponseEntity.ok(MessageResponse("Pomyślnie zarejestrowano użytkownika"))
+    }
+
+    @PostMapping("/validateToken")
+    fun validateToken(@RequestBody token: TokenValidationCommand): ResponseEntity<Boolean>{
+        return ResponseEntity.ok(jwtTokenUtils.validateJwtToken(token = token.token))
     }
 }
