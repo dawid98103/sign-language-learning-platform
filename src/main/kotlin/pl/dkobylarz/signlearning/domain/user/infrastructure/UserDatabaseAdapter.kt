@@ -1,6 +1,7 @@
 package pl.dkobylarz.signlearning.domain.user.infrastructure
 
 import pl.dkobylarz.signlearning.domain.user.domain.User
+import pl.dkobylarz.signlearning.domain.user.domain.UserPlatform
 import pl.dkobylarz.signlearning.domain.user.domain.exception.UserNotFoundException
 
 class UserDatabaseAdapter(private val userRepository: UserRepository) : UserDatabase {
@@ -25,5 +26,9 @@ class UserDatabaseAdapter(private val userRepository: UserRepository) : UserData
 
     override fun existsByUsername(username: String): Boolean {
         return userRepository.existsByUsername(username)
+    }
+
+    override fun getUserById(userId: Int): UserPlatform {
+        return userRepository.findByUserId(userId)
     }
 }

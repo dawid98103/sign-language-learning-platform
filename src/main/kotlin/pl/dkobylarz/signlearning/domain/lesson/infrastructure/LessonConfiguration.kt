@@ -5,13 +5,14 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import pl.dkobylarz.signlearning.domain.lesson.LessonFacade
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonService
+import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageCompletedService
 
 @Configuration
 class LessonConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = ["signlearning.db.mock"], havingValue = "true")
-    fun lessonTestDatabase(): LessonDatabase{
+    fun lessonTestDatabase(): LessonDatabase {
         return LessonDatabaseInMemoryAdapter()
     }
 
@@ -28,8 +29,18 @@ class LessonConfiguration {
     }
 
     @Bean
-    fun lessonFacade(lessonDatabase: LessonDatabase, lessonStageDatabase: LessonStageDatabase): LessonFacade {
+    fun lessonStageCompletedDatabase(lessonStageCompletedRepository: LessonStageCompletedRepository): LessonStageCompletedDatabase {
+        return LessonStageCompletedDatabaseAdapter(lessonStageCompletedRepository)
+    }
+
+    @Bean
+    fun lessonFacade(
+        lessonDatabase: LessonDatabase,
+        lessonStageDatabase: LessonStageDatabase,
+        lessonStageCompletedDatabase: LessonStageCompletedDatabase
+    ): LessonFacade {
         val lessonService = LessonService(lessonDatabase, lessonStageDatabase)
-        return LessonFacade(lessonService)
+        val lessonStageCompletedService = LessonStageCompletedService(lessonStageCompletedDatabase)
+        return LessonFacade(lessonService, lessonStageCompletedService)
     }
 }

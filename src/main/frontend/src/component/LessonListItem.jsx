@@ -14,14 +14,12 @@ function renderLessonStages(lessonStages) {
     })
 }
 
-function LessonListItem({ lessonName, lessonStages, isCompleted }) {
+function LessonListItem({ lessonName, lessonStages, isCompleted, disabled }) {
     const [open, setOpen] = useState(false);
-
-    console.log(isCompleted);
 
     return (
         <>
-            <ListGroupItemWithCursour action onClick={() => setOpen(!open)} aria-controls="example-collapse" aria-expanded={open}>{lessonName} / {isCompleted ? "Ukończony" : "Nieukończony"}</ListGroupItemWithCursour>
+            <ListGroupItemWithCursour action onClick={() => setOpen(!open)} aria-controls="example-collapse" disabled={disabled} aria-expanded={open}>{lessonName} / {isCompleted ? "Ukończony" : "Nieukończony"}</ListGroupItemWithCursour>
             <Collapse in={open}>
                 <div id="example-collapse">
                     {renderLessonStages(lessonStages)}

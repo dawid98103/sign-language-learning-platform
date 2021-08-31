@@ -31,7 +31,7 @@ function LoginPage() {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [processing, isProcessing] = useState(false);
-    const { state, dispatch } = useContext(GlobalContext);
+    const { dispatch } = useContext(GlobalContext);
     const history = useHistory();
 
     function loginUser({ username, password }) {

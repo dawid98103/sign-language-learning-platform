@@ -6,5 +6,6 @@ import java.time.LocalDateTime
 @Table("lesson_stage_completed")
 class LessonStageCompleted(
     val lessonStageId: Int,
+    val userId: Int,
     val completionDate: LocalDateTime
 )

@@ -37,7 +37,7 @@ function RegisterPage() {
 
     async function registerUser({ username, name, surname, password, email }) {
         isProcessing(true);
-        const response = await AxiosClient.post("/auth/signup", { username, name, surname, password, email, avatarUrl: "" })
+        await AxiosClient.post("/auth/signup", { username, name, surname, password, email, avatarUrl: "" })
         isProcessing(false);
         alert("Pomyślnie zarejestrowano użytkownika")
         history.push("/learn")

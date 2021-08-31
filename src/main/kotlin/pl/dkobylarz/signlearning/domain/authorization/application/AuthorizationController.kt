@@ -47,7 +47,6 @@ class AuthorizationController(
                 roles
             )
         )
-
     }
 
     @PostMapping("/signup")

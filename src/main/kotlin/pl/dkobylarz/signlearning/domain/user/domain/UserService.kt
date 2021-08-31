@@ -29,6 +29,10 @@ class UserService(private val userDatabase: UserDatabase) {
         return userDatabase.getUserByUsername(username)
     }
 
+    fun getUserById(userId: Int): UserPlatform {
+        return userDatabase.getUserById(userId)
+    }
+
     fun existsByUsername(username: String): Boolean {
         return userDatabase.existsByUsername(username)
     }

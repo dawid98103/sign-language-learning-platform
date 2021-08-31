@@ -1,7 +1,7 @@
 package pl.dkobylarz.signlearning.domain.user.domain
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.Transient
+import org.springframework.data.annotation.PersistenceConstructor
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -30,9 +30,7 @@ class User(
     val active: Boolean? = false,
     @Size(max = 2083, message = "url should have max 2083 chars!")
     val avatarUrl: String? = "",
-    private val lessonsStageCompleted: MutableSet<LessonStageCompleted>? = HashSet(),
     val creationDate: LocalDateTime? = LocalDateTime.now(),
-    @Transient
     private val authorities: MutableCollection<out GrantedAuthority> = Collections.emptyList()
 ) : UserDetails {
 
@@ -72,13 +70,4 @@ class User(
     override fun isEnabled(): Boolean {
         return true
     }
-
-    fun addCompletedLesson(lesson: Lesson) {
-        this.lessonsStageCompleted?.add(LessonStageCompleted(lessonStageId = lesson.lessonId, completionDate = LocalDateTime.now()))
-    }
-
-    fun getCompletedLessonsIds(): List<Int>? {
-        return this.lessonsStageCompleted?.map { it.lessonStageId }?.toList()
-    }
-
 }
