@@ -7,11 +7,11 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
-import pl.dkobylarz.signlearning.domain.authorization.domain.JwtResponse
-import pl.dkobylarz.signlearning.domain.authorization.domain.MessageResponse
-import pl.dkobylarz.signlearning.domain.authorization.domain.command.LoginCommand
-import pl.dkobylarz.signlearning.domain.authorization.domain.command.SignupCommand
-import pl.dkobylarz.signlearning.domain.authorization.domain.command.TokenValidationCommand
+import pl.dkobylarz.signlearning.domain.authorization.dto.JwtResponse
+import pl.dkobylarz.signlearning.domain.authorization.dto.MessageResponse
+import pl.dkobylarz.signlearning.domain.authorization.dto.LoginRequestDto
+import pl.dkobylarz.signlearning.domain.authorization.dto.SignupRequestDto
+import pl.dkobylarz.signlearning.domain.authorization.dto.TokenValidationRequestDto
 import pl.dkobylarz.signlearning.domain.user.UserFacade
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import pl.dkobylarz.signlearning.domain.user.domain.UserRole
@@ -27,9 +27,9 @@ class AuthorizationController(
 ) {
 
     @PostMapping("/signin")
-    fun authenticateUser(@RequestBody loginCommand: LoginCommand): ResponseEntity<JwtResponse> {
+    fun authenticateUser(@RequestBody loginRequestDto: LoginRequestDto): ResponseEntity<JwtResponse> {
         val authentication: Authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(loginCommand.username, loginCommand.password)
+            UsernamePasswordAuthenticationToken(loginRequestDto.username, loginRequestDto.password)
         )
 
         SecurityContextHolder.getContext().authentication = authentication
@@ -50,20 +50,21 @@ class AuthorizationController(
     }
 
     @PostMapping("/signup")
-    fun registerUser(@RequestBody signupCommand: SignupCommand): ResponseEntity<MessageResponse> {
-        if (userFacade.existsByUsername(signupCommand.username)) {
+    fun registerUser(@RequestBody signupRequestDto: SignupRequestDto): ResponseEntity<MessageResponse> {
+        if (userFacade.existsByUsername(signupRequestDto.username)) {
             return ResponseEntity.badRequest().body(MessageResponse("Nazwa użytkownika zajęta!"))
         }
 
         val user = User(
-            username = signupCommand.username,
-            password = passwordEncoder.encode(signupCommand.password),
-            name = signupCommand.name,
-            surname = signupCommand.surname,
-            email = signupCommand.email,
-            avatarUrl = signupCommand.avatarUrl,
+            username = signupRequestDto.username,
+            password = passwordEncoder.encode(signupRequestDto.password),
+            name = signupRequestDto.name,
+            surname = signupRequestDto.surname,
+            email = signupRequestDto.email,
+            avatarUrl = signupRequestDto.avatarUrl,
             active = true,
             roleId = 1
+
         )
 
         userFacade.saveUser(user)
@@ -71,7 +72,7 @@ class AuthorizationController(
     }
 
     @PostMapping("/validateToken")
-    fun validateToken(@RequestBody token: TokenValidationCommand): ResponseEntity<Boolean>{
+    fun validateToken(@RequestBody token: TokenValidationRequestDto): ResponseEntity<Boolean>{
         return ResponseEntity.ok(jwtTokenUtils.validateJwtToken(token = token.token))
     }
 }

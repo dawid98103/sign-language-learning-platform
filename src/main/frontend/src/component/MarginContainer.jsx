@@ -3,7 +3,10 @@ import styled from 'styled-components'
 import { Container } from 'react-bootstrap'
 
 const ContainerWithMargin = styled(Container)`
-    margin-top: 60px;
+    display: flex;
+    justify-items: center;
+    margin-top: 30px;
+    height: calc(100% - 142px);
 `
 
 function MarginContainer(props) {

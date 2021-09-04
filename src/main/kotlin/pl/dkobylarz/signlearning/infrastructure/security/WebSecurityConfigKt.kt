@@ -43,7 +43,8 @@ class WebSecurityConfigKt(
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/static/**",
-            "/**",
+            "/lessons",
+            "/**/stage",
             "/auth/**"
         )
     }

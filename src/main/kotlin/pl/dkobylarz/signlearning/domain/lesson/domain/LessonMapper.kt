@@ -1,45 +1,44 @@
 package pl.dkobylarz.signlearning.domain.lesson.domain
 
-import pl.dkobylarz.signlearning.domain.lesson.domain.dto.LessonWithCompletitionStatusDto
-import pl.dkobylarz.signlearning.domain.lesson.domain.dto.LessonStageCompletedDto
-import pl.dkobylarz.signlearning.domain.lesson.domain.dto.LessonStageDto
-import pl.dkobylarz.signlearning.domain.lesson.domain.dto.LessonStageElementDto
-import java.util.stream.Collectors
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDto
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDto
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDto
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDto
 
 class LessonMapper() {
 
     companion object {
-        fun toDto(lesson: Lesson): LessonWithCompletitionStatusDto {
-            return LessonWithCompletitionStatusDto(
+        fun toDto(lesson: Lesson): LessonWithCompletionStatusDto {
+            return LessonWithCompletionStatusDto(
                 lessonId = lesson.lessonId,
                 name = lesson.name,
-                lessonStages = lesson.lessonStages.stream()
-                    .map { toDto(it) }.collect(Collectors.toSet()),
                 loginRequired = lesson.loginRequired
             )
         }
 
-        fun toDto(lessonStage: LessonStage): LessonStageDto {
-            return LessonStageDto(
-                lessonStageId = lessonStage.lessonStageId,
-                name = lessonStage.name,
-                index = lessonStage.index,
+        fun toLessonStageCompletionDto(lessonStageWithoutElementsDto: LessonStageWithoutElementsDto, completed: Boolean?): LessonStageCompletionDto {
+            return LessonStageCompletionDto(
+                lessonStageId = lessonStageWithoutElementsDto.lessonStageId,
+                name = lessonStageWithoutElementsDto.name,
+                index = lessonStageWithoutElementsDto.index,
+                lessonId = lessonStageWithoutElementsDto.lessonId,
+                completed = completed
             )
         }
 
         fun toDto(lessonStageElement: LessonStageElement): LessonStageElementDto {
             return LessonStageElementDto(
-                lessonStageElementId = lessonStageElement.lessonStageElementId,
                 videoUrl = lessonStageElement.videoUrl,
                 description = lessonStageElement.description
             )
         }
 
-        fun toDto(lessonStageCompleted: LessonStageCompleted): LessonStageCompletedDto {
-            return LessonStageCompletedDto(
-                lessonStageId = lessonStageCompleted.lessonStageId,
-                userId = lessonStageCompleted.userId,
-                completionDate = lessonStageCompleted.completionDate
+        fun toDto(lessonStage: LessonStage): LessonStageWithoutElementsDto {
+            return LessonStageWithoutElementsDto(
+                lessonId = lessonStage.lessonId,
+                lessonStageId = lessonStage.lessonStageId,
+                name = lessonStage.name,
+                index = lessonStage.index
             )
         }
     }

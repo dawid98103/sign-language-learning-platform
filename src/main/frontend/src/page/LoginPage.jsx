@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react'
 import { Image, Form, Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import AxiosClient from '../config/axios/AxiosClient'
-import { useHistory } from 'react-router-dom';
 import CenteredMarginContainer from '../component/CenteredMarginContainer';
 import { GlobalContext } from '../context/GlobalContext';
 
@@ -45,7 +44,7 @@ function LoginPage() {
                 payload: { user: username, token: token, roles: roles }
             })
             isProcessing(false);
-            history.push("/learn")
+            history.push("/lesson")
         }).catch(error => {
             console.log(error);
             alert(error.response.data.error.message);

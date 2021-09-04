@@ -20,11 +20,13 @@ spring:
     password: sign_language_learn_platform_password
     table: schema_history
     baseline-on-migrate: true
-  jpa:
-    show-sql: true
   thymeleaf:
     prefix: file:\\\\D:\\Programowanie\\Uczelnia\\signlearning\\target\\classes\\static\\
     suffix: .html
+
+logging:
+  level:
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
 
 signlearning:
   db:

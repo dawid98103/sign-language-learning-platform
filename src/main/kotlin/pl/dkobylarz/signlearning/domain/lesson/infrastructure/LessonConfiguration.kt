@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 import pl.dkobylarz.signlearning.domain.lesson.LessonFacade
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonService
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageCompletedService
+import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageService
 
 @Configuration
 class LessonConfiguration {
@@ -41,6 +42,7 @@ class LessonConfiguration {
     ): LessonFacade {
         val lessonService = LessonService(lessonDatabase, lessonStageDatabase)
         val lessonStageCompletedService = LessonStageCompletedService(lessonStageCompletedDatabase)
-        return LessonFacade(lessonService, lessonStageCompletedService)
+        val lessonStageService = LessonStageService(lessonStageDatabase, lessonStageCompletedService)
+        return LessonFacade(lessonService, lessonStageService)
     }
 }

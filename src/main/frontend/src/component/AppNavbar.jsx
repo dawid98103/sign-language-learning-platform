@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { GlobalContext } from '../context/GlobalContext';
-import { Link } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
 const NavButton = styled.div`
@@ -85,7 +84,7 @@ function AppNavbar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavLink>
-                            <NavButton href="">
+                            <NavButton href="" onClick={() => history.push("/lesson")}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         alt=""

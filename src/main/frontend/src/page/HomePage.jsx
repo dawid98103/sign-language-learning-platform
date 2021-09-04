@@ -55,7 +55,7 @@ function HomePage(params) {
                                 </HomeTextBlock>
                             </div>
                             <ButtonWrapper>
-                                <Link to='/learn'>
+                                <Link to='/lesson'>
                                     <TransparentButton variant="success" size="lg">
                                         Rozpocznij naukę!
                                     </TransparentButton>

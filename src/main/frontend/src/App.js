@@ -1,8 +1,9 @@
-import LearnPage from './page/LearnPage';
 import HomePage from './page/HomePage';
 import RegisterPage from './page/RegisterPage';
 import LoginPage from './page/LoginPage';
 import AppNavbar from './component/AppNavbar';
+import LessonPage from './page/LessonPage';
+import LearnPage from './page/LearnPage';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 function App() {
@@ -23,9 +24,9 @@ function App() {
 const RoutesWithoutNav = () => {
   return (
     <>
-      <Route path="/" exact component={HomePage}></Route>
-      <Route path="/register" exact component={RegisterPage}></Route>
-      <Route path="/login" exact component={LoginPage}></Route>
+      <Route path="/" exact component={HomePage} />
+      <Route path="/register" exact component={RegisterPage} />
+      <Route path="/login" exact component={LoginPage} />
     </>
   )
 }
@@ -34,7 +35,8 @@ const RoutesWithNav = () => {
   return (
     <>
       <AppNavbar />
-      <Route path="/learn" component={LearnPage}></Route>
+      <Route path="/lesson" component={LessonPage} />
+      <Route path="/learn/:lessonId/:stageId" exact component={LearnPage} />
     </>
   )
 }

@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Image, Form, Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import AxiosClient from '../config/axios/AxiosClient'
-import { useHistory } from 'react-router-dom';
 import CenteredMarginContainer from '../component/CenteredMarginContainer';
 
 const FormWrapper = styled.div`
@@ -40,7 +39,7 @@ function RegisterPage() {
         await AxiosClient.post("/auth/signup", { username, name, surname, password, email, avatarUrl: "" })
         isProcessing(false);
         alert("Pomyślnie zarejestrowano użytkownika")
-        history.push("/learn")
+        history.push("/lesson")
     }
 
     return (

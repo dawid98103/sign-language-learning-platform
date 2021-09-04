@@ -1,4 +1,4 @@
-package pl.dkobylarz.signlearning.domain.authorization.domain
+package pl.dkobylarz.signlearning.domain.authorization.dto
 
 import pl.dkobylarz.signlearning.domain.user.domain.UserRole
 

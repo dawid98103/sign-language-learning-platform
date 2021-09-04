@@ -10,7 +10,6 @@ class Lesson(
     @Id
     @Column("lesson_id")
     val lessonId: Int,
-    val lessonGroupId: Int,
     val name: String,
     val loginRequired: Boolean,
     @MappedCollection(idColumn = "lesson_id")
