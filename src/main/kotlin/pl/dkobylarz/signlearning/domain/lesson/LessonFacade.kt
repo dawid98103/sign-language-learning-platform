@@ -25,4 +25,8 @@ class LessonFacade(
     fun getStagesForLessonWithCompletionStatus(lessonId: Int, user: User?): Set<LessonStageCompletionDto> {
         return lessonStageService.getStagesForLessonWithCompletionStatus(lessonId, user)
     }
+
+    fun setLessonStageAsCompletedByUser(stageId: Int, user: User?) {
+        lessonStageService.setLessonStageAsCompletedByUser(stageId, user)
+    }
 }

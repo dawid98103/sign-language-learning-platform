@@ -1,5 +1,8 @@
-package pl.dkobylarz.signlearning.domain.lesson.domain
+package pl.dkobylarz.signlearning.domain.lesson.infrastructure
 
+import pl.dkobylarz.signlearning.domain.lesson.domain.Lesson
+import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStage
+import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageElement
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDto
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDto
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDto

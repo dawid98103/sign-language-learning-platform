@@ -3,6 +3,7 @@ package pl.dkobylarz.signlearning.domain.lesson.domain
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDto
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDto
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDto
+import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonMapper
 import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonStageDatabase
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
@@ -40,6 +41,12 @@ class LessonStageService(
         return lessonStageCompletionSet.asSequence()
             .sortedBy { it.index }
             .toSet()
+    }
+
+    fun setLessonStageAsCompletedByUser(stageId: Int, user: User?) {
+        user?.let {
+            lessonStageCompletedService.setCompletedStatusForUserAndStage(it.userId!!, stageId)
+        }
     }
 
     fun getElementsForLessonStage(stageId: Int): Set<LessonStageElementDto> {

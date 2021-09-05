@@ -5,5 +5,6 @@ import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageCompleted
 
 interface LessonStageCompletedRepository : CrudRepository<LessonStageCompleted, Int> {
 
+    fun existsByUserIdAndLessonStageId(userId: Int, stageId: Int): Boolean
     fun findAllByUserId(userId: Int): List<LessonStageCompleted>
 }

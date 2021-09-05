@@ -1,10 +1,12 @@
 import React, { useState, useContext } from 'react'
 import { Image, Form, Button, Spinner } from 'react-bootstrap'
 import styled from 'styled-components';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import history from '../config/history';
 import AxiosClient from '../config/axios/AxiosClient'
 import CenteredMarginContainer from '../component/CenteredMarginContainer';
 import { GlobalContext } from '../context/GlobalContext';
+import { withRouter } from "react-router";
 
 const FormWrapper = styled.div`
     border-radius: 25px;
@@ -31,14 +33,11 @@ function LoginPage() {
     const [password, setPassword] = useState("")
     const [processing, isProcessing] = useState(false);
     const { dispatch } = useContext(GlobalContext);
-    const history = useHistory();
 
     function loginUser({ username, password }) {
         isProcessing(true)
         AxiosClient.post("/auth/signin", { username, password }).then(response => {
-            alert("Pomyślnie zalogowano użytkownika")
             const { username, token, roles } = response.data;
-            console.log(roles)
             dispatch({
                 type: "LOGIN",
                 payload: { user: username, token: token, roles: roles }
@@ -46,8 +45,6 @@ function LoginPage() {
             isProcessing(false);
             history.push("/lesson")
         }).catch(error => {
-            console.log(error);
-            alert(error.response.data.error.message);
             isProcessing(false);
         })
     }
@@ -93,4 +90,4 @@ function LoginPage() {
     )
 }
 
-export default LoginPage;
+export default withRouter(LoginPage);

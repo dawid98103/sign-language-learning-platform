@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { GlobalContext } from '../context/GlobalContext';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { LESSON_PAGE } from '../constants/Pages';
+import history from '../config/history'
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
 const NavButton = styled.div`
@@ -9,7 +11,7 @@ const NavButton = styled.div`
     align-items: center;
     flex-direction:row;
     cursor: pointer;
-    filter: invert(50%);
+    filter: ${props => props.active ? "invert(0%)" : "invert(50%)"};
     transition-duration: 0.6s;
     &:hover {
         filter: invert(0%); 
@@ -50,14 +52,11 @@ const NavLogo = styled.div`
 
 function AppNavbar() {
     const { state, dispatch } = useContext(GlobalContext);
-    const history = useHistory();
-
 
     function logout() {
         dispatch({
             type: "LOGOUT"
         });
-        alert("Pomyślnie wylogowano")
         history.push("/");
     }
 
@@ -84,7 +83,7 @@ function AppNavbar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavLink>
-                            <NavButton href="" onClick={() => history.push("/lesson")}>
+                            <NavButton href="" onClick={() => history.push("/lesson")} active={state.currentPage === LESSON_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         alt=""

@@ -4,12 +4,16 @@ import LoginPage from './page/LoginPage';
 import AppNavbar from './component/AppNavbar';
 import LessonPage from './page/LessonPage';
 import LearnPage from './page/LearnPage';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import history from './config/history';
+import { Router, Switch, Route } from 'react-router-dom'
 
 function App() {
   return (
     <>
-      <Router basename="/signlearning">
+      <Router history={history}>
+        <ToastContainer icon={false} />
         <Switch>
           <Route path="/" exact component={RoutesWithoutNav} />
           <Route path="/register" exact component={RoutesWithoutNav} />

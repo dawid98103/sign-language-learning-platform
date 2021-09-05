@@ -3,7 +3,7 @@ import ReactPlayer from 'react-player';
 import MarginContainer from './MarginContainer';
 import styled from 'styled-components';
 import LearnDescription from '../component/LearnDescription'
-import { Button } from 'react-bootstrap';
+import ControlButton from './ControlButton';
 
 const LearnWrapper = styled.div`
     margin: auto;
@@ -22,12 +22,11 @@ const ElementLeftCounter = styled.div`
 
 const ControlButtonContainer = styled.div`
     display: flex;
-    justify-items: center;
-    padding: 10px;
+    justify-content: space-between;
+    padding: 15px 0px 15px 0px;
 `
 
-function LearnContainer({ videoUrl, description, currentElement, quantityElements, nextElement, prevElement }) {
-
+function LearnContainer({ videoUrl, description, currentElement, quantityElements, nextElement, prevElement, finishEvent }) {
     return (
         <MarginContainer>
             <LearnWrapper>
@@ -37,8 +36,13 @@ function LearnContainer({ videoUrl, description, currentElement, quantityElement
                 <ReactPlayer url={videoUrl} />
                 <LearnDescription text={description} />
                 <ControlButtonContainer>
-                    <Button variant="outline-light" size="lg" active onClick={() => prevElement()}>Cofnij</Button>
-                    <Button variant="outline-light" size="lg" active onClick={() => nextElement()}>Dalej</Button>
+                    {currentElement === 1
+                        ? <ControlButton text={"< Cofnij"} disabled={true} clickEvent={() => { }} />
+                        : <ControlButton text={"< Cofnij"} disabled={false} clickEvent={() => prevElement()} />}
+
+                    {currentElement === quantityElements
+                        ? <ControlButton text={"Zakończ"} disabled={false} clickEvent={() => finishEvent()} />
+                        : <ControlButton text={"Dalej >"} disabled={false} clickEvent={() => nextElement()} />}
                 </ControlButtonContainer>
             </LearnWrapper>
         </MarginContainer>

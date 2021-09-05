@@ -21,7 +21,7 @@ class UserControllerAdvice {
         val error = SignLearningAppError(
             apiVersion,
             HttpStatus.NOT_FOUND.value().toString(),
-            "Given user not exists",
+            "Podany użytkownik nie istnieje",
             "User",
             "User with given id not exists",
             "User not exists in database"

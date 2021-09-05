@@ -40,7 +40,7 @@ class LessonConfiguration {
         lessonStageDatabase: LessonStageDatabase,
         lessonStageCompletedDatabase: LessonStageCompletedDatabase
     ): LessonFacade {
-        val lessonService = LessonService(lessonDatabase, lessonStageDatabase)
+        val lessonService = LessonService(lessonDatabase)
         val lessonStageCompletedService = LessonStageCompletedService(lessonStageCompletedDatabase)
         val lessonStageService = LessonStageService(lessonStageDatabase, lessonStageCompletedService)
         return LessonFacade(lessonService, lessonStageService)

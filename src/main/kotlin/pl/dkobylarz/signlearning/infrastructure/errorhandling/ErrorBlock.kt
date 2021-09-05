@@ -6,13 +6,13 @@ class ErrorBlock {
 
     var nanoId: String = ""
     var code: String = ""
-    var message: String = ""
+    var localizedMessage: String = ""
     var errors: List<Error> = emptyList()
 
 
     constructor(code: String, message: String, domain: String, reason: String, errorMessage: String) {
         this.code = code
-        this.message = message
+        this.localizedMessage = message
         this.nanoId = NanoIdUtils.randomNanoId()
         this.errors = listOf(Error(domain, reason, errorMessage))
     }
@@ -20,7 +20,7 @@ class ErrorBlock {
     constructor(nanoId: String, code: String, message: String, errors: List<Error>){
         this.nanoId = nanoId
         this.code = code
-        this.message = message
+        this.localizedMessage = message
         this.errors = errors
     }
 

@@ -4,6 +4,8 @@ import LessonListItem from '../component/LessonListItem';
 import MarginContainer from '../component/MarginContainer';
 import AxiosClient from '../config/axios/AxiosClient';
 import { GlobalContext } from '../context/GlobalContext';
+import { LESSON_PAGE } from '../constants/Pages';
+import GlobalSpinner from '../component/GlobalSpinner';
 import styled from 'styled-components';
 
 const ListGroupWithMargin = styled(ListGroup)`
@@ -26,12 +28,18 @@ function LessonPage() {
     const { state, dispatch } = useContext(GlobalContext);
 
     useEffect(() => {
-        AxiosClient.get(`/lessons`).then((response) => {
-            setLessons(response.data);
-        }).catch(error => {
-            console.log(error);
-        });
+        dispatch({
+            type: "SET_PAGE",
+            payload: { page: LESSON_PAGE }
+        })
+
+        fetchLessons();
     }, []);
+
+    const fetchLessons = async () => {
+        const { data } = await AxiosClient.get(`/lessons`)
+        setLessons(data);
+    }
 
     return (
         <MarginContainer>
@@ -40,11 +48,14 @@ function LessonPage() {
                     <Col xs={7}>
                         <ListGroupWithMargin>
                             {
-                                lessons.map(lesson => {
-                                    return (
-                                        <LessonListItem key={lesson.lessonId} lessonId={lesson.lessonId} lessonName={lesson.lessonId + ". " + lesson.name} isCompleted={false} disabled={!state.isAuthenticated && lesson.loginRequired} />
-                                    )
-                                })
+                                lessons.length > 0
+                                    ?
+                                    lessons.map(lesson => {
+                                        return (
+                                            <LessonListItem key={lesson.lessonId} lessonId={lesson.lessonId} lessonName={lesson.lessonId + ". " + lesson.name} isCompleted={false} disabled={!state.isAuthenticated && lesson.loginRequired} />
+                                        )
+                                    })
+                                    : <GlobalSpinner />
                             }
                         </ListGroupWithMargin>
                     </Col>

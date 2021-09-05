@@ -1,10 +1,12 @@
 import React, { createContext, useReducer } from 'react';
+import { toast } from 'react-toastify';
 
 const initalState = {
     isAuthenticated: localStorage.getItem("token") == null ? false : true,
     user: localStorage.getItem("user") == null ? null : localStorage.getItem("user"),
     token: localStorage.getItem("token") == null ? null : localStorage.getItem("token"),
-    roles: localStorage.getItem("roles") == null ? null : localStorage.getItem("roles")
+    roles: localStorage.getItem("roles") == null ? null : localStorage.getItem("roles"),
+    currentPage: ""
 };
 
 console.log(initalState);
@@ -14,11 +16,12 @@ export const GlobalContext = createContext(initalState);
 const reducer = (state, action) => {
     switch (action.type) {
         case "LOGIN":
-            console.log(state);
-            console.log(action);
             localStorage.setItem("user", action.payload.user);
             localStorage.setItem("token", action.payload.token);
             localStorage.setItem("roles", JSON.stringify(action.payload.roles));
+            toast.success("Zalogowano pomyślnie!", {
+                position: "bottom-right"
+            })
             return {
                 ...state,
                 isAuthenticated: true,
@@ -28,6 +31,9 @@ const reducer = (state, action) => {
             };
         case "LOGOUT":
             localStorage.clear();
+            toast.success("Wylogowano pomyślnie!", {
+                position: "bottom-right"
+            })
             return {
                 ...state,
                 isAuthenticated: false,
@@ -39,6 +45,12 @@ const reducer = (state, action) => {
                 ...state,
                 isAuthenticated: action.payload
             };
+        case "SET_PAGE":
+            console.log(action.payload.page);
+            return {
+                ...state,
+                currentPage: action.payload.page
+            }
         default:
             return state;
     }
