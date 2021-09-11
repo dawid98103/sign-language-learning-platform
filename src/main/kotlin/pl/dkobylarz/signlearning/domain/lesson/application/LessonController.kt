@@ -9,6 +9,7 @@ import pl.dkobylarz.signlearning.domain.lesson.LessonFacade
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDto
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDto
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDto
+import pl.dkobylarz.signlearning.domain.quiz.dto.QuizDto
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
 @RestController

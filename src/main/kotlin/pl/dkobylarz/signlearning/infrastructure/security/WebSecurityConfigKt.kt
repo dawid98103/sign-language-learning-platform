@@ -44,6 +44,7 @@ class WebSecurityConfigKt(
             "/swagger-ui/**",
             "/static/**",
             "/lessons",
+            "/quizzes",
             "/**/stage",
             "/auth/**"
         )

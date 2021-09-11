@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AxiosClient from '../config/axios/AxiosClient';
-import { ListGroup, Collapse } from 'react-bootstrap'
+import { ListGroup, Collapse } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
 const ListGroupItemWithCursour = styled(ListGroup.Item)`
     cursor: pointer;
+    padding: .9rem 1rem;
 `
 
-function LessonListItem({ lessonName, disabled, lessonId }) {
+function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
 
     const [open, setOpen] = useState(false);
     const [lessonStages, setLessonStages] = useState([]);
@@ -16,6 +17,7 @@ function LessonListItem({ lessonName, disabled, lessonId }) {
 
     useEffect(() => {
         console.log(lessonId);
+        console.log(quiz);
         AxiosClient.get(`/lessons/${lessonId}/stage`).then((response) => {
             console.log("ref");
             setLessonStages(response.data);
@@ -39,6 +41,19 @@ function LessonListItem({ lessonName, disabled, lessonId }) {
             <Collapse in={open}>
                 <div id="example-collapse">
                     {renderLessonStages(lessonStages)}
+                    {quiz &&
+                        <ListGroupItemWithCursour action key={quiz.quizId}>
+                            <img
+                                alt=""
+                                src={process.env.PUBLIC_URL + "/icons/quiz.svg"}
+                                width="30"
+                                height="30"
+                                style={{ marginRight: 10 }}
+                                className="d-inline-block align-center"
+                            />
+                            {quiz.title}
+                        </ListGroupItemWithCursour>}
+
                 </div>
             </Collapse>
         </>

@@ -13,7 +13,5 @@ data class Lesson(
     val name: String,
     val loginRequired: Boolean,
     @MappedCollection(idColumn = "lesson_id")
-    val lessonStages: Set<LessonStage>,
-    @MappedCollection(idColumn = "quiz_id")
-    val quiz: Quiz
+    val lessonStages: Set<LessonStage>
 )

@@ -6,6 +6,7 @@ import AxiosClient from '../config/axios/AxiosClient';
 import { GlobalContext } from '../context/GlobalContext';
 import { LESSON_PAGE } from '../constants/Pages';
 import GlobalSpinner from '../component/GlobalSpinner';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
 const ListGroupWithMargin = styled(ListGroup)`
@@ -25,6 +26,7 @@ border-radius: 25px;
 function LessonPage() {
 
     const [lessons, setLessons] = useState([]);
+    const [quizzes, setQuizzes] = useState([]);
     const { state, dispatch } = useContext(GlobalContext);
 
     useEffect(() => {
@@ -33,12 +35,36 @@ function LessonPage() {
             payload: { page: LESSON_PAGE }
         })
 
+        renderNotificationIfExists()
         fetchLessons();
+        fetchQuizzes();
     }, []);
 
     const fetchLessons = async () => {
         const { data } = await AxiosClient.get(`/lessons`)
         setLessons(data);
+    }
+
+    const fetchQuizzes = async () => {
+        const { data } = await AxiosClient.get(`/quizzes`)
+        setQuizzes(data)
+    }
+
+    const getQuizForLesson = (idToFind) => {
+        console.log(idToFind);
+        console.log(quizzes);
+        return quizzes.find(({ lessonId }) => lessonId === idToFind);
+    }
+
+    const renderNotificationIfExists = () => {
+        if (state.globalNotification !== null) {
+            toast.success(`${state.globalNotification}`, {
+                position: "bottom-right"
+            })
+            dispatch({
+                type: "CLEAR_NOTIFICATION"
+            })
+        }
     }
 
     return (
@@ -52,7 +78,7 @@ function LessonPage() {
                                     ?
                                     lessons.map(lesson => {
                                         return (
-                                            <LessonListItem key={lesson.lessonId} lessonId={lesson.lessonId} lessonName={lesson.lessonId + ". " + lesson.name} isCompleted={false} disabled={!state.isAuthenticated && lesson.loginRequired} />
+                                            <LessonListItem key={lesson.lessonId} lessonId={lesson.lessonId} lessonName={lesson.lessonId + ". " + lesson.name} isCompleted={false} disabled={!state.isAuthenticated && lesson.loginRequired} quiz={getQuizForLesson(lesson.lessonId)} />
                                         )
                                     })
                                     : <GlobalSpinner />
@@ -63,9 +89,18 @@ function LessonPage() {
                         <UserCard>
                             <Card.Body>
                                 <Card.Img variant="top" src="https://biografia24.pl/wp-content/uploads/2013/11/adam-malysz.png" />
-                                <Card.Title>{state.user}</Card.Title>
+                                <Card.Title>
+                                    <Card body>
+                                        {state.user}
+                                    </Card>
+                                </Card.Title>
                                 <Card.Text>
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                    <Card body>
+                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                    </Card>
+                                    <Card body>
+                                        It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                    </Card>
                                 </Card.Text>
                             </Card.Body>
                         </UserCard>

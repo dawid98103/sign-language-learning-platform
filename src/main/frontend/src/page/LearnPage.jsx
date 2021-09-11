@@ -36,6 +36,10 @@ function LearnPage({ match }) {
     const finishLesson = async () => {
         const response = await AxiosClient.post(`/lessons/${match.params.lessonId}/stage/${match.params.stageId}/finish`)
         console.log(response);
+        dispatch({
+            type: "SET_NOTIFICATION",
+            payload: { globalNotification: "Brawo! Pomyślnie ukończyłeś lekcję!" }
+        })
         history.push("/lesson")
     }
 

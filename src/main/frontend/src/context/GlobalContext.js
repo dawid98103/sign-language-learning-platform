@@ -6,7 +6,8 @@ const initalState = {
     user: localStorage.getItem("user") == null ? null : localStorage.getItem("user"),
     token: localStorage.getItem("token") == null ? null : localStorage.getItem("token"),
     roles: localStorage.getItem("roles") == null ? null : localStorage.getItem("roles"),
-    currentPage: ""
+    currentPage: "",
+    globalNotification: null
 };
 
 console.log(initalState);
@@ -50,6 +51,18 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 currentPage: action.payload.page
+            }
+        case "SET_NOTIFICATION":
+            console.log(action.payload.globalNotification);
+            return {
+                ...state,
+                globalNotification: action.payload.globalNotification
+            }
+        case "CLEAR_NOTIFICATION":
+            console.log("Clear notification");
+            return {
+                ...state,
+                globalNotification: null
             }
         default:
             return state;
