@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AxiosClient from '../config/axios/AxiosClient';
 import { ListGroup, Collapse } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
+import history from '../config/history';
 
 const ListGroupItemWithCursour = styled(ListGroup.Item)`
     cursor: pointer;
@@ -13,7 +13,6 @@ function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
 
     const [open, setOpen] = useState(false);
     const [lessonStages, setLessonStages] = useState([]);
-    const history = useHistory();
 
     useEffect(() => {
         console.log(lessonId);
@@ -42,7 +41,7 @@ function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
                 <div id="example-collapse">
                     {renderLessonStages(lessonStages)}
                     {quiz &&
-                        <ListGroupItemWithCursour action key={quiz.quizId}>
+                        <ListGroupItemWithCursour action key={quiz.quizId} onClick={() => history.push(`/quiz/${lessonId}/${quiz.quizId}`)}>
                             <img
                                 alt=""
                                 src={process.env.PUBLIC_URL + "/icons/quiz.svg"}

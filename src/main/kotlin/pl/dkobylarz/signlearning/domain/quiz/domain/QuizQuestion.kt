@@ -8,10 +8,11 @@ import org.springframework.data.relational.core.mapping.Table
 data class QuizQuestion(
     @Id
     val quizQuestionId: Int,
-    val question_number: Int,
-    val question_name: String,
+    val quizId: Int,
+    val questionNumber: Int,
+    val questionName: String,
     val points: Int,
-    val video_url: String,
+    val videoUrl: String,
     @MappedCollection(idColumn = "quiz_question_id")
     val answers: Set<QuizAnswer>
 )
