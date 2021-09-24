@@ -31,14 +31,14 @@ class AuthorizationController(
 
     @PostMapping("/signin")
     fun authenticateUser(
-        @RequestBody loginRequestDto: LoginRequestDto,
+        @RequestBody loginRequestDTO: LoginRequestDTO,
         @RequestHeader header: HttpHeaders
-    ): ResponseEntity<JwtResponse> {
+    ): ResponseEntity<JwtResponseDTO> {
         val authentication: Authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(loginRequestDto.username, loginRequestDto.password)
+            UsernamePasswordAuthenticationToken(loginRequestDTO.username, loginRequestDTO.password)
         )
 
-        logger.info("Autoryzowano użytkownika: ${loginRequestDto.username}")
+        logger.info("Autoryzowano użytkownika: ${loginRequestDTO.username}")
         logger.info("Host: ${header.getValue("host")}")
         logger.info("User-agent: ${header.getValue("user-agent")}")
 
@@ -49,7 +49,7 @@ class AuthorizationController(
         val roles: List<UserRole> = user.authorities.map { item -> UserRole.valueOf(item.authority) }
 
         return ResponseEntity.ok(
-            JwtResponse(
+            JwtResponseDTO(
                 jwt,
                 user.userId,
                 user.username,
@@ -60,29 +60,29 @@ class AuthorizationController(
     }
 
     @PostMapping("/signup")
-    fun registerUser(@RequestBody signupRequestDto: SignupRequestDto): ResponseEntity<MessageResponse> {
-        if (userFacade.existsByUsername(signupRequestDto.username)) {
-            return ResponseEntity.badRequest().body(MessageResponse("Nazwa użytkownika zajęta!"))
+    fun registerUser(@RequestBody signupRequestDTO: SignupRequestDTO): ResponseEntity<MessageResponseDTO> {
+        if (userFacade.existsByUsername(signupRequestDTO.username)) {
+            return ResponseEntity.badRequest().body(MessageResponseDTO("Nazwa użytkownika zajęta!"))
         }
 
         val user = User(
-            username = signupRequestDto.username,
-            password = passwordEncoder.encode(signupRequestDto.password),
-            name = signupRequestDto.name,
-            surname = signupRequestDto.surname,
-            email = signupRequestDto.email,
-            avatarUrl = signupRequestDto.avatarUrl,
+            username = signupRequestDTO.username,
+            password = passwordEncoder.encode(signupRequestDTO.password),
+            name = signupRequestDTO.name,
+            surname = signupRequestDTO.surname,
+            email = signupRequestDTO.email,
+            avatarUrl = signupRequestDTO.avatarUrl,
             active = true,
             roleId = 1
 
         )
 
         userFacade.saveUser(user)
-        return ResponseEntity.ok(MessageResponse("Pomyślnie zarejestrowano użytkownika"))
+        return ResponseEntity.ok(MessageResponseDTO("Pomyślnie zarejestrowano użytkownika"))
     }
 
     @PostMapping("/validateToken")
-    fun validateToken(@RequestBody token: TokenValidationRequestDto): ResponseEntity<Boolean> {
+    fun validateToken(@RequestBody token: TokenValidationRequestDTO): ResponseEntity<Boolean> {
         return ResponseEntity.ok(jwtTokenUtils.validateJwtToken(token = token.token))
     }
 }

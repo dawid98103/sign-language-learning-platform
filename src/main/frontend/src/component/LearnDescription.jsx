@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 
 const DescriptionWrapper = styled.div`
-    margin-top: 2em;
-    background-color: #e5e5e5;
+    margin: 1em 0 1em 0;
     text-align: center;
-    padding: 20px;
+    border: 2px solid #e5e5e5;
+    border-radius: 25px;
+    padding: 10px;
     border-radius: 15px;
 `
 

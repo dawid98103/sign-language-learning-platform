@@ -1,6 +1,6 @@
 package pl.dkobylarz.signlearning.domain.lesson.dto
 
-data class LessonWithCompletionStatusDto(
+data class LessonWithCompletionStatusDTO(
     val lessonId: Int,
     val name: String,
     val loginRequired: Boolean

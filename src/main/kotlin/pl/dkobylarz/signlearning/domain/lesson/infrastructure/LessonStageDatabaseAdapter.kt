@@ -1,7 +1,7 @@
 package pl.dkobylarz.signlearning.domain.lesson.infrastructure
 
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStage
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDto
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
 import pl.dkobylarz.signlearning.domain.lesson.exception.StageNotFoundException
 
 class LessonStageDatabaseAdapter(private val lessonStageRepository: LessonStageRepository) : LessonStageDatabase {
@@ -10,7 +10,7 @@ class LessonStageDatabaseAdapter(private val lessonStageRepository: LessonStageR
         lessonStageRepository.save(lessonStage)
     }
 
-    override fun findStagesForLessonWithoutElements(lessonId: Int): List<LessonStageWithoutElementsDto> {
+    override fun findStagesForLessonWithoutElements(lessonId: Int): List<LessonStageWithoutElementsDTO> {
         return lessonStageRepository.findByLessonId(lessonId)
     }
 

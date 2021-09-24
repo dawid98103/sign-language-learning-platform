@@ -4,20 +4,13 @@ import MarginContainer from './MarginContainer';
 import styled from 'styled-components';
 import LearnDescription from '../component/LearnDescription'
 import ControlButton from './ControlButton';
+import ElementCounter from './ElementCounter';
 
 const LearnWrapper = styled.div`
     margin: auto;
     padding: 30px;
     border: 2px solid #e5e5e5;
     border-radius: 25px;
-`
-const ElementLeftCounter = styled.div`
-    margin: 5px 0px 15px 0px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.5rem;
-    padding: 5px;
-    border-radius: 15px;
 `
 
 const ControlButtonContainer = styled.div`
@@ -30,10 +23,10 @@ function LearnContainer({ videoUrl, description, currentElement, quantityElement
     return (
         <MarginContainer>
             <LearnWrapper>
-                <ElementLeftCounter>
+                <ElementCounter>
                     {`${currentElement} / ${quantityElements}`}
-                </ElementLeftCounter>
-                <ReactPlayer url={videoUrl} />
+                </ElementCounter>
+                <ReactPlayer url={videoUrl} width={900} height={500} />
                 <LearnDescription text={description} />
                 <ControlButtonContainer>
                     {currentElement === 1

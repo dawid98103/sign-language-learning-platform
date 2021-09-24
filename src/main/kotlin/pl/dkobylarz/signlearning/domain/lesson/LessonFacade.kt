@@ -3,9 +3,9 @@ package pl.dkobylarz.signlearning.domain.lesson
 import org.springframework.transaction.annotation.Transactional
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonService
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageService
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDto
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDto
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDto
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDTO
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDTO
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDTO
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
 @Transactional
@@ -14,15 +14,15 @@ class LessonFacade(
     private val lessonStageService: LessonStageService
 ) {
 
-    fun getLessons(): Set<LessonWithCompletionStatusDto> {
+    fun getLessons(): Set<LessonWithCompletionStatusDTO> {
         return lessonService.getLessons()
     }
 
-    fun getElementsForLessonStage(stageId: Int): Set<LessonStageElementDto> {
+    fun getElementsForLessonStage(stageId: Int): Set<LessonStageElementDTO> {
         return lessonStageService.getElementsForLessonStage(stageId)
     }
 
-    fun getStagesForLessonWithCompletionStatus(lessonId: Int, user: User?): Set<LessonStageCompletionDto> {
+    fun getStagesForLessonWithCompletionStatus(lessonId: Int, user: User?): Set<LessonStageCompletionDTO> {
         return lessonStageService.getStagesForLessonWithCompletionStatus(lessonId, user)
     }
 

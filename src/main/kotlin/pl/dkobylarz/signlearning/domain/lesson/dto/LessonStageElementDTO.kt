@@ -1,6 +1,6 @@
 package pl.dkobylarz.signlearning.domain.lesson.dto
 
-data class LessonStageElementDto(
+data class LessonStageElementDTO(
     val videoUrl: String,
     val description: String
 )

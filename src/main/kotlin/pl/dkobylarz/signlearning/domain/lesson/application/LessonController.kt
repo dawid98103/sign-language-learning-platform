@@ -6,10 +6,9 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import pl.dkobylarz.signlearning.domain.lesson.LessonFacade
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDto
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDto
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDto
-import pl.dkobylarz.signlearning.domain.quiz.dto.QuizDto
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDTO
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDTO
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDTO
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
 @RestController
@@ -18,7 +17,7 @@ import pl.dkobylarz.signlearning.domain.user.domain.User
 class LessonController(private val lessonFacade: LessonFacade) {
 
     @GetMapping("")
-    fun getLessonsWithCompletionStatus(): ResponseEntity<Set<LessonWithCompletionStatusDto>> {
+    fun getLessonsWithCompletionStatus(): ResponseEntity<Set<LessonWithCompletionStatusDTO>> {
         return ResponseEntity.ok(lessonFacade.getLessons())
     }
 
@@ -26,7 +25,7 @@ class LessonController(private val lessonFacade: LessonFacade) {
     fun getStagesForLessonWithCompletionStatus(
         @PathVariable lessonId: Int,
         @AuthenticationPrincipal user: User?
-    ): ResponseEntity<Set<LessonStageCompletionDto>> {
+    ): ResponseEntity<Set<LessonStageCompletionDTO>> {
         return ResponseEntity.ok(lessonFacade.getStagesForLessonWithCompletionStatus(lessonId, user))
     }
 
@@ -34,7 +33,7 @@ class LessonController(private val lessonFacade: LessonFacade) {
     fun getElementsForLessonStage(
         @PathVariable lessonId: Int,
         @PathVariable stageId: Int
-    ): ResponseEntity<Set<LessonStageElementDto>> {
+    ): ResponseEntity<Set<LessonStageElementDTO>> {
         return ResponseEntity.ok(lessonFacade.getElementsForLessonStage(stageId))
     }
 

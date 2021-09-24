@@ -9,10 +9,10 @@ const ContainerWithMargin = styled(Container)`
     height: calc(100% - 142px);
 `
 
-function MarginContainer(props) {
+function MarginContainer({ children }) {
     return (
         <ContainerWithMargin>
-            {props.children}
+            {children}
         </ContainerWithMargin>
     )
 }

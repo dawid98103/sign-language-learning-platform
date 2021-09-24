@@ -5,8 +5,8 @@ import GlobalSpinner from '../component/GlobalSpinner';
 import QuizContainer from '../component/QuizContainer';
 
 function QuizPage({ match }) {
-
     const [questions, setQuestions] = useState([])
+    const [userAnswers, setUserAnswers] = useState([])
     const [currentQuestion, setCurrentQuestion] = useState(0)
 
     useEffect(() => {
@@ -15,14 +15,33 @@ function QuizPage({ match }) {
 
     const fetchQuestions = async () => {
         const { data } = await AxiosClient.get(`/quizzes/${match.params.lessonId}/quiz/${match.params.quizId}/questions`)
-        console.log(data);
         setQuestions(data)
+    }
+
+    const checkAnswer = async (questionAnswerId) => {
+        const { data } = await AxiosClient.get(`/quizzes/${match.params.lessonId}/quiz/${match.params.quizId}/question/${questions[currentQuestion].quizQuestionId}/answers/${questionAnswerId}`)
+        setUserAnswers(userAnswers.push({ quizAnswerId: questions[currentQuestion].quizQuestionId, answer: data }))
+        console.log(userAnswers);
+    }
+
+    const nextQuestion = (questionAnswerId) => {
+        console.log(questionAnswerId);
+        checkAnswer(questionAnswerId);
+
+
+        setCurrentQuestion(currentQuestion + 1)
     }
 
     return (
         <MarginContainer>
             {questions.length > 0
-                ? <QuizContainer videoUrl={questions[currentQuestion].videoUrl} questionName={questions[currentQuestion].questionName} answers={questions[currentQuestion].answers} />
+                ? <QuizContainer
+                    currentQuestion={currentQuestion}
+                    questionsCount={questions.length}
+                    videoUrl={questions[currentQuestion].videoUrl}
+                    questionName={questions[currentQuestion].questionName}
+                    answers={questions[currentQuestion].answers}
+                    handleNextQuestion={nextQuestion} />
                 : <GlobalSpinner />}
         </MarginContainer>
     )

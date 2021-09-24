@@ -1,6 +1,6 @@
 package pl.dkobylarz.signlearning.domain.lesson.domain
 
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDto
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
 import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonStageCompletedDatabase
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import java.time.LocalDateTime
@@ -21,7 +21,7 @@ class LessonStageCompletedService(private val lessonStageCompletedDatabase: Less
     }
 
     fun getCompletedStatusForUserAndLessonStage(
-        lessonStageWithoutElements: Set<LessonStageWithoutElementsDto>,
+        lessonStageWithoutElements: Set<LessonStageWithoutElementsDTO>,
         user: User
     ): Map<Int, Boolean> {
         val completedLessons: List<LessonStageCompleted> =

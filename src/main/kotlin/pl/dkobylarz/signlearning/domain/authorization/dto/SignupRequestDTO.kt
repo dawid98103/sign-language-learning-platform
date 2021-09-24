@@ -1,6 +1,6 @@
 package pl.dkobylarz.signlearning.domain.authorization.dto
 
-data class SignupRequestDto(
+data class SignupRequestDTO(
     val username: String,
     val name: String,
     val surname: String,

@@ -1,3 +1,3 @@
 package pl.dkobylarz.signlearning.domain.authorization.dto
 
-data class TokenValidationRequestDto(val token:String)
+data class MessageResponseDTO(val message: String)
