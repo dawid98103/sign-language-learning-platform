@@ -18,7 +18,7 @@ const UserCard = styled(Card)`
 `
 
 const LessonContentWrapper = styled.div`
-padding: 30px;
+padding: 20px;
 border: 2px solid #e5e5e5;
 border-radius: 25px;
 `
@@ -87,7 +87,9 @@ function LessonPage() {
                     <Col>
                         <UserCard>
                             <Card.Body>
-                                <Card.Img variant="top" src="https://biografia24.pl/wp-content/uploads/2013/11/adam-malysz.png" />
+                                <Card.Img 
+                                variant="top" 
+                                src="https://biografia24.pl/wp-content/uploads/2013/11/adam-malysz.png"/>
                                 <Card.Title>
                                     <Card body>
                                         {state.user}
@@ -97,7 +99,6 @@ function LessonPage() {
                                     <Card body>
                                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
                                     </Card>
-
                                 </Card.Text>
                             </Card.Body>
                         </UserCard>

@@ -26,7 +26,7 @@ function LearnContainer({ videoUrl, description, currentElement, quantityElement
                 <ElementCounter>
                     {`${currentElement} / ${quantityElements}`}
                 </ElementCounter>
-                <ReactPlayer url={videoUrl} width={900} height={500} />
+                <ReactPlayer url={videoUrl} />
                 <LearnDescription text={description} />
                 <ControlButtonContainer>
                     {currentElement === 1
