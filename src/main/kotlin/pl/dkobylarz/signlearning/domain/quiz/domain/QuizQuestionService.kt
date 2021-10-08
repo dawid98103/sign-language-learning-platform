@@ -9,16 +9,20 @@ class QuizQuestionService(private val quizQuestionDatabase: QuizQuestionDatabase
     fun getQuestionsForGivenQuizWithAnswers(quizId: Int): Set<QuizQuestionDTO> {
         val questionsForQuiz: Set<QuizQuestion> = quizQuestionDatabase.getQuestionsForQuiz(quizId)
         return questionsForQuiz.asSequence()
-            .map { QuizQuestionMapper.toDto(it) }
-            .toSet()
+                .map { QuizQuestionMapper.toDto(it) }
+                .toSet()
     }
 
-    fun getIsTheCorrectAnswer(quizId: Int, quizQuestionId: Int, answerId: Int): Boolean {
+    fun getQuizQuestionForQuizQuestionId(quizQuestionId: Int): QuizQuestionDTO {
+        return QuizQuestionMapper.toDto(quizQuestionDatabase.getQuestionByQuizQuestionId(quizQuestionId))
+    }
+
+    fun isAnswerCorrect(quizId: Int, quizQuestionId: Int, answerId: Int): Boolean {
         val questionsForQuiz: Set<QuizQuestion> = quizQuestionDatabase.getQuestionsForQuiz(quizId)
         return questionsForQuiz.asSequence()
-            .filter { it.quizQuestionId == quizQuestionId }
-            .first().answers.asSequence()
-            .filter { it.correct }
-            .first().quizAnswerId == answerId
+                .filter { it.quizQuestionId == quizQuestionId }
+                .first().answers.asSequence()
+                .filter { it.correct }
+                .first().quizAnswerId == answerId
     }
 }
