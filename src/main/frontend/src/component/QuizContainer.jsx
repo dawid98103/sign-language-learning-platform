@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ReactPlayer from 'react-player';
+import ResponsivePlayer from './ResponsivePlayer';
 import MarginContainer from './MarginContainer';
 import styled from 'styled-components';
 import LearnDescription from '../component/LearnDescription'
@@ -9,16 +9,11 @@ import ElementCounter from './ElementCounter';
 import { Col } from 'react-bootstrap';
 
 const LearnWrapper = styled.div`
-    width: 65%;
+    width: 70%;
     margin: auto;
     padding: 30px;
     border: 2px solid #e5e5e5;
     border-radius: 25px;
-`
-
-const PlayerContainer = styled.div`
-    display: flex;
-    justify-content: center;
 `
 
 const ControlButtonContainer = styled.div`
@@ -49,9 +44,7 @@ function QuizContainer({ currentQuestion, questionsCount, videoUrl, questionName
                 <ElementCounter>
                     {`${currentQuestion + 1} / ${questionsCount}`}
                 </ElementCounter>
-                <PlayerContainer>
-                    <ReactPlayer width={900} height={500} url={videoUrl} />
-                </PlayerContainer>
+                <ResponsivePlayer url={videoUrl} />
                 <LearnDescription text={questionName} />
                 {answers.map(answer => {
                     return (
@@ -75,7 +68,6 @@ function QuizContainer({ currentQuestion, questionsCount, videoUrl, questionName
             </LearnWrapper>
         </MarginContainer>
     )
-
 }
 
 export default QuizContainer

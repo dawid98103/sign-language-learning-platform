@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactPlayer from 'react-player';
+import ResponsivePlayer from './ResponsivePlayer';
 import MarginContainer from './MarginContainer';
 import styled from 'styled-components';
 import LearnDescription from '../component/LearnDescription'
@@ -8,6 +8,7 @@ import ElementCounter from './ElementCounter';
 
 const LearnWrapper = styled.div`
     margin: auto;
+    min-width: 70%;
     padding: 30px;
     border: 2px solid #e5e5e5;
     border-radius: 25px;
@@ -26,7 +27,7 @@ function LearnContainer({ videoUrl, description, currentElement, quantityElement
                 <ElementCounter>
                     {`${currentElement} / ${quantityElements}`}
                 </ElementCounter>
-                <ReactPlayer url={videoUrl} width={900} height={500} />
+                <ResponsivePlayer url={videoUrl} />
                 <LearnDescription text={description} />
                 <ControlButtonContainer>
                     {currentElement === 1

@@ -26,9 +26,8 @@ function QuizPage({ match }) {
 
     const nextQuestion = (questionAnswerId) => {
         console.log(questionAnswerId);
+
         checkAnswer(questionAnswerId);
-
-
         setCurrentQuestion(currentQuestion + 1)
     }
 
