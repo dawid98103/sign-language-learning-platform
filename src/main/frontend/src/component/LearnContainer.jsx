@@ -1,18 +1,11 @@
 import React from 'react';
+import styled from 'styled-components';
+import LearnWrapper from './LearnWrapper';
 import ResponsivePlayer from './ResponsivePlayer';
 import MarginContainer from './MarginContainer';
-import styled from 'styled-components';
 import LearnDescription from '../component/LearnDescription'
 import ControlButton from './ControlButton';
 import ElementCounter from './ElementCounter';
-
-const LearnWrapper = styled.div`
-    margin: auto;
-    min-width: 70%;
-    padding: 30px;
-    border: 2px solid #e5e5e5;
-    border-radius: 25px;
-`
 
 const ControlButtonContainer = styled.div`
     display: flex;

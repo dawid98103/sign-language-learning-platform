@@ -5,6 +5,7 @@ import AppNavbar from './component/AppNavbar';
 import LessonPage from './page/LessonPage';
 import LearnPage from './page/LearnPage';
 import QuizPage from './page/QuizPage';
+import QuizResultPage from './page/QuizResultPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import history from './config/history';
@@ -40,9 +41,12 @@ const RoutesWithNav = () => {
   return (
     <>
       <AppNavbar />
-      <Route path="/lesson" component={LessonPage} />
-      <Route path="/learn/:lessonId/:stageId" exact component={LearnPage} />
-      <Route path="/quiz/:lessonId/:quizId" exact component={QuizPage} />
+      <Switch>
+        <Route path="/lesson" component={LessonPage} />
+        <Route path="/learn/:lessonId/:stageId" exact component={LearnPage} />
+        <Route path="/quiz/:lessonId/result/:quizId" exact component={QuizResultPage} />
+        <Route path="/quiz/:lessonId/:quizId" exact component={QuizPage} />
+      </Switch>
     </>
   )
 }

@@ -1,7 +1,6 @@
 package pl.dkobylarz.signlearning.domain.authorization.application
 
 import lombok.extern.slf4j.Slf4j
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
@@ -11,10 +10,14 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 import pl.dkobylarz.signlearning.domain.authorization.dto.*
+import pl.dkobylarz.signlearning.domain.authorization.exception.PasswordsNotSameException
+import pl.dkobylarz.signlearning.domain.authorization.exception.UsernameAlreadyExistsException
 import pl.dkobylarz.signlearning.domain.user.UserFacade
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import pl.dkobylarz.signlearning.domain.user.domain.UserRole
+import pl.dkobylarz.signlearning.domain.userlogging.UserLoginLogFacade
 import pl.dkobylarz.signlearning.infrastructure.security.JwtTokenUtils
+import java.util.logging.Logger
 
 @Slf4j
 @RestController
@@ -23,11 +26,13 @@ class AuthorizationController(
     private val authenticationManager: AuthenticationManager,
     private val userFacade: UserFacade,
     private val passwordEncoder: PasswordEncoder,
-    private val jwtTokenUtils: JwtTokenUtils
+    private val jwtTokenUtils: JwtTokenUtils,
+    private val userLoginLogFacade: UserLoginLogFacade
 ) {
 
-    fun <T> loggerFor(clazz: Class<T>) = LoggerFactory.getLogger(clazz)
-    private val logger = loggerFor(this::class.java)
+    companion object {
+        val LOG = Logger.getLogger(AuthorizationController::class.java.name)
+    }
 
     @PostMapping("/signin")
     fun authenticateUser(
@@ -38,9 +43,9 @@ class AuthorizationController(
             UsernamePasswordAuthenticationToken(loginRequestDTO.username, loginRequestDTO.password)
         )
 
-        logger.info("Autoryzowano użytkownika: ${loginRequestDTO.username}")
-        logger.info("Host: ${header.getValue("host")}")
-        logger.info("User-agent: ${header.getValue("user-agent")}")
+        LOG.info("Autoryzowano użytkownika: ${loginRequestDTO.username}")
+        LOG.info("Host: ${header.getValue("host")}")
+        LOG.info("User-agent: ${header.getValue("user-agent")}")
 
         SecurityContextHolder.getContext().authentication = authentication
         val jwt: String = jwtTokenUtils.generateJwtToken(authentication)
@@ -48,11 +53,14 @@ class AuthorizationController(
         val user: User = authentication.principal as User
         val roles: List<UserRole> = user.authorities.map { item -> UserRole.valueOf(item.authority) }
 
+        userLoginLogFacade.logUserLogin(user.userId!!)
+
         return ResponseEntity.ok(
             JwtResponseDTO(
                 jwt,
                 user.userId,
                 user.username,
+                user.avatarUrl,
                 user.email,
                 roles
             )
@@ -62,7 +70,10 @@ class AuthorizationController(
     @PostMapping("/signup")
     fun registerUser(@RequestBody signupRequestDTO: SignupRequestDTO): ResponseEntity<MessageResponseDTO> {
         if (userFacade.existsByUsername(signupRequestDTO.username)) {
-            return ResponseEntity.badRequest().body(MessageResponseDTO("Nazwa użytkownika zajęta!"))
+            throw UsernameAlreadyExistsException()
+        }
+        if(!userFacade.isSamePasswords(signupRequestDTO.password, signupRequestDTO.passwordRepeat)){
+            throw PasswordsNotSameException()
         }
 
         val user = User(

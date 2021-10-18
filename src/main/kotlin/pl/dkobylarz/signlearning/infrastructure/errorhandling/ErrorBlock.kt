@@ -10,18 +10,18 @@ class ErrorBlock {
     var errors: List<Error> = emptyList()
 
 
-    constructor(code: String, message: String, domain: String, reason: String, errorMessage: String) {
+    constructor(code: String, localizedMessage: String, domain: String, reason: String, errorMessage: String) {
         this.code = code
-        this.localizedMessage = message
+        this.localizedMessage = localizedMessage
         this.nanoId = NanoIdUtils.randomNanoId()
         this.errors = listOf(Error(domain, reason, errorMessage))
     }
 
-    constructor(nanoId: String, code: String, message: String, errors: List<Error>){
-        this.nanoId = nanoId
+    constructor(nanoId: String, code: String, message: String, errors: List<Error>) {
         this.code = code
-        this.localizedMessage = message
         this.errors = errors
+        this.localizedMessage = message
+        this.nanoId = nanoId
     }
 
     companion object {

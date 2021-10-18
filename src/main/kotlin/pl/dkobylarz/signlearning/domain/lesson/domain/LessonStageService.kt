@@ -1,24 +1,32 @@
 package pl.dkobylarz.signlearning.domain.lesson.domain
 
+import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDTO
-import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDTO
-import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonMapper
-import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonStageDatabase
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
+import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonRepository
+import pl.dkobylarz.signlearning.domain.lessoncompleted.LessonCompletedFacade
+import pl.dkobylarz.signlearning.domain.lessoncompleted.domain.LessonStageCompletedService
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
+@Service
 class LessonStageService(
-    val lessonStageDatabase: LessonStageDatabase,
+    val lessonRepository: LessonRepository,
+    val lessonCompletedFacade: LessonCompletedFacade,
     val lessonStageCompletedService: LessonStageCompletedService
 ) {
 
     fun getStagesForLessonWithCompletionStatus(lessonId: Int, user: User?): Set<LessonStageCompletionDTO> {
-        val lessonStageWithoutElements: Set<LessonStageWithoutElementsDTO> = lessonStageDatabase.findStagesForLessonWithoutElements(lessonId)
-            .toSet()
+        val lesson: Lesson = lessonRepository.findByLessonId(lessonId)
+        val lessonStageWithoutElements: Set<LessonStageWithoutElementsDTO> =
+            lesson.getStagesForLesson().asSequence()
+                .map { LessonMapper.toDto(it) }
+                .toSet()
 
         val lessonStageCompletionSet: MutableSet<LessonStageCompletionDTO> = mutableSetOf()
         user?.let {
-            val completionStageStatusForUser: Map<Int, Boolean> = getCompletionStageStatusForUserMap(lessonStageWithoutElements, user)
+            val completionStageStatusForUser: Map<Int, Boolean> =
+                lessonCompletedFacade.getCompletionStageStatusForUserMap(lessonStageWithoutElements, user)
 
             lessonStageWithoutElements.asSequence()
                 .map {
@@ -43,25 +51,21 @@ class LessonStageService(
             .toSet()
     }
 
-    fun setLessonStageAsCompletedByUser(stageId: Int, user: User?) {
-        user?.let {
-            lessonStageCompletedService.setCompletedStatusForUserAndStage(it.userId!!, stageId)
-        }
-    }
-
-    fun getElementsForLessonStage(stageId: Int): Set<LessonStageElementDTO> {
-        val lessonStage: LessonStage = lessonStageDatabase.getByStageId(stageId)
+    fun getElementsForLessonStage(lessonId: Int, stageId: Int): Set<LessonStageElementDTO> {
+        val lesson: Lesson = lessonRepository.findByLessonId(lessonId)
+        val lessonStage: LessonStage = lesson.getLessonStageById(stageId)
 
         return lessonStage.lessonStageElements.asSequence()
             .map { LessonMapper.toDto(it) }
             .toSet()
     }
 
-    private fun getStatus(completionStageStatusMap: Map<Int, Boolean>, lessonStageWithoutElementsDTO: LessonStageWithoutElementsDTO): Boolean {
+    private fun getStatus(
+        completionStageStatusMap: Map<Int, Boolean>,
+        lessonStageWithoutElementsDTO: LessonStageWithoutElementsDTO
+    ): Boolean {
         return completionStageStatusMap[lessonStageWithoutElementsDTO.lessonStageId]!!
     }
 
-    private fun getCompletionStageStatusForUserMap(lessonStageWithoutElements: Set<LessonStageWithoutElementsDTO>, user: User): Map<Int, Boolean> {
-        return lessonStageCompletedService.getCompletedStatusForUserAndLessonStage(lessonStageWithoutElements, user)
-    }
+
 }

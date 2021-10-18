@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LearnWrapper from './LearnWrapper';
 import ResponsivePlayer from './ResponsivePlayer';
 import MarginContainer from './MarginContainer';
 import styled from 'styled-components';
@@ -7,14 +8,6 @@ import QuizAnswerBox from './QuizAnswerBox';
 import ControlButton from './ControlButton';
 import ElementCounter from './ElementCounter';
 import { Col } from 'react-bootstrap';
-
-const LearnWrapper = styled.div`
-    width: 70%;
-    margin: auto;
-    padding: 30px;
-    border: 2px solid #e5e5e5;
-    border-radius: 25px;
-`
 
 const ControlButtonContainer = styled.div`
     display: flex;

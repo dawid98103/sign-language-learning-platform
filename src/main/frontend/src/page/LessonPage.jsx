@@ -1,13 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Col, ListGroup, Row, Card } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+import { Col, ListGroup, Row, Card, Image } from 'react-bootstrap';
 import LessonListItem from '../component/LessonListItem';
 import MarginContainer from '../component/MarginContainer';
 import AxiosClient from '../config/axios/AxiosClient';
 import { GlobalContext } from '../context/GlobalContext';
 import { LESSON_PAGE } from '../constants/Pages';
 import GlobalSpinner from '../component/GlobalSpinner';
-import { toast } from 'react-toastify';
-import styled from 'styled-components';
+
+const ImageContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+`
 
 const ListGroupWithMargin = styled(ListGroup)`
     margin: 1rem 10px 1rem 10px;
@@ -18,9 +24,10 @@ const UserCard = styled(Card)`
 `
 
 const LessonContentWrapper = styled.div`
-padding: 20px;
-border: 2px solid #e5e5e5;
-border-radius: 25px;
+    padding: 20px;
+    border: 0.5px solid #e5e5e5;
+    border-radius: 25px;
+    width: 100%;
 `
 
 function LessonPage() {
@@ -28,16 +35,24 @@ function LessonPage() {
     const [quizzes, setQuizzes] = useState([]);
     const { state, dispatch } = useContext(GlobalContext);
 
-    useEffect(() => {
+    useEffect(async () => {
         dispatch({
             type: "SET_PAGE",
             payload: { page: LESSON_PAGE }
         })
 
-        renderNotificationIfExists()
+        renderNotificationIfExists();
+        await terminateActiveQuizzes();
         fetchLessons();
         fetchQuizzes();
     }, []);
+
+    const terminateActiveQuizzes = async () => {
+        const { data } = await AxiosClient.get(`/quizzes/process`)
+        if (data.quizId != null) {
+            await AxiosClient.post(`/quizzes/process/quiz/${data.quizId}/finish`)
+        }
+    }
 
     const fetchLessons = async () => {
         const { data } = await AxiosClient.get(`/lessons`)
@@ -50,9 +65,9 @@ function LessonPage() {
     }
 
     const getQuizForLesson = (idToFind) => {
-        console.log(idToFind);
-        console.log(quizzes);
-        return quizzes.find(({ lessonId }) => lessonId === idToFind);
+        if (state.isAuthenticated) {
+            return quizzes.find(({ lessonId }) => lessonId === idToFind);
+        }
     }
 
     const renderNotificationIfExists = () => {
@@ -69,27 +84,34 @@ function LessonPage() {
     return (
         <MarginContainer>
             <LessonContentWrapper>
-                <Row> {/* //TODO  usunąć styl przy COL */}
-                    <Col xs={7}>
+                <Row>
+                    <Col sm={7}>
                         <ListGroupWithMargin>
                             {
                                 lessons.length > 0
                                     ?
                                     lessons.map(lesson => {
                                         return (
-                                            <LessonListItem key={lesson.lessonId} lessonId={lesson.lessonId} lessonName={lesson.lessonId + ". " + lesson.name} isCompleted={false} disabled={!state.isAuthenticated && lesson.loginRequired} quiz={getQuizForLesson(lesson.lessonId)} />
+                                            <LessonListItem
+                                                key={lesson.lessonId}
+                                                lessonId={lesson.lessonId}
+                                                lessonName={lesson.lessonId + ". " + lesson.name}
+                                                isCompleted={false}
+                                                disabled={!state.isAuthenticated && lesson.loginRequired}
+                                                quiz={getQuizForLesson(lesson.lessonId)}
+                                            />
                                         )
                                     })
                                     : <GlobalSpinner />
                             }
                         </ListGroupWithMargin>
                     </Col>
-                    <Col>
+                    <Col sm={5}>
                         <UserCard>
                             <Card.Body>
-                                <Card.Img 
-                                variant="top" 
-                                src="https://biografia24.pl/wp-content/uploads/2013/11/adam-malysz.png"/>
+                                <ImageContainer>
+                                    <Image src={state.avatarUrl} />
+                                </ImageContainer>
                                 <Card.Title>
                                     <Card body>
                                         {state.user}
@@ -97,7 +119,11 @@ function LessonPage() {
                                 </Card.Title>
                                 <Card.Text>
                                     <Card body>
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                                        <ListGroup variant="flush">
+                                            <ListGroup.Item>Ostatnia aktywność: 2020-10-11 15:00:00</ListGroup.Item>
+                                            <ListGroup.Item>Dni nauki z rzędu: 5</ListGroup.Item>
+                                            <ListGroup.Item>Zdobytych punktów: 69</ListGroup.Item>
+                                        </ListGroup>
                                     </Card>
                                 </Card.Text>
                             </Card.Body>

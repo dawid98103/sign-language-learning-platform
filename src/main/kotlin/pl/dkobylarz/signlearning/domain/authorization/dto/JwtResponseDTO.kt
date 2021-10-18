@@ -6,6 +6,7 @@ data class JwtResponseDTO(
     val token: String,
     val id: Int?,
     val username: String,
+    val avatarUrl: String,
     val email: String?,
     val roles: List<UserRole>?
 )

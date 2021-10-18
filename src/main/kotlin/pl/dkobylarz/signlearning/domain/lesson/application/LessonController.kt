@@ -34,16 +34,6 @@ class LessonController(private val lessonFacade: LessonFacade) {
         @PathVariable lessonId: Int,
         @PathVariable stageId: Int
     ): ResponseEntity<Set<LessonStageElementDTO>> {
-        return ResponseEntity.ok(lessonFacade.getElementsForLessonStage(stageId))
-    }
-
-    @PostMapping("/{lessonId}/stage/{stageId}/finish")
-    fun setLessonStageAsCompletedByUser(
-        @PathVariable lessonId: Int,
-        @PathVariable stageId: Int,
-        @AuthenticationPrincipal user: User?
-    ): ResponseEntity<Any> {
-        lessonFacade.setLessonStageAsCompletedByUser(stageId, user)
-        return ResponseEntity(HttpStatus.OK)
+        return ResponseEntity.ok(lessonFacade.getElementsForLessonStage(lessonId, stageId))
     }
 }

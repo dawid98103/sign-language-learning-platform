@@ -46,7 +46,15 @@ function LearnPage({ match }) {
     return (
         <MarginContainer>
             {elements.length > 0
-                ? <LearnContainer videoUrl={elements[currentElement].videoUrl} description={elements[currentElement].description} currentElement={currentElement + 1} quantityElements={elements.length} nextElement={() => nextElement()} prevElement={() => prevElement()} finishEvent={() => finishLesson()} />
+                ? <LearnContainer
+                    videoUrl={elements[currentElement].videoUrl}
+                    description={elements[currentElement].description}
+                    currentElement={currentElement + 1}
+                    quantityElements={elements.length}
+                    nextElement={() => nextElement()}
+                    prevElement={() => prevElement()}
+                    finishEvent={() => finishLesson()}
+                />
                 : <GlobalSpinner />}
         </MarginContainer>
     )

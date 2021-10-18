@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 const initalState = {
     isAuthenticated: localStorage.getItem("token") == null ? false : true,
     user: localStorage.getItem("user") == null ? null : localStorage.getItem("user"),
+    avatarUrl: localStorage.getItem("avatarUrl") == null ? null : localStorage.getItem("avatarUrl"),
     token: localStorage.getItem("token") == null ? null : localStorage.getItem("token"),
     roles: localStorage.getItem("roles") == null ? null : localStorage.getItem("roles"),
     currentPage: "",
@@ -18,6 +19,7 @@ const reducer = (state, action) => {
     switch (action.type) {
         case "LOGIN":
             localStorage.setItem("user", action.payload.user);
+            localStorage.setItem("avatarUrl", action.payload.userAvatar);
             localStorage.setItem("token", action.payload.token);
             localStorage.setItem("roles", JSON.stringify(action.payload.roles));
             toast.success("Zalogowano pomyślnie!", {
@@ -27,9 +29,16 @@ const reducer = (state, action) => {
                 ...state,
                 isAuthenticated: true,
                 user: action.payload.user,
+                avatarUrl: action.payload.userAvatar,
                 token: action.payload.token,
                 roles: action.payload.roles
             };
+
+        case "REGISTER":
+            toast.success("Zarejestrowano pomyślnie!, Możesz się zalogować!", {
+                position: "bottom-right"
+            })
+            break;
         case "LOGOUT":
             localStorage.clear();
             toast.success("Wylogowano pomyślnie!", {

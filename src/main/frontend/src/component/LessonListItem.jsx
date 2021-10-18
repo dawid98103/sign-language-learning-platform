@@ -6,17 +6,16 @@ import history from '../config/history';
 
 const ListGroupItemWithCursour = styled(ListGroup.Item)`
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
     padding: .9rem 1rem;
 `
 
 function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
-
     const [open, setOpen] = useState(false);
     const [lessonStages, setLessonStages] = useState([]);
 
     useEffect(() => {
-        console.log(lessonId);
-        console.log(quiz);
         AxiosClient.get(`/lessons/${lessonId}/stage`).then((response) => {
             console.log("ref");
             setLessonStages(response.data);
@@ -27,11 +26,18 @@ function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
 
     function renderLessonStages() {
         return lessonStages.map(lessonStage => {
-            console.log(lessonStage);
             return (
-                <ListGroupItemWithCursour action key={lessonStage.lessonStageId} variant={lessonStage.completed ? "success" : ""} onClick={() => history.push(`/learn/${lessonId}/${lessonStage.lessonStageId}`)}>{lessonStage.index}. {lessonStage.name}</ListGroupItemWithCursour>
+                <ListGroupItemWithCursour action
+                    key={lessonStage.lessonStageId}
+                    variant={lessonStage.completed ? "success" : ""}
+                    onClick={() => history.push(`/learn/${lessonId}/${lessonStage.lessonStageId}`)}>{lessonStage.index}. {lessonStage.name}</ListGroupItemWithCursour>
             )
         })
+    }
+
+    const handleQuizStart = async () => {
+        await AxiosClient.post(`/quizzes/process/quiz/${quiz.quizId}/start`);
+        history.push(`/quiz/${lessonId}/${quiz.quizId}`)
     }
 
     return (
@@ -41,16 +47,26 @@ function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
                 <div id="example-collapse">
                     {renderLessonStages(lessonStages)}
                     {quiz &&
-                        <ListGroupItemWithCursour action key={quiz.quizId} onClick={() => history.push(`/quiz/${lessonId}/${quiz.quizId}`)}>
-                            <img
-                                alt=""
-                                src={process.env.PUBLIC_URL + "/icons/quiz.svg"}
-                                width="30"
-                                height="30"
-                                style={{ marginRight: 10 }}
-                                className="d-inline-block align-center"
-                            />
-                            {quiz.title}
+                        <ListGroupItemWithCursour action
+                            key={quiz.quizId}
+                            variant="flush"
+                            disabled={quiz.quizResult != null}
+                            onClick={() => handleQuizStart()}>
+                            <div>
+                                <img
+                                    alt=""
+                                    src={process.env.PUBLIC_URL + "/icons/quiz.svg"}
+                                    width="30"
+                                    height="30"
+                                    style={{ marginRight: 10 }}
+                                    className="d-inline-block align-center"
+                                />
+                                {quiz.title}
+                            </div>
+                            <div>
+                                {quiz.quizResult != null
+                                    ? `Wynik: ${(quiz.quizResult.pointsGained / quiz.quizResult.pointsToGain) * 100}%` : ""}
+                            </div>
                         </ListGroupItemWithCursour>}
 
                 </div>

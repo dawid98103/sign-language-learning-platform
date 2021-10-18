@@ -1,10 +1,17 @@
 package pl.dkobylarz.signlearning.domain.user.domain
 
+import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.user.domain.command.AddUserCommand
-import pl.dkobylarz.signlearning.domain.user.infrastructure.UserDatabase
+import pl.dkobylarz.signlearning.domain.user.infrastructure.UserRepository
 import java.time.LocalDateTime
+import java.util.logging.Logger
 
-class UserService(private val userDatabase: UserDatabase) {
+@Service
+class UserService(private val userRepository: UserRepository) {
+
+    companion object {
+        val LOG = Logger.getLogger(UserService::class.java.name)
+    }
 
     fun saveUser(addUserCommand: AddUserCommand) {
         val user = User(
@@ -18,22 +25,22 @@ class UserService(private val userDatabase: UserDatabase) {
             creationDate = LocalDateTime.now()
         )
 
-        userDatabase.saveUser(user)
+        userRepository.save(user)
     }
 
     fun saveUser(user: User) {
-        userDatabase.saveUser(user)
+        userRepository.save(user)
     }
 
     fun getUserByUsername(username: String): User {
-        return userDatabase.getUserByUsername(username)
+        return userRepository.findByUsername(username).orElseGet { null }
     }
 
     fun getUserById(userId: Int): UserPlatform {
-        return userDatabase.getUserById(userId)
+        return userRepository.findByUserId(userId)
     }
 
     fun existsByUsername(username: String): Boolean {
-        return userDatabase.existsByUsername(username)
+        return userRepository.existsByUsername(username)
     }
 }

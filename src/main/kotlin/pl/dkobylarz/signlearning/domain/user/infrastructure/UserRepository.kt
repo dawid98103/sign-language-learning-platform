@@ -8,16 +8,16 @@ import pl.dkobylarz.signlearning.domain.user.domain.UserPlatform
 import java.util.*
 
 interface UserRepository : CrudRepository<User, Int> {
+
     fun existsByUsername(username: String): Boolean
 
-    @Query("SELECT * FROM platform_user u WHERE u.username = :username")
-    fun findByUsername(@Param("username") username: String): Optional<User>
-
-//    @Query("SELECT * FROM platform_user u WHERE u.user_Id = :userId")
-//    fun findByUserId(@Param("userId") userId: Int): Optional<User>
+    fun findByUsername(username: String): Optional<User>
 
     fun findByUserId(@Param("userId") user: Int): UserPlatform
 
     @Query("SELECT * FROM platform_user u WHERE u.username = :username")
     fun findUserPlatformByUsername(@Param("username") username: String): UserPlatform?
+
+//    @Query("SELECT * FROM platform_user u WHERE u.username = :username")
+//    fun findByUsername(@Param("username") username: String): Optional<User>
 }

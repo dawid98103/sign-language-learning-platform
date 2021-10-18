@@ -1,15 +1,15 @@
 package pl.dkobylarz.signlearning.domain.lesson.domain
 
+import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDTO
-import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonDatabase
-import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonMapper
+import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonRepository
 import java.util.stream.Collectors
 
-class LessonService(private val lessonDatabase: LessonDatabase) {
-
+@Service
+class LessonService(private val lessonRepository: LessonRepository) {
 
     fun getLessons(): LinkedHashSet<LessonWithCompletionStatusDTO> {
-        val lessons: MutableList<Lesson> = lessonDatabase.findAll()
+        val lessons: MutableList<Lesson> = lessonRepository.findAll() as MutableList<Lesson>
         return lessons.stream()
             .map { LessonMapper.toDto(it) }
             .sorted { o1, o2 ->

@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import pl.dkobylarz.signlearning.domain.authorization.domain.UserDetailsServiceImpl
 
 @Configuration
@@ -55,6 +54,18 @@ class WebSecurityConfigKt(
         return BCryptPasswordEncoder()
     }
 
+    @Bean
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
+    }
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val source = UrlBasedCorsConfigurationSource()
+        source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
+        return source
+    }
+
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.userDetailsService(userDetailsServiceImpl)?.passwordEncoder(passwordEncoder())
     }
@@ -67,17 +78,5 @@ class WebSecurityConfigKt(
             ?.anyRequest()?.authenticated()
 
         http?.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
-    }
-
-    @Bean
-    override fun authenticationManagerBean(): AuthenticationManager {
-        return super.authenticationManagerBean()
-    }
-
-    @Bean
-    fun corsConfigurationSource() : CorsConfigurationSource {
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
-        return source
     }
 }

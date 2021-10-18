@@ -8,13 +8,13 @@ class SignLearningAppError {
     constructor(
         apiVersion: String,
         status: String,
-        message: String,
+        localizedMessage: String,
         domain: String,
         reason: String,
         errorMessage: String
     ) {
         this.apiVersion = apiVersion
-        this.error = ErrorBlock(status, message, domain, reason, errorMessage)
+        this.error = ErrorBlock(status, localizedMessage, domain, reason, errorMessage)
     }
 
     companion object {

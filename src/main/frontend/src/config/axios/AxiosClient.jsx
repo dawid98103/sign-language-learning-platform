@@ -1,5 +1,4 @@
 import axios from 'axios'
-import history from '../history'
 import { toast } from 'react-toastify';
 
 const instance = axios.create({
@@ -9,7 +8,7 @@ const instance = axios.create({
 instance.interceptors.response.use((response) => {
     return response;
 }, error => {
-    if (error.response.status === 500) {
+    if (error == undefined || error.response.status === 500) {
         toast.warn("Błąd połączenia z serwerem!", {
             position: "bottom-right"
         })
@@ -19,15 +18,15 @@ instance.interceptors.response.use((response) => {
             position: "bottom-right"
         })
     }
-    if (error.response.status === 401) {
-        localStorage.clear();
-        toast.error("Brak uprawnień do zasobu. Nastąpi wylogowanie", {
-            position: "bottom-right"
-        })
-        history.push("/")
-    }
-    console.log(error)
-    console.log(error.response)
+
+    // if (error.response.status === 401) {
+    //     localStorage.clear();
+    //     toast.error("Brak uprawnień do zasobu. Nastąpi wylogowanie", {
+    //         position: "bottom-right"
+    //     })
+    //     history.push("/")
+    // }
+
     return Promise.reject(error);
 })
 

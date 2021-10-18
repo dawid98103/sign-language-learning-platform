@@ -18,7 +18,6 @@ const AnswerBox = styled.div`
         background-color: #f8f9fa;
     }
     `}
-
 `
 
 const Separator = styled.div`

@@ -1,9 +1,11 @@
 package pl.dkobylarz.signlearning.domain.user
 
+import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import pl.dkobylarz.signlearning.domain.user.domain.UserPlatform
 import pl.dkobylarz.signlearning.domain.user.domain.UserService
 
+@Service
 class UserFacade(private val userService: UserService) {
 
     fun saveUser(user: User) {
@@ -20,5 +22,9 @@ class UserFacade(private val userService: UserService) {
 
     fun existsByUsername(username: String): Boolean {
         return userService.existsByUsername(username)
+    }
+
+    fun isSamePasswords(password: String, repeatPassword: String): Boolean {
+        return password == repeatPassword
     }
 }

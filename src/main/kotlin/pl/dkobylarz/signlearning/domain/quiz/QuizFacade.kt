@@ -1,49 +1,44 @@
 package pl.dkobylarz.signlearning.domain.quiz
 
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import pl.dkobylarz.signlearning.domain.quiz.domain.QuizProcessService
+import pl.dkobylarz.signlearning.domain.quiz.domain.Quiz
 import pl.dkobylarz.signlearning.domain.quiz.domain.QuizQuestionService
 import pl.dkobylarz.signlearning.domain.quiz.domain.QuizService
+import pl.dkobylarz.signlearning.domain.quiz.dto.QuizCompletionStatusDTO
 import pl.dkobylarz.signlearning.domain.quiz.dto.QuizDTO
-import pl.dkobylarz.signlearning.domain.quiz.dto.QuizProcessDTO
 import pl.dkobylarz.signlearning.domain.quiz.dto.QuizQuestionDTO
+import pl.dkobylarz.signlearning.domain.quiz.dto.QuizResultDTO
+import pl.dkobylarz.signlearning.domain.user.domain.User
 
+@Service
 @Transactional
 class QuizFacade(
-        private val quizService: QuizService,
-        private val quizProcessService: QuizProcessService,
-        private val quizQuestionService: QuizQuestionService
+    private val quizService: QuizService,
+    private val quizQuestionService: QuizQuestionService
 ) {
 
-    fun getQuizForLessonWithCompletionStatus(lessonId: Int): QuizDTO {
-        return quizService.getQuizForLessonWithCompletionStatus(lessonId)
+    fun getQuiz(quizId: Int): Quiz {
+        return quizService.getQuiz(quizId)
     }
 
-    fun getQuizzes(): Set<QuizDTO> {
-        return quizService.getQuizzes()
+    fun getQuizForLessonWithCompletionStatus(lessonId: Int, user: User): QuizCompletionStatusDTO {
+        return quizService.getQuizForLessonWithCompletionStatus(lessonId, user)
     }
 
     fun getQuestionsForGivenQuizWithAnswers(quizId: Int): Set<QuizQuestionDTO> {
         return quizQuestionService.getQuestionsForGivenQuizWithAnswers(quizId)
     }
 
-    fun processUserAnswer(quizId: Int, quizQuestionId: Int, answerId: Int): Boolean {
-        return quizProcessService.processUserAnswer(quizId, quizQuestionId, answerId)
+    fun getQuizzes(): Set<QuizDTO> {
+        return quizService.getQuizzes()
     }
 
-    fun getQuizProcess(): Map<Pair<Int, Int>, QuizProcessDTO>{
-        return quizProcessService.getMapState()
+    fun getQuizzesWithCompletionStatus(userId: Int): Set<QuizCompletionStatusDTO> {
+        return quizService.getQuizzesWithCompletionStatus(userId)
     }
 
-    fun hasActiveQuizzes(userId: Int): Boolean {
-        return quizProcessService.hasActiveQuizzes(userId)
-    }
-
-    fun startQuizForUser(userId: Int, quizId: Int) {
-        quizProcessService.startQuiz(userId, quizId)
-    }
-
-    fun finishQuizForUser(userId: Int, quizId: Int) {
-        quizProcessService.finishQuiz(userId, quizId)
+    fun getQuizResult(quizId: Int,lessonId: Int ,userId: Int): QuizResultDTO? {
+        return quizService.getQuizResult(quizId,lessonId ,userId)
     }
 }

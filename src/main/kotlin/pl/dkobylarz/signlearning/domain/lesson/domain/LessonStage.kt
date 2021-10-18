@@ -14,9 +14,5 @@ data class LessonStage(
     val lessonId: Int,
     @MappedCollection(idColumn = "lesson_stage_id")
     val lessonStageElements: MutableSet<LessonStageElement>
-) {
-    fun addStageElement(lessonStageElement: LessonStageElement) {
-        this.lessonStageElements.add(lessonStageElement)
-    }
-}
+)
 
