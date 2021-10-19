@@ -33,6 +33,7 @@ const LessonContentWrapper = styled.div`
 function LessonPage() {
     const [lessons, setLessons] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
+    const [userInfo, setUserInfo] = useState({ lastActivityDateTime: new Date().toLocaleTimeString(), consecutiveDays: 0, gainedPoints: 0 });
     const { state, dispatch } = useContext(GlobalContext);
 
     useEffect(async () => {
@@ -40,18 +41,20 @@ function LessonPage() {
             type: "SET_PAGE",
             payload: { page: LESSON_PAGE }
         })
-
         renderNotificationIfExists();
         await terminateActiveQuizzes();
+        fetchUserBasicInfo();
         fetchLessons();
         fetchQuizzes();
     }, []);
 
     const terminateActiveQuizzes = async () => {
-        const { data } = await AxiosClient.get(`/quizzes/process`)
-        if (data.quizId != null) {
-            await AxiosClient.post(`/quizzes/process/quiz/${data.quizId}/finish`)
-        }
+        await AxiosClient.post(`/quizzes/process/quiz/terminate`)
+    }
+
+    const fetchUserBasicInfo = async () => {
+        const { data } = await AxiosClient.get(`/users/user/info`)
+        setUserInfo(data);
     }
 
     const fetchLessons = async () => {
@@ -120,9 +123,9 @@ function LessonPage() {
                                 <Card.Text>
                                     <Card body>
                                         <ListGroup variant="flush">
-                                            <ListGroup.Item>Ostatnia aktywność: 2020-10-11 15:00:00</ListGroup.Item>
-                                            <ListGroup.Item>Dni nauki z rzędu: 5</ListGroup.Item>
-                                            <ListGroup.Item>Zdobytych punktów: 69</ListGroup.Item>
+                                            <ListGroup.Item>Ostatnia aktywność: {userInfo.lastActivityDateTime}</ListGroup.Item>
+                                            <ListGroup.Item>Dni nauki z rzędu: {userInfo.consecutiveDays}</ListGroup.Item>
+                                            <ListGroup.Item>Zdobytych punktów: {userInfo.gainedPoints}</ListGroup.Item>
                                         </ListGroup>
                                     </Card>
                                 </Card.Text>

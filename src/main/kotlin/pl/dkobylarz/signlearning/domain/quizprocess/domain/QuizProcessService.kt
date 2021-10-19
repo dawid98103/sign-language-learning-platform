@@ -47,7 +47,15 @@ class QuizProcessService(
         return answerCorrectness
     }
 
-    fun getActiveQuizProcess(userId: Int): ActiveQuizProcessDTO? {
+
+    fun terminateActiveQuizz(userId: Int) {
+        val activeQuizProcessDTO = getActiveQuizProcess(userId)
+        activeQuizProcessDTO?.let {
+            finishQuizForUser(userId, it.quizId)
+        }
+    }
+
+    private fun getActiveQuizProcess(userId: Int): ActiveQuizProcessDTO? {
         val activeQuizProcess = quizProcess.asSequence()
             .find { it.key.first == userId }
 

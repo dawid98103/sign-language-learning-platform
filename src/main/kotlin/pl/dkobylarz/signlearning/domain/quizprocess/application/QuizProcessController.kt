@@ -1,11 +1,11 @@
 package pl.dkobylarz.signlearning.domain.quizprocess.application
 
 import lombok.RequiredArgsConstructor
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import pl.dkobylarz.signlearning.domain.quizprocess.QuizProcessFacade
-import pl.dkobylarz.signlearning.domain.quizprocess.dto.ActiveQuizProcessDTO
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import java.time.LocalDateTime
 
@@ -41,10 +41,11 @@ class QuizProcessController(private val quizProcessFacade: QuizProcessFacade) {
         return ResponseEntity.ok(isTheCorrectAnswer)
     }
 
-    @GetMapping("")
-    fun getActiveQuizProcessForUser(
+    @PostMapping("/quiz/terminate")
+    fun terminateActiveQuizzesForUser(
         @AuthenticationPrincipal user: User
-    ): ResponseEntity<ActiveQuizProcessDTO> {
-        return ResponseEntity.ok(quizProcessFacade.getActiveQuizProcess(user.userId!!))
+    ): ResponseEntity<Any> {
+        quizProcessFacade.terminateActiveQuiz(user.userId!!)
+        return ResponseEntity(HttpStatus.OK)
     }
 }

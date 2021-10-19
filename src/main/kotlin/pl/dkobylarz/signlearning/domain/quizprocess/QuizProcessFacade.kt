@@ -13,10 +13,6 @@ class QuizProcessFacade(private val quizProcessService: QuizProcessService) {
         return quizProcessService.getMapState()
     }
 
-    fun getActiveQuizProcess(userId: Int): ActiveQuizProcessDTO? {
-        return quizProcessService.getActiveQuizProcess(userId)
-    }
-
     fun processUserAnswer(quizId: Int, quizQuestionId: Int, answerId: Int): Boolean {
         return quizProcessService.processUserAnswer(quizId, quizQuestionId, answerId)
     }
@@ -31,5 +27,9 @@ class QuizProcessFacade(private val quizProcessService: QuizProcessService) {
 
     fun hasActiveQuizzes(userId: Int): Boolean {
         return quizProcessService.hasActiveQuizzes(userId)
+    }
+
+    fun terminateActiveQuiz(userId: Int) {
+        quizProcessService.terminateActiveQuizz(userId)
     }
 }

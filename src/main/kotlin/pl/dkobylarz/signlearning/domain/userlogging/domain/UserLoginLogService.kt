@@ -1,6 +1,7 @@
 package pl.dkobylarz.signlearning.domain.userlogging.domain
 
 import org.springframework.stereotype.Service
+import pl.dkobylarz.signlearning.domain.userlogging.dto.UserLoginLogDTO
 import pl.dkobylarz.signlearning.domain.userlogging.infrastructure.UserLoginLogRepository
 import java.time.LocalDateTime
 
@@ -15,5 +16,12 @@ class UserLoginLogService(private val userLoginLogRepository: UserLoginLogReposi
                 LocalDateTime.now()
             )
         )
+    }
+
+    fun getLogsForUser(userId: Int): Set<UserLoginLogDTO> {
+        val userLoginLogs = userLoginLogRepository.findByUserId(userId)
+        return userLoginLogs.asSequence()
+            .map { UserLoginLogMapper.toDTO(it) }
+            .toSet()
     }
 }
