@@ -3,14 +3,20 @@ package pl.dkobylarz.signlearning.domain.lessoncompleted.domain
 import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
 import pl.dkobylarz.signlearning.domain.lessoncompleted.infrastructure.LessonStageCompletedRepository
+import pl.dkobylarz.signlearning.domain.lessoncompleted.infrastructure.UserClient
+import pl.dkobylarz.signlearning.domain.user.constant.PointsToGain
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import java.time.LocalDateTime
 
 @Service
-class LessonStageCompletedService(private val lessonStageCompletedRepository: LessonStageCompletedRepository) {
+class LessonStageCompletedService(
+    private val lessonStageCompletedRepository: LessonStageCompletedRepository,
+    private val userClient: UserClient
+) {
 
     fun setLessonStageAsCompletedByUser(stageId: Int, user: User?) {
         user?.let {
+            addPointsIfUserNotCompletedStageBefore(it.userId!!, stageId)
             setCompletedStatusForUserAndStage(it.userId!!, stageId)
         }
     }
@@ -20,6 +26,12 @@ class LessonStageCompletedService(private val lessonStageCompletedRepository: Le
         user: User
     ): Map<Int, Boolean> {
         return getCompletedStatusForUserAndLessonStage(lessonStageWithoutElements, user)
+    }
+
+    private fun addPointsIfUserNotCompletedStageBefore(userId: Int, stageId: Int){
+        if(!lessonStageCompletedRepository.existsByUserIdAndLessonStageId(userId, stageId)){
+            userClient.addPointsToAccount(userId, PointsToGain.COMPLETE_STAGE)
+        }
     }
 
     private fun setCompletedStatusForUserAndStage(userId: Int, stageId: Int) {

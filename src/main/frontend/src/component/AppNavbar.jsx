@@ -86,7 +86,6 @@ function AppNavbar() {
                             <NavButton href="" onClick={() => history.push("/lesson")} active={state.currentPage === LESSON_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
-                                        alt=""
                                         src={process.env.PUBLIC_URL + "/icons/learning.svg"}
                                         className="d-inline-block align-top"
                                     />
@@ -100,7 +99,6 @@ function AppNavbar() {
                             <NavButton href="">
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
-                                        alt=""
                                         src={process.env.PUBLIC_URL + "/icons/forum.svg"}
                                         className="d-inline-block align-top"
                                     />
@@ -115,12 +113,12 @@ function AppNavbar() {
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         alt=""
-                                        src={process.env.PUBLIC_URL + "/icons/shop.svg"}
+                                        src={process.env.PUBLIC_URL + "/icons/goal.svg"}
                                         className="d-inline-block align-top"
                                     />
                                 </div>
                                 <MenuText>
-                                    Sklep
+                                    Osiągnięcia
                                 </MenuText>
                             </NavButton>
                         </NavLink>
@@ -128,13 +126,12 @@ function AppNavbar() {
                             <NavButton href="">
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
-                                        alt=""
-                                        src={process.env.PUBLIC_URL + "/icons/more.svg"}
+                                        src={process.env.PUBLIC_URL + "/icons/results.svg"}
                                         className="d-inline-block align-top"
                                     />
                                 </div>
                                 <MenuText>
-                                    Więcej
+                                    Wyniki
                                 </MenuText>
                             </NavButton>
                         </NavLink>
@@ -143,15 +140,25 @@ function AppNavbar() {
                 <Navbar.Collapse className="justify-content-end">
                     <Link to="/login">
                         <NavDropdownBlack title="" id="navbarScrollingDropdown">
-                            <NavDropdown.Item onClick={() => state.isAuthenticated ? logout() : pushToLogin()}>
-                                {state.isAuthenticated ? "Wyloguj" : "Zaloguj"}
+                        {state.isAuthenticated ? 
+                        <>
+                            <NavDropdown.Item>
+                                Konto
                             </NavDropdown.Item>
+                            <NavDropdown.Item onClick={() => logout()}>
+                                Wyloguj
+                            </NavDropdown.Item>
+                            </>
+                            :
+                            <NavDropdown.Item onClick={() => pushToLogin()}>
+                                Zaloguj
+                            </NavDropdown.Item>
+                            }
                         </NavDropdownBlack>
                     </Link>
                     <NavButton>
                         {state.user}
                         <NavIcon
-                            alt=""
                             src={process.env.PUBLIC_URL + "/icons/user.svg"}
                             className="d-inline-block align-top"
                         >

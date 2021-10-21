@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonService
 import pl.dkobylarz.signlearning.domain.lesson.domain.LessonStageService
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDTO
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageDTO
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDTO
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonWithCompletionStatusDTO
 import pl.dkobylarz.signlearning.domain.user.domain.User
@@ -18,6 +19,10 @@ class LessonFacade(
 
     fun getLessons(): Set<LessonWithCompletionStatusDTO> {
         return lessonService.getLessons()
+    }
+
+    fun getStagesForLesson(lessonId: Int): Set<LessonStageDTO> {
+        return lessonStageService.getStagesForLesson(lessonId)
     }
 
     fun getElementsForLessonStage(lessonId: Int, stageId: Int): Set<LessonStageElementDTO> {

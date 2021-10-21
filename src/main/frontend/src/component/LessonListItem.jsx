@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import NotificationModal from './modal/NotificationModal';
 import AxiosClient from '../config/axios/AxiosClient';
 import { ListGroup, Collapse } from 'react-bootstrap';
 import history from '../config/history';
@@ -13,16 +14,42 @@ const ListGroupItemWithCursour = styled(ListGroup.Item)`
 
 function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
     const [open, setOpen] = useState(false);
-    const [lessonStages, setLessonStages] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [lessonStages, setLessonStages] = useState(null);
 
     useEffect(() => {
-        AxiosClient.get(`/lessons/${lessonId}/stage`).then((response) => {
-            console.log("ref");
-            setLessonStages(response.data);
-        }).catch((error) => {
-            console.log(error);
-        })
+        fetchLessonStages();
     }, [])
+
+    const checkIsCompleted = () => {
+        let containsFalse = false;
+        lessonStages.forEach(lessonStage => {
+            if (lessonStage.completed === false) {
+                containsFalse = true
+            }
+        })
+
+        if (containsFalse) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    const fetchLessonStages = async () => {
+        const { data } = await AxiosClient.get(`/lessons/${lessonId}/stage`);
+        setLessonStages(data)
+    }
+
+    const handleCloseModal = async () => {
+        setShowModal(false)
+        await AxiosClient.post(`/quizzes/process/quiz/${quiz.quizId}/start`);
+        history.push(`/quiz/${lessonId}/${quiz.quizId}`)
+    }
+
+    const handleQuizStart = () => {
+        setShowModal(true)
+    }
 
     function renderLessonStages() {
         return lessonStages.map(lessonStage => {
@@ -35,42 +62,62 @@ function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
         })
     }
 
-    const handleQuizStart = async () => {
-        await AxiosClient.post(`/quizzes/process/quiz/${quiz.quizId}/start`);
-        history.push(`/quiz/${lessonId}/${quiz.quizId}`)
-    }
-
     return (
         <>
-            <ListGroupItemWithCursour action onClick={() => setOpen(!open)} aria-controls="example-collapse" disabled={disabled} aria-expanded={open}>{lessonName}</ListGroupItemWithCursour>
+            {lessonStages == null ?
+                <>
+                    Loading..
+                </>
+                :
+                <ListGroupItemWithCursour action onClick={() => setOpen(!open)} aria-controls="example-collapse" disabled={disabled} aria-expanded={open}>{lessonName} {checkIsCompleted() ? <img
+                    alt=""
+                    src={process.env.PUBLIC_URL + "/icons/valid.svg"}
+                    width="30"
+                    height="30"
+                    style={{ marginRight: 10 }}
+                    className="d-inline-block align-center"
+                /> : ""}</ListGroupItemWithCursour>
+            }
             <Collapse in={open}>
-                <div id="example-collapse">
-                    {renderLessonStages(lessonStages)}
-                    {quiz &&
-                        <ListGroupItemWithCursour action
-                            key={quiz.quizId}
-                            variant="flush"
-                            disabled={quiz.quizResult != null}
-                            onClick={() => handleQuizStart()}>
-                            <div>
-                                <img
-                                    alt=""
-                                    src={process.env.PUBLIC_URL + "/icons/quiz.svg"}
-                                    width="30"
-                                    height="30"
-                                    style={{ marginRight: 10 }}
-                                    className="d-inline-block align-center"
-                                />
-                                {quiz.title}
-                            </div>
-                            <div>
-                                {quiz.quizResult != null
-                                    ? `Wynik: ${(quiz.quizResult.pointsGained / quiz.quizResult.pointsToGain) * 100}%` : ""}
-                            </div>
-                        </ListGroupItemWithCursour>}
+                {lessonStages == null ?
+                    <>
+                        Loading..
+                    </>
+                    :
+                    <div id="example-collapse">
+                        {renderLessonStages(lessonStages)}
+                        {quiz &&
+                            <ListGroupItemWithCursour action
+                                key={quiz.quizId}
+                                variant="flush"
+                                disabled={quiz.quizResult != null}
+                                onClick={handleQuizStart}>
+                                <div>
+                                    <img
+                                        alt=""
+                                        src={process.env.PUBLIC_URL + "/icons/quiz.svg"}
+                                        width="30"
+                                        height="30"
+                                        style={{ marginRight: 10 }}
+                                        className="d-inline-block align-center"
+                                    />
+                                    {quiz.title}
+                                </div>
+                                <div>
+                                    {quiz.quizResult != null
+                                        ? `Wynik: ${(quiz.quizResult.pointsGained / quiz.quizResult.pointsToGain) * 100}%` : ""}
+                                </div>
+                            </ListGroupItemWithCursour>}
 
-                </div>
+                    </div>
+                }
             </Collapse>
+            <NotificationModal
+                headerText={"Ważna informacja"}
+                contentText={"Kiedy przejdziesz do rozwiązywania quizu nie będzie już możliwości powrotu, każde wyjście w połowie rozwiązywania wiąże się z zapisaniem uzyskanych do tej pory punktów!!"}
+                modalShow={showModal}
+                closeModal={handleCloseModal}
+            />
         </>
     )
 }

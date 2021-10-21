@@ -40,7 +40,7 @@ const TransparentButton = styled(Button)`
 
 function HomePage(params) {
     return (
-        <CenteredMarginContainerWithBackground withBackground={true}>
+        <CenteredMarginContainerWithBackground withbackground={true}>
             <div>
                 <Row>
                     <Col xs={1}></Col>

@@ -8,14 +8,14 @@ const CenteredContainer = styled(Container)`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: ${props => props.withBackground ? "url(" + process.env.PUBLIC_URL + "/pictures/background.jpg)" : "white"};
+    background-image: ${props => props.withbackground ? "url(" + process.env.PUBLIC_URL + "/pictures/background.jpg)" : "white"};
     background-repeat: no-repeat;
     background-size: cover;
 `
 
-function CenteredMarginContainer({ children, withBackground }) {
+function CenteredMarginContainer({ children, withbackground }) {
     return (
-        <CenteredContainer withBackground={withBackground} fluid>
+        <CenteredContainer withbackground={withbackground} fluid>
             {children}
         </CenteredContainer>
     )

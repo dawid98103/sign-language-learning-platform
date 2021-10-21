@@ -2,6 +2,7 @@ package pl.dkobylarz.signlearning.domain.lesson.domain
 
 import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageCompletionDTO
+import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageDTO
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageElementDTO
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
 import pl.dkobylarz.signlearning.domain.lesson.infrastructure.LessonRepository
@@ -51,6 +52,14 @@ class LessonStageService(
             .toSet()
     }
 
+    fun getStagesForLesson(lessonId: Int): Set<LessonStageDTO> {
+        val lesson: Lesson = lessonRepository.findByLessonId(lessonId)
+        val lessonStages = lesson.getStagesForLesson()
+        return lessonStages.asSequence()
+            .map { LessonMapper.toLessonStageDto(it) }
+            .toSet()
+    }
+
     fun getElementsForLessonStage(lessonId: Int, stageId: Int): Set<LessonStageElementDTO> {
         val lesson: Lesson = lessonRepository.findByLessonId(lessonId)
         val lessonStage: LessonStage = lesson.getLessonStageById(stageId)
@@ -60,12 +69,15 @@ class LessonStageService(
             .toSet()
     }
 
+    fun getStageQuantityForLesson(lessonId: Int): Int {
+        val lesson: Lesson = lessonRepository.findByLessonId(lessonId)
+        return lesson.lessonStages.count()
+    }
+
     private fun getStatus(
         completionStageStatusMap: Map<Int, Boolean>,
         lessonStageWithoutElementsDTO: LessonStageWithoutElementsDTO
     ): Boolean {
         return completionStageStatusMap[lessonStageWithoutElementsDTO.lessonStageId]!!
     }
-
-
 }

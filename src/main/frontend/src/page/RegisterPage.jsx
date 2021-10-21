@@ -64,7 +64,6 @@ function RegisterPage() {
             })
             history.push("/")
         }).catch(error => {
-            console.log(error);
             isProcessing(false);
         })
     }
@@ -90,13 +89,6 @@ function RegisterPage() {
     const handleSurnameInput = (event) => {
         const surnameValue = event.target.value;
         setSurname(surnameValue);;
-    }
-
-    const deletePasswordValidationError = (val) => {
-        const index = passwordValidationErrors.indexOf(val);
-        if (index > -1) {
-            passwordValidationErrors.splice(index, 1);
-        }
     }
 
     const handlePasswordInput = (event) => {
@@ -143,15 +135,36 @@ function RegisterPage() {
         console.log(fileValue);
     }
 
+    const deletePasswordValidationError = (val) => {
+        const index = passwordValidationErrors.indexOf(val);
+        if (index > -1) {
+            passwordValidationErrors.splice(index, 1);
+        }
+    }
+
     const validateEmail = (email) => {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
 
+    const validationErrorsExists = () => {
+        if(usernameValidationErrors.length > 0 || nameValidationErrors.length > 0 || surnameValidationErrors.length > 0 || passwordValidationErrors.length > 0 || emailValidationErrors.length > 0){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        registerUser()
+        if(validationErrorsExists()){
+            toast.warning("Wystąpiły błędy walidacji!. Popraw je i spróbuj ponownie", {
+                position: "bottom-right"
+            })
+        }else {
+            registerUser()
+        }
     }
 
     const containsSpecialCharacter = (value) => {
@@ -164,7 +177,7 @@ function RegisterPage() {
     }
 
     return (
-        <CenteredMarginContainer withBackground={false}>
+        <CenteredMarginContainer withbackground={false}>
             <FormWrapper>
                 {processing ?
                     <GlobalSpinner />
@@ -178,7 +191,7 @@ function RegisterPage() {
                                 Zarejestruj się
                             </span>
                         </HeaderTextBlock>
-                        <Form noValidate onSubmit={handleSubmit}>
+                        <Form onSubmit={handleSubmit}>
                             <Row className="mb-3">
                                 <Form.Group as={Col} md="12" controlId="validationCustom01">
                                     <Form.Label>Nazwa użytkownika:</Form.Label>
@@ -189,7 +202,6 @@ function RegisterPage() {
                                         type="text"
                                         placeholder=""
                                         onChange={handleUsernameInput}
-                                        defaultValue=""
                                         isInvalid={usernameValidationErrors.length > 0}
                                     />
                                     {usernameValidationErrors.length > 0 &&
@@ -208,7 +220,6 @@ function RegisterPage() {
                                         type="text"
                                         placeholder=""
                                         onChange={handleNameInput}
-                                        defaultValue=""
                                     />
                                 </Form.Group>
                             </Row>
@@ -216,12 +227,10 @@ function RegisterPage() {
                                 <Form.Group as={Col} md="12" controlId="validationCustom02">
                                     <Form.Label>Nazwisko:</Form.Label>
                                     <Form.Control
-                                        required
                                         value={surname}
                                         type="Nazwisko"
                                         placeholder=""
                                         onChange={handleSurnameInput}
-                                        defaultValue=""
                                     />
                                 </Form.Group>
                             </Row>
@@ -234,7 +243,6 @@ function RegisterPage() {
                                         type="password"
                                         placeholder=""
                                         onChange={handlePasswordInput}
-                                        defaultValue=""
                                         isInvalid={passwordValidationErrors.length > 0}
                                     />
                                     {passwordValidationErrors.includes(ValidationErrors.PASSWORD_TOO_SHORT) &&
@@ -258,7 +266,6 @@ function RegisterPage() {
                                         type="password"
                                         placeholder=""
                                         onChange={handleRepeatPasswordInput}
-                                        defaultValue=""
                                     />
                                 </Form.Group>
                             </Row>
@@ -271,7 +278,6 @@ function RegisterPage() {
                                         type="email"
                                         placeholder=""
                                         onChange={handleEmailInput}
-                                        defaultValue=""
                                         isInvalid={emailValidationErrors.includes(ValidationErrors.BAD_EMAIL)}
                                     />
                                     {emailValidationErrors.includes(ValidationErrors.BAD_EMAIL) &&
@@ -289,7 +295,6 @@ function RegisterPage() {
                                         type="file"
                                         placeholder=""
                                         onChange={handleFileInput}
-                                        defaultValue=""
                                     />
                                     <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 </Form.Group>
@@ -302,51 +307,5 @@ function RegisterPage() {
         </CenteredMarginContainer>
     )
 }
-
-{/* <HeaderTextBlock>
-                    <CloseButtonWrapper>
-                        <Link to="/">
-                            <Image src={process.env.PUBLIC_URL + "/icons/close.svg"} width={40} hieght={40} />
-                        </Link>
-                    </CloseButtonWrapper>
-                    <span style={{ margin: "auto" }}>
-                        Załóż konto
-                    </span>
-                </HeaderTextBlock>
-                <Form>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Nazwa użytkownika</Form.Label>
-                        <Form.Control type="text" size="lg" placeholder="Nazwa użytkownika" onChange={val => setUsername(val.target.value)} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Imię</Form.Label>
-                        <Form.Control type="text" size="lg" placeholder="Imie" onChange={val => setName(val.target.value)} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Nazwisko</Form.Label>
-                        <Form.Control type="text" size="lg" placeholder="Nazwisko" onChange={val => setSurname(val.target.value)} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Hasło</Form.Label>
-                        <Form.Control type="password" size="lg" placeholder="Hasło" onChange={val => setPassword(val.target.value)} />
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" size="lg" placeholder="Email" onChange={val => setEmail(val.target.value)} />
-                    </Form.Group>
-                    <div style={{ textAlign: "center" }}>
-                        <Button variant="primary" className="mt-3" size="lg" disabled={processing} onClick={() => registerUser({ username, name, surname, password, email })}>
-                            {processing &&
-                                <Spinner
-                                    as="span"
-                                    animation="grow"
-                                    size="sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                />}
-                            Zarejestruj się
-                        </Button>
-                    </div>
-                </Form> */}
 
 export default RegisterPage;

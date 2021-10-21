@@ -14,7 +14,7 @@ data class UserPlatform(
     val surname: String,
     val email: String,
     val roleId: Int,
-    val points: Int,
+    var points: Int,
     val active: Boolean,
     val avatarUrl: String,
     @JsonSerialize(using = CustomLocalDateTimeSerializer::class)

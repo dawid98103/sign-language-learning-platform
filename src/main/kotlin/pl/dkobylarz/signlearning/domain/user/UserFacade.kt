@@ -1,14 +1,16 @@
 package pl.dkobylarz.signlearning.domain.user
 
 import org.springframework.stereotype.Service
-import pl.dkobylarz.signlearning.domain.user.domain.BasicInfoService
-import pl.dkobylarz.signlearning.domain.user.domain.User
-import pl.dkobylarz.signlearning.domain.user.domain.UserPlatform
-import pl.dkobylarz.signlearning.domain.user.domain.UserService
+import pl.dkobylarz.signlearning.domain.user.constant.PointsToGain
+import pl.dkobylarz.signlearning.domain.user.domain.*
 import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoDTO
 
 @Service
-class UserFacade(private val userService: UserService, private val basicInfoService: BasicInfoService) {
+class UserFacade(
+    private val userService: UserService,
+    private val basicInfoService: BasicInfoService,
+    private val userPointsService: UserPointsService
+) {
 
     fun saveUser(user: User) {
         userService.saveUser(user)
@@ -24,6 +26,10 @@ class UserFacade(private val userService: UserService, private val basicInfoServ
 
     fun getUserBasicInfo(userId: Int): UserBasicInfoDTO? {
         return basicInfoService.getUserBasicInfo(userId)
+    }
+
+    fun assignPointsToAccount(userId: Int, pointsToGain: PointsToGain) {
+        userPointsService.addPointsToAccount(userId, pointsToGain)
     }
 
     fun existsByUsername(username: String): Boolean {

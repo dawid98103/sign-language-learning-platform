@@ -23,7 +23,7 @@ class User(
     @Email
     val email: String? = "",
     val roleId: Int? = null,
-    val points: Int? = 0,
+    var points: Int? = 0,
     val active: Boolean? = false,
     @Size(max = 2083, message = "url should have max 2083 chars!")
     val avatarUrl: String = "",

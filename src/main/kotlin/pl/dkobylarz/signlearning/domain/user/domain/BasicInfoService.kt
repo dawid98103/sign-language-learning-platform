@@ -62,6 +62,10 @@ class BasicInfoService(private val userRepository: UserRepository, private val u
             }
         }
 
-        return daysCount
+        return if(daysCount > 0){
+            daysCount + 1
+        }else {
+            daysCount
+        }
     }
 }

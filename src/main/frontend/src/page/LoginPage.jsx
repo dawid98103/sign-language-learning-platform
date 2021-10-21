@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useRef ,useContext } from 'react'
 import { Image, Form, Button, Row, Col } from 'react-bootstrap'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
@@ -40,7 +40,6 @@ function LoginPage() {
     const { dispatch } = useContext(GlobalContext);
 
     function loginUser() {
-        setIsProcessing(true)
         AxiosClient.post("/auth/signin", { username, password }).then(response => {
             const { username, avatarUrl, token, roles } = response.data;
             dispatch({
@@ -60,23 +59,22 @@ function LoginPage() {
     const handleUsernameInput = (event) => {
         const usernameValue = event.target.value;
         setUsername(usernameValue);
-        console.log(username);
     }
 
     const handlePasswordInput = (event) => {
         const passwordValue = event.target.value;
         setPassword(passwordValue);
-        console.log(password);
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        loginUser()
+        setIsProcessing(true)
+        loginUser();
     }
 
     return (
-        <CenteredMarginContainer withBackground={false}>
+        <CenteredMarginContainer withbackground={false}>
             <FormWrapper>
                 {processing ?
                     <GlobalSpinner />
@@ -84,38 +82,37 @@ function LoginPage() {
                     <>
                         <HeaderTextBlock>
                             <CloseButtonWrapper>
-                                <Link to="/">
-                                    <Image src={process.env.PUBLIC_URL + "/icons/close.svg"} width={40} hieght={40} />
-                                </Link>
+                            <CloseButtonWrapper>
+                                <Button onClick={() => history.push("/")}>X</Button>
+                            </CloseButtonWrapper>
                             </CloseButtonWrapper>
                             <span style={{ margin: "auto" }}>
                                 Zaloguj się
                             </span>
                         </HeaderTextBlock>
-                        <Form noValidate onSubmit={handleSubmit}>
+                        <Form onSubmit={handleSubmit}>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                <Form.Group as={Col} md="12">
                                     <Form.Label>Nazwa użytkownika</Form.Label>
                                     <Form.Control
                                         required
                                         type="text"
                                         placeholder="Nazwa użytkownika"
                                         onChange={handleUsernameInput}
-                                        defaultValue=""
+                                        value={username}
                                     />
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="validationCustom02">
+                                <Form.Group as={Col} md="12">
                                     <Form.Label>Hasło</Form.Label>
                                     <Form.Control
                                         required
                                         type="password"
                                         placeholder="Hasło"
                                         onChange={handlePasswordInput}
-                                        defaultValue=""
+                                        value={password}
                                     />
-                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 </Form.Group>
                             </Row>
                             <Button type="submit">Zaloguj się</Button>

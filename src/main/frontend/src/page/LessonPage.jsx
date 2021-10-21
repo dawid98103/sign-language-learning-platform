@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { Col, ListGroup, Row, Card, Image } from 'react-bootstrap';
+import Placeholder from 'react-bootstrap/Placeholder'
 import LessonListItem from '../component/LessonListItem';
 import MarginContainer from '../component/MarginContainer';
 import AxiosClient from '../config/axios/AxiosClient';
@@ -33,7 +34,7 @@ const LessonContentWrapper = styled.div`
 function LessonPage() {
     const [lessons, setLessons] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
-    const [userInfo, setUserInfo] = useState({ lastActivityDateTime: new Date().toLocaleTimeString(), consecutiveDays: 0, gainedPoints: 0 });
+    const [userInfo, setUserInfo] = useState(null);
     const { state, dispatch } = useContext(GlobalContext);
 
     useEffect(async () => {
@@ -99,7 +100,6 @@ function LessonPage() {
                                                 key={lesson.lessonId}
                                                 lessonId={lesson.lessonId}
                                                 lessonName={lesson.lessonId + ". " + lesson.name}
-                                                isCompleted={false}
                                                 disabled={!state.isAuthenticated && lesson.loginRequired}
                                                 quiz={getQuizForLesson(lesson.lessonId)}
                                             />
@@ -123,9 +123,26 @@ function LessonPage() {
                                 <Card.Text>
                                     <Card body>
                                         <ListGroup variant="flush">
-                                            <ListGroup.Item>Ostatnia aktywność: {userInfo.lastActivityDateTime}</ListGroup.Item>
-                                            <ListGroup.Item>Dni nauki z rzędu: {userInfo.consecutiveDays}</ListGroup.Item>
-                                            <ListGroup.Item>Zdobytych punktów: {userInfo.gainedPoints}</ListGroup.Item>
+                                            {userInfo == null ? 
+                                            <>
+                                                <Placeholder as={ListGroup.Item} animation="glow"> 
+                                                    <Placeholder xs={12} />
+                                                </Placeholder>
+                                                <Placeholder as={ListGroup.Item} animation="glow"> 
+                                                    <Placeholder xs={12} />
+                                                </Placeholder>
+                                                <Placeholder as={ListGroup.Item} animation="glow"> 
+                                                    <Placeholder xs={12} />
+                                                </Placeholder>
+                                                
+                                            </>
+                                            : 
+                                            <>
+                                                <ListGroup.Item>Ostatnia aktywność: {userInfo.lastActivityDateTime}</ListGroup.Item>
+                                                <ListGroup.Item>Dni nauki z rzędu: {userInfo.consecutiveDays}</ListGroup.Item>
+                                                <ListGroup.Item>Zdobytych punktów: {userInfo.gainedPoints}</ListGroup.Item>      
+                                            </>
+                                            }
                                         </ListGroup>
                                     </Card>
                                 </Card.Text>
