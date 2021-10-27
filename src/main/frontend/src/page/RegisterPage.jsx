@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react'
-import { Image, Form, Button, Col, Row } from 'react-bootstrap'
+import { Form, Button, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components';
-import history from '../config/history';
 import ValidationErrors from '../constants/ValidationErrors';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import AxiosClient from '../config/axios/AxiosClient'
 import { GlobalContext } from '../context/GlobalContext';
 import { toast } from 'react-toastify';

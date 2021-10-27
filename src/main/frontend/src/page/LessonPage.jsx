@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Col, ListGroup, Row, Card, Image } from 'react-bootstrap';
 import Placeholder from 'react-bootstrap/Placeholder'
 import LessonListItem from '../component/LessonListItem';
+import GlobalContentWrapper from '../component/GlobalContentWrapper';
 import MarginContainer from '../component/MarginContainer';
 import AxiosClient from '../config/axios/AxiosClient';
 import { GlobalContext } from '../context/GlobalContext';
@@ -22,13 +23,6 @@ const ListGroupWithMargin = styled(ListGroup)`
 
 const UserCard = styled(Card)`
     margin: 1rem 10px 1rem 10px;
-`
-
-const LessonContentWrapper = styled.div`
-    padding: 20px;
-    border: 0.5px solid #e5e5e5;
-    border-radius: 25px;
-    width: 100%;
 `
 
 function LessonPage() {
@@ -87,7 +81,7 @@ function LessonPage() {
 
     return (
         <MarginContainer>
-            <LessonContentWrapper>
+            <GlobalContentWrapper>
                 <Row>
                     <Col sm={7}>
                         <ListGroupWithMargin>
@@ -150,7 +144,7 @@ function LessonPage() {
                         </UserCard>
                     </Col>
                 </Row>
-            </LessonContentWrapper>
+            </GlobalContentWrapper>
         </MarginContainer>
     )
 }

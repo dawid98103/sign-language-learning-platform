@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
-import { LESSON_PAGE } from '../constants/Pages';
+import { LESSON_PAGE, FORUM_PAGE } from '../constants/Pages';
 import history from '../config/history'
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
@@ -96,7 +96,7 @@ function AppNavbar() {
                             </NavButton>
                         </NavLink>
                         <NavLink>
-                            <NavButton href="">
+                            <NavButton href="" onClick={() => history.push("/forum")} active={state.currentPage === FORUM_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         src={process.env.PUBLIC_URL + "/icons/forum.svg"}
