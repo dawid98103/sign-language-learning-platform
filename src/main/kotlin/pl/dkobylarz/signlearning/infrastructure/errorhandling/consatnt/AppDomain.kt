@@ -9,5 +9,6 @@ enum class AppDomain(val domainId: Int, @JsonValue val domainName: String) {
     QUIZ(4, "QUIZ"),
     QUIZ_COMPLETED(5, "QUIZ_COMPLETED"),
     USER(6, "USER"),
-    USER_LOGGING(7, "USER_LOGGING")
+    USER_LOGGING(7, "USER_LOGGING"),
+    FORUM(8, "FORUM")
 }

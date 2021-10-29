@@ -11,17 +11,21 @@ import java.time.LocalDateTime
 
 @Table("post")
 data class Post(
-        @Id
-        val postId: Int,
-        val topic: String,
-        val content: String,
-        @JsonSerialize(using = CustomLocalDateTimeSerializer::class)
-        @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
-        val creationDate: LocalDateTime,
-        @JsonSerialize(using = CustomLocalDateTimeSerializer::class)
-        @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
-        val updateDate: LocalDateTime,
-        val userId: Int,
-        @MappedCollection(keyColumn = "post_id", idColumn = "post_id")
-        val comments: Set<Comment>
-)
+    @Id
+    val postId: Int,
+    val topic: String,
+    val content: String,
+    @JsonSerialize(using = CustomLocalDateTimeSerializer::class)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
+    val creationDate: LocalDateTime,
+    @JsonSerialize(using = CustomLocalDateTimeSerializer::class)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
+    val updateDate: LocalDateTime,
+    val userId: Int,
+    @MappedCollection(idColumn = "post_id", keyColumn = "post_id")
+    var comments: MutableSet<Comment>
+){
+    fun addComment(comment: Comment){
+        this.comments.add(comment)
+    }
+}

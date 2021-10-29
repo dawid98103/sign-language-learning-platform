@@ -60,6 +60,22 @@ function AppNavbar() {
         history.push("/");
     }
 
+    const handleChangeToLessonPage = () => {
+        dispatch({
+            type: "SET_PAGE",
+            payload: { page: LESSON_PAGE }
+        })
+        history.push("/lesson")
+    }
+
+    const handleChangeToForumPage = () => {
+        dispatch({
+            type: "SET_PAGE",
+            payload: { page: FORUM_PAGE }
+        })
+        history.push("/forum")
+    }
+
     function pushToLogin() {
         history.push("/login");
     }
@@ -83,7 +99,7 @@ function AppNavbar() {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavLink>
-                            <NavButton href="" onClick={() => history.push("/lesson")} active={state.currentPage === LESSON_PAGE}>
+                            <NavButton href="" onClick={handleChangeToLessonPage} active={state.currentPage === LESSON_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         src={process.env.PUBLIC_URL + "/icons/learning.svg"}
@@ -96,7 +112,7 @@ function AppNavbar() {
                             </NavButton>
                         </NavLink>
                         <NavLink>
-                            <NavButton href="" onClick={() => history.push("/forum")} active={state.currentPage === FORUM_PAGE}>
+                            <NavButton href="" onClick={handleChangeToForumPage} active={state.currentPage === FORUM_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         src={process.env.PUBLIC_URL + "/icons/forum.svg"}
@@ -140,19 +156,19 @@ function AppNavbar() {
                 <Navbar.Collapse className="justify-content-end">
                     <Link to="/login">
                         <NavDropdownBlack title="" id="navbarScrollingDropdown">
-                        {state.isAuthenticated ? 
-                        <>
-                            <NavDropdown.Item>
-                                Konto
-                            </NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => logout()}>
-                                Wyloguj
-                            </NavDropdown.Item>
-                            </>
-                            :
-                            <NavDropdown.Item onClick={() => pushToLogin()}>
-                                Zaloguj
-                            </NavDropdown.Item>
+                            {state.isAuthenticated ?
+                                <>
+                                    <NavDropdown.Item>
+                                        Konto
+                                    </NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => logout()}>
+                                        Wyloguj
+                                    </NavDropdown.Item>
+                                </>
+                                :
+                                <NavDropdown.Item onClick={() => pushToLogin()}>
+                                    Zaloguj
+                                </NavDropdown.Item>
                             }
                         </NavDropdownBlack>
                     </Link>

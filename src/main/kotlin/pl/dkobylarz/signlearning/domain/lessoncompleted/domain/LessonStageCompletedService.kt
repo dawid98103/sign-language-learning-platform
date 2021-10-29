@@ -3,7 +3,7 @@ package pl.dkobylarz.signlearning.domain.lessoncompleted.domain
 import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
 import pl.dkobylarz.signlearning.domain.lessoncompleted.infrastructure.LessonStageCompletedRepository
-import pl.dkobylarz.signlearning.domain.lessoncompleted.infrastructure.UserClient
+import pl.dkobylarz.signlearning.domain.lessoncompleted.infrastructure.LessonCompletedUserClient
 import pl.dkobylarz.signlearning.domain.user.constant.PointsToGain
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import java.time.LocalDateTime
@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 @Service
 class LessonStageCompletedService(
     private val lessonStageCompletedRepository: LessonStageCompletedRepository,
-    private val userClient: UserClient
+    private val lessonCompletedUserClient: LessonCompletedUserClient
 ) {
 
     fun setLessonStageAsCompletedByUser(stageId: Int, user: User?) {
@@ -30,7 +30,7 @@ class LessonStageCompletedService(
 
     private fun addPointsIfUserNotCompletedStageBefore(userId: Int, stageId: Int){
         if(!lessonStageCompletedRepository.existsByUserIdAndLessonStageId(userId, stageId)){
-            userClient.addPointsToAccount(userId, PointsToGain.COMPLETE_STAGE)
+            lessonCompletedUserClient.addPointsToAccount(userId, PointsToGain.COMPLETE_STAGE)
         }
     }
 

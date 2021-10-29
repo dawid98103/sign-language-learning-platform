@@ -48,24 +48,27 @@ class BasicInfoService(private val userRepository: UserRepository, private val u
             .sortedDescending()
             .toList()
 
-        if (userLoginDates[0].equals(currentDate)) {
-            for (i in userLoginLogs.indices) {
-                if (i == userLoginLogs.size - 1) {
-                    break
-                } else {
-                    if (userLoginDates[i].minusDays(1).equals(userLoginDates[i + 1])) {
-                        daysCount += 1
-                    } else {
+        if(userLoginDates.size < 2){
+            return 0
+        }else {
+            if (userLoginDates[0].equals(currentDate)) {
+                for (i in userLoginLogs.indices) {
+                    if (i == userLoginLogs.size - 1) {
                         break
+                    } else {
+                        if (userLoginDates[i].minusDays(1).equals(userLoginDates[i + 1])) {
+                            daysCount += 1
+                        } else {
+                            break
+                        }
                     }
                 }
             }
-        }
-
-        return if(daysCount > 0){
-            daysCount + 1
-        }else {
-            daysCount
+            return if(daysCount > 0){
+                daysCount + 1
+            }else {
+                daysCount
+            }
         }
     }
 }

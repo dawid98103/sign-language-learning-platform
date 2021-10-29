@@ -18,8 +18,7 @@ import pl.dkobylarz.signlearning.domain.user.domain.User
 @RequiredArgsConstructor
 @RequestMapping("/quizzes")
 class QuizController(
-    private val quizFacade: QuizFacade,
-    private val quizProcessFacade: QuizProcessFacade
+    private val quizFacade: QuizFacade
 ) {
 
     @GetMapping("")

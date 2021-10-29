@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Image } from 'react-bootstrap';
 import styled from 'styled-components';
 
-const PostWrapper = styled.div`
+const CommentWrapper = styled.div`
     display: flex,
     padding:25px;
     border: 2px solid #e5e5e5;
@@ -14,8 +14,8 @@ const PostWrapper = styled.div`
 `
 
 const ContentWrapper = styled.div`
-    display: flex,
-    padding: 10px;
+    display: flex;
+    padding: 15px;
 `
 
 const ImageWrapper = styled.div`
@@ -28,41 +28,28 @@ const ImageWrapper = styled.div`
     justify-content: center;
 `
 
-const TitleWrapper = styled.div`
-    display: flex;
-    padding: 16px 12px 16px 12px;
-    height: 100%;
-    width: 100%;
-    font-size: 1.2em;
-    font-weight: bold;
-`
-
 const FittedImage = styled(Image)`
     width: 100%;
     height: auto;
 `
 
-function PostListElement({ title, content, author, creationDate, avatar, openPost }) {
+function CommentListElement({ content, author, creationDate, avatar }) {
     return (
-        <PostWrapper onClick={openPost}>
+        <CommentWrapper>
             <Container>
                 <Row>
                     <Col xs={2}>
                         <ImageWrapper>
-                            <FittedImage src={avatar} rounded />
+                            {/* <FittedImage src={avatar} rounded /> */}
                         </ImageWrapper>
                     </Col>
                     <Col xs={10}>
-                        <Row>
-                            <TitleWrapper>
-                                {title}
-                            </TitleWrapper>
-                        </Row>
                         <Row>
                             <ContentWrapper>
                                 {content}
                             </ContentWrapper>
                         </Row>
+                        <hr />
                         <Row>
                             <Col lg={5}>
                                 <p>Autor: {author}</p>
@@ -74,8 +61,8 @@ function PostListElement({ title, content, author, creationDate, avatar, openPos
                     </Col>
                 </Row>
             </Container>
-        </PostWrapper>
+        </CommentWrapper>
     )
 }
 
-export default PostListElement;
+export default CommentListElement;

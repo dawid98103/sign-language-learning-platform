@@ -3,7 +3,6 @@ package pl.dkobylarz.signlearning.domain.lessoncompleted
 import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.lesson.dto.LessonStageWithoutElementsDTO
 import pl.dkobylarz.signlearning.domain.lessoncompleted.domain.LessonStageCompletedService
-import pl.dkobylarz.signlearning.domain.lessoncompleted.infrastructure.UserClient
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
 @Service

@@ -7,3 +7,10 @@ html, body {
     height: 100%;
     margin: 0;
 }
+
+hr {
+    border-right-color: initial;
+    border-bottom-color: initial;
+    border-left-color: initial;
+    border-top-color: rgb(55, 60, 62);
+}
