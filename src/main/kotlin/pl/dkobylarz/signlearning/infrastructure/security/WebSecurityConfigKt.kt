@@ -23,29 +23,29 @@ import pl.dkobylarz.signlearning.domain.authorization.domain.UserDetailsServiceI
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class WebSecurityConfigKt(
-    private val authEntryPoint: AuthEntryPoint,
-    private val jwtTokenFilter: JwtTokenFilter,
-    private val userDetailsServiceImpl: UserDetailsServiceImpl
+        private val authEntryPoint: AuthEntryPoint,
+        private val jwtTokenFilter: JwtTokenFilter,
+        private val userDetailsServiceImpl: UserDetailsServiceImpl
 ) : WebSecurityConfigurerAdapter() {
 
     companion object {
         private val AUTH_WHITELIST = arrayOf(
-            // -- Swagger UI v2
-            "/v2/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**",
-            // -- Swagger UI v3 (OpenAPI)
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/static/**",
-            "/lessons",
-            "/quizzes",
-            "/**/stage",
-            "/auth/**"
+                // -- Swagger UI v2
+                "/v2/api-docs",
+                "/swagger-resources",
+                "/swagger-resources/**",
+                "/configuration/ui",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**",
+                // -- Swagger UI v3 (OpenAPI)
+                "/v3/api-docs/**",
+                "/swagger-ui/**",
+                "/static/**",
+                "/lessons",
+                "/quizzes",
+                "/**/stage",
+                "/auth/**"
         )
     }
 
@@ -62,7 +62,11 @@ class WebSecurityConfigKt(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", CorsConfiguration().applyPermitDefaultValues())
+        val configuration = CorsConfiguration()
+        configuration.allowedOrigins = listOf("*")
+        configuration.allowedMethods = listOf("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE")
+        configuration.allowedHeaders = listOf("*")
+        source.registerCorsConfiguration("/**", configuration)
         return source
     }
 
@@ -72,10 +76,10 @@ class WebSecurityConfigKt(
 
     override fun configure(http: HttpSecurity?) {
         http?.cors()?.and()?.csrf()?.disable()
-            ?.exceptionHandling()?.authenticationEntryPoint(authEntryPoint)?.and()
-            ?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)?.and()
-            ?.authorizeRequests()?.antMatchers(*AUTH_WHITELIST)?.permitAll()
-            ?.anyRequest()?.authenticated()
+                ?.exceptionHandling()?.authenticationEntryPoint(authEntryPoint)?.and()
+                ?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)?.and()
+                ?.authorizeRequests()?.antMatchers(*AUTH_WHITELIST)?.permitAll()
+                ?.anyRequest()?.authenticated()
 
         http?.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
     }

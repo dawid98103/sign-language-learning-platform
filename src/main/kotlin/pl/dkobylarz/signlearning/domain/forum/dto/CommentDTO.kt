@@ -13,5 +13,6 @@ data class CommentDTO(
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
     val creationDate: LocalDateTime,
     val avatarUrl: String,
-    val author: String
+    val author: String,
+    val editable: Boolean
 )

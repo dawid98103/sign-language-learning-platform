@@ -7,10 +7,15 @@ import GlobalSpinner from '../component/GlobalSpinner';
 import CommentListElement from '../component/CommentListElement';
 import history from '../config/history';
 import styled from 'styled-components';
+import { set } from 'react-hook-form';
 
 const PostHeader = styled.div`
     display: flex;
     padding: 20px 0px 20px 0px;
+`
+
+const ContentWrapper = styled.div`
+    padding: 5px 0px 5px 0px;
 `
 
 const ImageWrapper = styled.div`
@@ -30,15 +35,29 @@ const FittedImage = styled(Image)`
 
 function PostPage({ match }) {
     const [post, setPost] = useState(null)
+    const [refresh, setRefresh] = useState(false);
+    const [comment, setComment] = useState("")
 
     useEffect(() => {
         fetchPost()
-    }, [])
+    }, [refresh])
 
     const fetchPost = async () => {
-        console.log(match)
         const { data } = await AxiosClient.get(`/forum/post/${match.params.postId}`)
         setPost(data)
+    }
+
+    const addComment = async () => { 
+        console.log(comment)   
+        if(comment.length > 0){
+            await AxiosClient.patch(`/forum/post/comment`, {content: comment, postId: match.params.postId})
+            setRefresh(!refresh)
+        }
+    }
+
+    const handleChangeComment = (event) => {
+        const commentContent = event.target.value;
+        setComment(commentContent)
     }
 
     return (
@@ -52,15 +71,21 @@ function PostPage({ match }) {
                             <Container>
                                 <PostHeader>
                                     <Row>
-                                        <Col xs={3} md={5}>
+                                        <Col xs={2}>
                                             <ImageWrapper>
                                                 <FittedImage src={post.simplePostDTO.avatarUrl} rounded />
                                             </ImageWrapper>
                                         </Col>
-
-                                        <Col xs={9} md={7}>
+                                        <Col xs={10}>
                                             <h4>{post.simplePostDTO.topic}</h4>
-                                            {post.simplePostDTO.content}
+                                            <ContentWrapper>
+                                                {post.simplePostDTO.content}
+                                            </ContentWrapper>
+                                            <hr />
+                                            <Row>
+                                                <Col>Autor: {post.simplePostDTO.author}</Col>
+                                                <Col>Data utworzenia: {post.simplePostDTO.creationDate}</Col>
+                                            </Row>
                                         </Col>
                                     </Row>
                                 </PostHeader>
@@ -68,9 +93,9 @@ function PostPage({ match }) {
                                 <Row>
                                     <Form>
                                         <Form.Group className="mb-3">
-                                            <Form.Control as="textarea" rows={3} placeholder="Dodaj komentarz..." />
+                                            <Form.Control as="textarea" rows={3} value={comment} onChange={handleChangeComment} placeholder="Dodaj komentarz..." />
                                         </Form.Group>
-                                        <Button>Dodaj komentarz +</Button>
+                                        <Button onClick={addComment}>Dodaj komentarz +</Button>
                                     </Form>
                                 </Row>
                             </Container>

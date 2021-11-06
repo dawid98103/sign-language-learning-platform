@@ -18,8 +18,9 @@ import pl.dkobylarz.signlearning.domain.user.domain.User
 class ForumController(private val forumFacade: ForumFacade) {
 
     @GetMapping("/post/{postId}")
-    fun getPosts(@PathVariable postId: Int): ResponseEntity<PostDTO> {
-        val post: PostDTO = forumFacade.getPost(postId)
+    fun getPosts(@PathVariable postId: Int,
+                 @AuthenticationPrincipal user: User): ResponseEntity<PostDTO> {
+        val post: PostDTO = forumFacade.getPost(postId, user)
         return ResponseEntity.ok(post)
     }
 
@@ -31,19 +32,19 @@ class ForumController(private val forumFacade: ForumFacade) {
 
     @PostMapping("/post")
     fun createPost(
-        @RequestBody post: CreatePostDTO,
-        @AuthenticationPrincipal user: User?
+            @RequestBody post: CreatePostDTO,
+            @AuthenticationPrincipal user: User
     ): ResponseEntity<MessageResponseDTO> {
-        forumFacade.createPost(post, user?.userId!!)
+        forumFacade.createPost(post, user)
         return ResponseEntity.ok(MessageResponseDTO("Pomyślnie utworzono post!"))
     }
 
     @PatchMapping("/post/comment")
     fun createComment(
-        @RequestBody comment: CreateCommentDTO,
-        @AuthenticationPrincipal user: User?
+            @RequestBody comment: CreateCommentDTO,
+            @AuthenticationPrincipal user: User
     ): ResponseEntity<MessageResponseDTO> {
-        forumFacade.createComment(comment, user?.userId!!)
+        forumFacade.createComment(comment, user)
         return ResponseEntity.ok(MessageResponseDTO("Pomyślnie utworzono komentarz!"))
     }
 }

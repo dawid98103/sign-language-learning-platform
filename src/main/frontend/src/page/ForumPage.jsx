@@ -46,7 +46,7 @@ function ForumPage() {
     }
 
     const prepareContent = (content) => {
-        return content.substring(0, 256).concat("...")
+        return content.substring(0, 128).concat("...")
     }
 
     const handleSearchPost = (event) => {

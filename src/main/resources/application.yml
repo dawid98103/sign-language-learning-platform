@@ -9,13 +9,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/sign_language_platform
+    url: jdbc:postgresql://localhost:5432/sign_language_platform_2
     username: sign_language_learn_platform_user
     password: sign_language_learn_platform_password
     hikari:
       maximum-pool-size: 10
   flyway:
-    url: jdbc:postgresql://localhost:5432/sign_language_platform
+    url: jdbc:postgresql://localhost:5432/sign_language_platform_2
     user: sign_language_learn_platform_user
     password: sign_language_learn_platform_password
     table: schema_history

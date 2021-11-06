@@ -5,6 +5,7 @@ import styled from 'styled-components';
 const CommentWrapper = styled.div`
     display: flex,
     padding:25px;
+    margin-top: 10px;
     border: 2px solid #e5e5e5;
     border-radius: 15px;
     &:hover {
@@ -40,7 +41,7 @@ function CommentListElement({ content, author, creationDate, avatar }) {
                 <Row>
                     <Col xs={2}>
                         <ImageWrapper>
-                            {/* <FittedImage src={avatar} rounded /> */}
+                            <FittedImage src={avatar} rounded />
                         </ImageWrapper>
                     </Col>
                     <Col xs={10}>
