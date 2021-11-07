@@ -53,8 +53,13 @@ class ForumMapper {
             )
         }
 
-        fun mapToPostDTO(post: Post, userPlatform: UserPlatform, currentlyLoggedUser: User): PostDTO {
-            val simplePostDTO: SimplePostDTO = mapToSimplePost(post, userPlatform, currentlyLoggedUser)
+        fun mapToPostDTO(
+            post: Post,
+            userPlatform: UserPlatform,
+            currentlyLoggedUser: User,
+            postLikes: Set<PostLikeDTO>
+        ): PostDTO {
+            val simplePostDTO: SimplePostDTO = mapToSimplePost(post, userPlatform, currentlyLoggedUser, postLikes)
             return PostDTO(
                 simplePostDTO,
                 emptySet()
@@ -75,7 +80,8 @@ class ForumMapper {
         fun mapToSimplePost(
             post: Post,
             userPlatform: UserPlatform,
-            currentlyLoggedUser: User
+            currentlyLoggedUser: User,
+            postLikes: Set<PostLikeDTO>
         ): SimplePostDTO {
             return SimplePostDTO(
                 post.postId,
@@ -84,7 +90,8 @@ class ForumMapper {
                 userPlatform.username,
                 userPlatform.avatarUrl,
                 post.creationDate,
-                userPlatform.userId == currentlyLoggedUser.userId
+                userPlatform.userId == currentlyLoggedUser.userId,
+                postLikes
             )
         }
     }

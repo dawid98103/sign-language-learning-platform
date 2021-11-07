@@ -68,12 +68,25 @@ const FullHeightRow = styled(Row)`
     height: 100%;
 `
 
-function PostListElement({ postId, topic, content, author, creationDate, avatarUrl, editable, openPost, openDeleteModal, openEditModal }) {
+const PostInfoBarWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    &:hover{
+        cursor: pointer;
+        filter: ${props => props.userAddLike ? "invert(27%) sepia(40%) saturate(3502%) hue-rotate(332deg) brightness(96%) contrast(91%);" : "invert(23%) sepia(79%) saturate(4294%) hue-rotate(117deg) brightness(98%) contrast(101%)"};
+    }
+`
+
+function PostListElement({ postId, topic, content, author, creationDate, avatarUrl, editable, likeQuantity, openPost, openDeleteModal, openEditModal, addLike, deleteLike, userAddLike }) {
     return (
         <PostWrapper >
             <Container>
                 <Row>
-                    <ContentCol xs={editable ? 10 : 12} onClick={openPost}>
+                    <ContentCol xs={editable ? 10 : 12}>
                         <Row>
                             <Col xs={2}>
                                 <ImageWrapper>
@@ -82,14 +95,34 @@ function PostListElement({ postId, topic, content, author, creationDate, avatarU
                             </Col>
                             <Col xs={10}>
                                 <Row>
-                                    <TitleWrapper>
-                                        {topic}
-                                    </TitleWrapper>
-                                </Row>
-                                <Row>
-                                    <ContentWrapper>
-                                        {content}
-                                    </ContentWrapper>
+                                    <Col xs={11} onClick={openPost}>
+                                        <Row>
+                                            <TitleWrapper>
+                                                {topic}
+                                            </TitleWrapper>
+                                        </Row>
+                                        <Row>
+                                            <ContentWrapper>
+                                                {content}
+                                            </ContentWrapper>
+                                        </Row>
+                                    </Col>
+                                    <Col xs={1}>
+                                        <PostInfoBarWrapper onClick={() => userAddLike ? deleteLike(postId) : addLike(postId)} userAddLike={userAddLike}>
+                                            {userAddLike ?
+                                                <>
+                                                    <span>{likeQuantity}</span>
+                                                    <Image src={process.env.PUBLIC_URL + "/icons/down.svg"} width={25} />
+                                                </>
+                                                :
+                                                <>
+                                                    <Image src={process.env.PUBLIC_URL + "/icons/up.svg"} width={25} />
+                                                    <span>{likeQuantity}</span>
+                                                </>
+                                            }
+
+                                        </PostInfoBarWrapper>
+                                    </Col>
                                 </Row>
                                 <hr />
                                 <Row>
@@ -121,7 +154,7 @@ function PostListElement({ postId, topic, content, author, creationDate, avatarU
                     }
 
                 </Row>
-            </Container>
+            </Container >
         </PostWrapper >
     )
 }

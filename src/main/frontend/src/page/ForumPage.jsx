@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import MarginContainer from '../component/MarginContainer';
 import AddPostModal from '../component/modal/AddPostModal';
 import DeletePostModal from '../component/modal/DeletePostModal';
@@ -10,6 +10,7 @@ import PostListElement from '../component/PostListElement';
 import GlobalSpinner from '../component/GlobalSpinner';
 import styled from 'styled-components';
 import history from '../config/history';
+import { GlobalContext } from '../context/GlobalContext';
 import { toast } from 'react-toastify';
 
 const FullWitdhButton = styled(Button)`
@@ -31,6 +32,7 @@ function ForumPage() {
     const [loading, setLoading] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const oldValues = useRef([])
+    const { state, dispatch } = useContext(GlobalContext);
 
     useEffect(() => {
         fetchPosts()
@@ -55,7 +57,7 @@ function ForumPage() {
     }
 
     const editPost = async (newContent) => {
-        const responseMessage = await AxiosClient.put(`/forum/post`, { ...selectedPost, content: newContent })
+        const responseMessage = await AxiosClient.put(`/forum/post`, { ...selectedPost, content: newContent, likes: [] })
         setShowEditModal(false);
         setRefresh(!refresh)
 
@@ -64,20 +66,30 @@ function ForumPage() {
         })
     }
 
+    const addLike = async (postId) => {
+        await AxiosClient.post(`/forum/post/like/${postId}`)
+        setRefresh(!refresh)
+    }
+
+    const deleteLike = async (postId) => {
+        await AxiosClient.delete(`/forum/post/like/${postId}`)
+        setRefresh(!refresh)
+    }
+
     const refreshPosts = () => {
-        setRefresh(!refresh);
+        setRefresh(!refresh)
     }
 
     const handleCloseModal = () => {
-        setShowModal(false);
+        setShowModal(false)
     }
 
     const handleCloseDeleteModal = () => {
-        setShowDeleteModal(false);
+        setShowDeleteModal(false)
     }
 
     const handleCloseEditModal = () => {
-        setShowEditModal(false);
+        setShowEditModal(false)
     }
 
     const handleOpenModal = () => {
@@ -85,17 +97,30 @@ function ForumPage() {
     }
 
     const handleOpenDeleteModal = (postId) => {
-        setSelectedPostId(postId);
-        setShowDeleteModal(true);
+        setSelectedPostId(postId)
+        setShowDeleteModal(true)
     }
 
     const handleOpenEditModal = (postBody) => {
         setSelectedPost(postBody)
-        setShowEditModal(true);
+        setShowEditModal(true)
+    }
+
+    const isUserAlreadyAddLike = ({ likes }) => {
+        const userId = state.userId
+        return likes.filter(like => like.userId === userId).length > 0
+    }
+
+    const calculatePostLikes = ({ likes }) => {
+        return likes.length;
     }
 
     const prepareContent = (content) => {
-        return content.substring(0, 128).concat("...")
+        if (content.length > 128) {
+            return content.substring(0, 128).concat("...")
+        } else {
+            return content
+        }
     }
 
     const handleSearchPost = (event) => {
@@ -131,8 +156,12 @@ function ForumPage() {
                                                     creationDate={post.creationDate}
                                                     avatarUrl={post.avatarUrl}
                                                     editable={post.editable}
+                                                    likeQuantity={calculatePostLikes(post)}
                                                     openDeleteModal={handleOpenDeleteModal}
                                                     openEditModal={handleOpenEditModal}
+                                                    addLike={addLike}
+                                                    deleteLike={deleteLike}
+                                                    userAddLike={isUserAlreadyAddLike(post)}
                                                     openPost={() => history.push(`/forum/${post.postId}`)}
                                                 />
                                             </ListGroup.Item>

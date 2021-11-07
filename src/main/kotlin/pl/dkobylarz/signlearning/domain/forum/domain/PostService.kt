@@ -23,7 +23,9 @@ class PostService(
     fun getPost(postId: Int, currentlyLoggedUser: User): PostDTO {
         val post: Post? = postRepository.findByPostId(postId)
         if (post != null) {
-            val postDTO = ForumMapper.mapToPostDTO(post, forumUserClient.getUserById(post.userId), currentlyLoggedUser)
+            val postAuthor = forumUserClient.getUserById(post.userId)
+            val postLikes = postLikeClient.getLikesForPost(post.postId)
+            val postDTO = ForumMapper.mapToPostDTO(post, postAuthor, currentlyLoggedUser, postLikes)
             postDTO.comments = getCommentsForPost(post, currentlyLoggedUser)
             return postDTO
         } else {
@@ -34,7 +36,11 @@ class PostService(
     fun getSimplePosts(currentlyLoggedUser: User): Set<SimplePostDTO> {
         val posts: Set<Post> = postRepository.findAll()
         return posts.asSequence()
-            .map { ForumMapper.mapToSimplePost(it, forumUserClient.getUserById(it.userId), currentlyLoggedUser) }
+            .map {
+                val postAuthor = forumUserClient.getUserById(it.userId)
+                val postLikes = postLikeClient.getLikesForPost(it.postId)
+                ForumMapper.mapToSimplePost(it, postAuthor, currentlyLoggedUser, postLikes)
+            }
             .toSet()
     }
 

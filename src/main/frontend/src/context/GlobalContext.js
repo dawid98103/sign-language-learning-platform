@@ -1,5 +1,12 @@
 import React, { createContext, useReducer } from 'react';
+import jwt_decode from 'jwt-decode';
 import { toast } from 'react-toastify';
+
+const getUserIdClaimFromToken = () => {
+    const token = localStorage.getItem("token") == null ? null : localStorage.getItem("token")
+    const claims = jwt_decode(token)
+    return claims.userId;
+}
 
 const initalState = {
     isAuthenticated: localStorage.getItem("token") == null ? false : true,
@@ -7,6 +14,7 @@ const initalState = {
     avatarUrl: localStorage.getItem("avatarUrl") == null ? null : localStorage.getItem("avatarUrl"),
     token: localStorage.getItem("token") == null ? null : localStorage.getItem("token"),
     roles: localStorage.getItem("roles") == null ? null : localStorage.getItem("roles"),
+    userId: localStorage.getItem("token") == null ? null : getUserIdClaimFromToken(),
     currentPage: "",
     globalNotification: null
 };
@@ -31,7 +39,8 @@ const reducer = (state, action) => {
                 user: action.payload.user,
                 avatarUrl: action.payload.userAvatar,
                 token: action.payload.token,
-                roles: action.payload.roles
+                roles: action.payload.roles,
+                userId: getUserIdClaimFromToken()
             };
 
         case "REGISTER":

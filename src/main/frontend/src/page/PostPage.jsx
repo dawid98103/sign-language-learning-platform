@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MarginContainer from '../component/MarginContainer';
 import GlobalContentWrapper from '../component/GlobalContentWrapper';
 import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
@@ -7,6 +7,7 @@ import GlobalSpinner from '../component/GlobalSpinner';
 import CommentListElement from '../component/CommentListElement';
 import DeleteCommentModal from '../component/modal/DeleteCommentModal';
 import EditCommentModal from '../component/modal/EditCommentModal';
+import { GlobalContext } from '../context/GlobalContext';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 
@@ -41,6 +42,19 @@ flex-direction: row;
 justify-content: space-between;
 `
 
+const PostInfoBarWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    &:hover{
+        cursor: pointer;
+        filter: ${props => props.userAddLike ? "invert(27%) sepia(40%) saturate(3502%) hue-rotate(332deg) brightness(96%) contrast(91%);" : "invert(23%) sepia(79%) saturate(4294%) hue-rotate(117deg) brightness(98%) contrast(101%)"};
+    }
+`
+
 function PostPage({ match }) {
     const [post, setPost] = useState(null);
     const [refresh, setRefresh] = useState(false);
@@ -49,6 +63,7 @@ function PostPage({ match }) {
     const [selectedComment, setSelectedComment] = useState(null)
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const { state, dispatch } = useContext(GlobalContext);
 
     useEffect(() => {
         fetchPost()
@@ -97,6 +112,16 @@ function PostPage({ match }) {
         })
     }
 
+    const addLike = async (postId) => {
+        await AxiosClient.post(`/forum/post/like/${postId}`)
+        setRefresh(!refresh)
+    }
+
+    const deleteLike = async (postId) => {
+        await AxiosClient.delete(`/forum/post/like/${postId}`)
+        setRefresh(!refresh)
+    }
+
     const handleOpenDeleteModal = (commentId) => {
         setSelectedCommentId(commentId);
         setShowDeleteModal(true);
@@ -137,10 +162,22 @@ function PostPage({ match }) {
                                             </ImageWrapper>
                                         </Col>
                                         <Col xs={10}>
-                                            <h3>{post.simplePostDTO.topic}</h3>
-                                            <ContentWrapper>
-                                                {post.simplePostDTO.content}
-                                            </ContentWrapper>
+                                            <Row>
+                                                <Col xs={11}>
+                                                    <h3>{post.simplePostDTO.topic}</h3>
+                                                    <ContentWrapper>
+                                                        {post.simplePostDTO.content}
+                                                    </ContentWrapper>
+                                                </Col>
+                                                <Col xs={1}>
+                                                    <PostInfoBarWrapper>
+                                                        <>
+                                                            <Image src={process.env.PUBLIC_URL + "/icons/up.svg"} width={25} />
+                                                            <span>1</span>
+                                                        </>
+                                                    </PostInfoBarWrapper>
+                                                </Col>
+                                            </Row>
                                             <hr />
                                             <Row>
                                                 <PostFooterWrapper>
