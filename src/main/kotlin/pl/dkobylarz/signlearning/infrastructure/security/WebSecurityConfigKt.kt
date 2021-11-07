@@ -79,6 +79,7 @@ class WebSecurityConfigKt(
                 ?.exceptionHandling()?.authenticationEntryPoint(authEntryPoint)?.and()
                 ?.sessionManagement()?.sessionCreationPolicy(SessionCreationPolicy.STATELESS)?.and()
                 ?.authorizeRequests()?.antMatchers(*AUTH_WHITELIST)?.permitAll()
+                ?.antMatchers("/post/like")?.hasAnyRole("USER")
                 ?.anyRequest()?.authenticated()
 
         http?.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)

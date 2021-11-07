@@ -1,6 +1,15 @@
+@font-face {
+    font-family: 'ciutadella-font';
+    src: url('./fonts/10xTTF/Ciutadella\ Rounded\ Medium.ttf');
+}
+
 html, body {
     height: 100%;
     margin: 0;
+}
+
+body {
+    font-family: 'ciutadella-font' !important;
 }
 
 #root {

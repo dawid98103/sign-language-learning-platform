@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import NotificationModal from './modal/NotificationModal';
 import AxiosClient from '../config/axios/AxiosClient';
-import { ListGroup, Collapse } from 'react-bootstrap';
+import { ListGroup, Collapse, Placeholder } from 'react-bootstrap';
 import history from '../config/history';
 
 const ListGroupItemWithCursour = styled(ListGroup.Item)`
@@ -66,7 +66,9 @@ function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
         <>
             {lessonStages == null ?
                 <>
-                    Loading..
+                    <Placeholder as={ListGroup.Item} animation="glow">
+                        <Placeholder xs={12} />
+                    </Placeholder>
                 </>
                 :
                 <ListGroupItemWithCursour action onClick={() => setOpen(!open)} aria-controls="example-collapse" disabled={disabled} aria-expanded={open}>{lessonName} {checkIsCompleted() ? <img
@@ -81,7 +83,9 @@ function LessonListItem({ lessonName, disabled, lessonId, quiz }) {
             <Collapse in={open}>
                 {lessonStages == null ?
                     <>
-                        Loading..
+                        <Placeholder as={ListGroup.Item} animation="glow">
+                            <Placeholder xs={12} />
+                        </Placeholder>
                     </>
                     :
                     <div id="example-collapse">

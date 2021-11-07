@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
 import { LESSON_PAGE, FORUM_PAGE } from '../constants/Pages';
@@ -10,11 +10,11 @@ const NavButton = styled.div`
     display:flex;
     align-items: center;
     flex-direction:row;
-    cursor: pointer;
+    cursor: ${props => props.disabled ? "default" : "pointer"};
     filter: ${props => props.active ? "invert(0%)" : "invert(50%)"};
     transition-duration: 0.6s;
     &:hover {
-        filter: invert(0%); 
+        ${props => props.disabled ? "" : "invert(0%)"};
     }
 `
 
@@ -29,6 +29,7 @@ const NavDropdownBlack = styled(NavDropdown)`
 `
 
 const MenuText = styled.span`
+    font-family: ${props => props.theme.fontFamily};
     font-size: 1.2rem;
     font-weight: 600;
 `
@@ -112,7 +113,7 @@ function AppNavbar() {
                             </NavButton>
                         </NavLink>
                         <NavLink>
-                            <NavButton href="" onClick={handleChangeToForumPage} active={state.currentPage === FORUM_PAGE}>
+                            <NavButton href="" onClick={!state.isAuthenticated ? null : handleChangeToForumPage} disabled={!state.isAuthenticated} active={state.currentPage === FORUM_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         src={process.env.PUBLIC_URL + "/icons/forum.svg"}
@@ -125,7 +126,7 @@ function AppNavbar() {
                             </NavButton>
                         </NavLink>
                         <NavLink>
-                            <NavButton href="">
+                            <NavButton href="" disabled={!state.isAuthenticated}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         alt=""
@@ -139,7 +140,7 @@ function AppNavbar() {
                             </NavButton>
                         </NavLink>
                         <NavLink>
-                            <NavButton href="">
+                            <NavButton href="" disabled={!state.isAuthenticated}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         src={process.env.PUBLIC_URL + "/icons/results.svg"}
@@ -172,10 +173,12 @@ function AppNavbar() {
                             }
                         </NavDropdownBlack>
                     </Link>
-                    <NavButton>
+                    <NavButton active>
                         {state.user}
                         <NavIcon
-                            src={process.env.PUBLIC_URL + "/icons/user.svg"}
+                            src={state.avatarUrl}
+                            width={20}
+                            height={20}
                             className="d-inline-block align-top"
                         >
                         </NavIcon>

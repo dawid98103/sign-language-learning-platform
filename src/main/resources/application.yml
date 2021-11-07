@@ -9,13 +9,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/sign_language_platform_2
+    url: jdbc:postgresql://localhost:5432/sign_language_platform
     username: sign_language_learn_platform_user
     password: sign_language_learn_platform_password
     hikari:
       maximum-pool-size: 10
   flyway:
-    url: jdbc:postgresql://localhost:5432/sign_language_platform_2
+    url: jdbc:postgresql://localhost:5432/sign_language_platform
     user: sign_language_learn_platform_user
     password: sign_language_learn_platform_password
     table: schema_history
@@ -29,7 +29,7 @@ logging:
     org.springframework.jdbc.core.JdbcTemplate: DEBUG
 
 signlearning:
-  db:
-    mock: false
+  job:
+    quiz-timeout-in-minutes: 15
   api:
     version: 1.0.0

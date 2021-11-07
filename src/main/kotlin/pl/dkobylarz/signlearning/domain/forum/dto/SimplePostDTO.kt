@@ -14,5 +14,6 @@ data class SimplePostDTO(
     val avatarUrl: String,
     @JsonSerialize(using = CustomLocalDateTimeSerializer::class)
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
-    val creationDate: LocalDateTime
+    val creationDate: LocalDateTime,
+    val editable: Boolean
 )

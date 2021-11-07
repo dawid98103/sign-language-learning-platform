@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Form, Button, Col, Row } from 'react-bootstrap'
 import styled from 'styled-components';
 import ValidationErrors from '../constants/ValidationErrors';
@@ -6,6 +6,8 @@ import { useHistory } from 'react-router-dom';
 import AxiosClient from '../config/axios/AxiosClient'
 import { GlobalContext } from '../context/GlobalContext';
 import { toast } from 'react-toastify';
+import { storage } from '../firebase';
+import reactImageSize from 'react-image-size';
 import CenteredMarginContainer from '../component/CenteredMarginContainer';
 import GlobalSpinner from '../component/GlobalSpinner';
 
@@ -39,23 +41,30 @@ function RegisterPage() {
     const [password, setPassword] = useState("")
     const [passwordRepeat, setPasswordRepeat] = useState("")
     const [email, setEmail] = useState("")
-    const [avatar, setAvatar] = useState(null);
+    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [image, setImage] = useState(null);
     const { dispatch } = useContext(GlobalContext);
 
     const [usernameValidationErrors, setUsernameValidationErrors] = useState([])
-    const [nameValidationErrors, setNameValidationErrors] = useState([])
-    const [surnameValidationErrors, setSurnameValidationErrors] = useState([])
     const [passwordValidationErrors, setPasswordValidationErrors] = useState([])
     const [emailValidationErrors, setEmailValidationErrors] = useState([])
 
     const [processing, isProcessing] = useState(false);
+    const [uploadImage, setUploadImage] = useState(false)
     const history = useHistory();
+
+    useEffect(() => {
+        if (image != null) {
+            setUploadImage(true);
+            handleUploadImage();
+        }
+    }, [image])
 
     var specialCharacters = /^[!@#\$%\^\&*\)\(+=._-]+$/g
 
     async function registerUser() {
         isProcessing(true);
-        AxiosClient.post("/auth/signup", { username, name, surname, password, passwordRepeat, email, avatarUrl: "" }).then(response => {
+        AxiosClient.post("/auth/signup", { username, name, surname, password, passwordRepeat, email, avatarUrl }).then(response => {
             isProcessing(false);
             dispatch({
                 type: "REGISTER",
@@ -111,9 +120,48 @@ function RegisterPage() {
         }
     }
 
+    const checkImageDimensions = (url) => {
+        reactImageSize(url)
+            .then(({ width, height }) => {
+                if (width > 400 || height > 400) {
+                    throw Error("Nieprawidłowe wymiary obrazka!")
+                }
+            })
+            .catch(({ message }) => {
+                setImage(null);
+                toast.warning(message, {
+                    position: "bottom-right"
+                })
+            });
+    }
+
     const handleRepeatPasswordInput = (event) => {
         const repeatPasswordValue = event.target.value;
         setPasswordRepeat(repeatPasswordValue);
+    }
+
+    const handleUploadImage = () => {
+        const uploadTask = storage.ref(`images/${image.name}`).put(image);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+                console.log(snapshot);
+            },
+            error => {
+                console.log(error);
+            },
+            () => {
+                storage
+                    .ref("images")
+                    .child(image.name)
+                    .getDownloadURL()
+                    .then(url => {
+                        setUploadImage(false);
+                        setAvatarUrl(url);
+                        checkImageDimensions(url);
+                    });
+            }
+        )
     }
 
     const handleEmailInput = (event) => {
@@ -130,8 +178,9 @@ function RegisterPage() {
     }
 
     const handleFileInput = (event) => {
-        const fileValue = event.target.value;
-        console.log(fileValue);
+        if (event.target.files[0]) {
+            setImage(event.target.files[0]);
+        }
     }
 
     const deletePasswordValidationError = (val) => {
@@ -147,9 +196,9 @@ function RegisterPage() {
     }
 
     const validationErrorsExists = () => {
-        if(usernameValidationErrors.length > 0 || nameValidationErrors.length > 0 || surnameValidationErrors.length > 0 || passwordValidationErrors.length > 0 || emailValidationErrors.length > 0){
+        if (usernameValidationErrors.length > 0 || passwordValidationErrors.length > 0 || emailValidationErrors.length > 0) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
@@ -157,11 +206,11 @@ function RegisterPage() {
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        if(validationErrorsExists()){
+        if (validationErrorsExists()) {
             toast.warning("Wystąpiły błędy walidacji!. Popraw je i spróbuj ponownie", {
                 position: "bottom-right"
             })
-        }else {
+        } else {
             registerUser()
         }
     }
@@ -176,7 +225,7 @@ function RegisterPage() {
     }
 
     return (
-        <CenteredMarginContainer withbackground={false}>
+        <CenteredMarginContainer>
             <FormWrapper>
                 {processing ?
                     <GlobalSpinner />
@@ -192,7 +241,7 @@ function RegisterPage() {
                         </HeaderTextBlock>
                         <Form onSubmit={handleSubmit}>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="validationCustom01">
+                                <Form.Group as={Col} md="12">
                                     <Form.Label>Nazwa użytkownika:</Form.Label>
                                     <Form.Control
                                         required
@@ -211,7 +260,7 @@ function RegisterPage() {
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="validationCustom02">
+                                <Form.Group as={Col} md="12">
                                     <Form.Label>Imie:</Form.Label>
                                     <Form.Control
                                         required
@@ -223,7 +272,7 @@ function RegisterPage() {
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="validationCustom02">
+                                <Form.Group as={Col} md="12">
                                     <Form.Label>Nazwisko:</Form.Label>
                                     <Form.Control
                                         value={surname}
@@ -234,7 +283,7 @@ function RegisterPage() {
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="validationCustom02">
+                                <Form.Group as={Col} md="12">
                                     <Form.Label>Hasło:</Form.Label>
                                     <Form.Control
                                         required
@@ -257,7 +306,7 @@ function RegisterPage() {
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="validationCustom02">
+                                <Form.Group as={Col} md="12">
                                     <Form.Label>Powtórz hasło:</Form.Label>
                                     <Form.Control
                                         required
@@ -269,7 +318,7 @@ function RegisterPage() {
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="inputGroupPrepend">
+                                <Form.Group as={Col} md="12" controlId="emailInput">
                                     <Form.Label>Email:</Form.Label>
                                     <Form.Control
                                         required
@@ -287,18 +336,19 @@ function RegisterPage() {
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
-                                <Form.Group as={Col} md="12" controlId="inputGroupPrepend">
-                                    <Form.Label>Avatar:</Form.Label>
+                                <Form.Group as={Col} md="12" controlId="fileInput">
+                                    <Form.Label>Avatar (max: 400x400):</Form.Label>
                                     <Form.Control
                                         required
                                         type="file"
-                                        placeholder=""
+                                        accept="image/png, image/jpeg"
                                         onChange={handleFileInput}
                                     />
-                                    <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
                                 </Form.Group>
                             </Row>
-                            <Button type="submit">Zarejestruj się</Button>
+                            <Button type="submit" disabled={uploadImage}>
+                                {uploadImage ? "Wczytywanie..." : "Zarejestruj się"}
+                            </Button>
                         </Form>
                     </>
                 }

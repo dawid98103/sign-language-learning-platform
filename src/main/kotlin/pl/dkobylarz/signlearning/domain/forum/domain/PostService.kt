@@ -4,21 +4,68 @@ import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.forum.dto.*
 import pl.dkobylarz.signlearning.domain.forum.exception.PostNotFoundException
 import pl.dkobylarz.signlearning.domain.forum.infrastructure.ForumUserClient
+import pl.dkobylarz.signlearning.domain.forum.infrastructure.PostLikeClient
 import pl.dkobylarz.signlearning.domain.forum.infrastructure.PostRepository
 import pl.dkobylarz.signlearning.domain.user.domain.User
 import java.util.logging.Logger
 
 @Service
-class PostService(private val postRepository: PostRepository, private val forumUserClient: ForumUserClient) {
+class PostService(
+    private val postRepository: PostRepository,
+    private val forumUserClient: ForumUserClient,
+    private val postLikeClient: PostLikeClient
+) {
 
     companion object {
         val LOG = Logger.getLogger(PostService::class.java.name)
+    }
+
+    fun getPost(postId: Int, currentlyLoggedUser: User): PostDTO {
+        val post: Post? = postRepository.findByPostId(postId)
+        if (post != null) {
+            val postDTO = ForumMapper.mapToPostDTO(post, forumUserClient.getUserById(post.userId), currentlyLoggedUser)
+            postDTO.comments = getCommentsForPost(post, currentlyLoggedUser)
+            return postDTO
+        } else {
+            throw PostNotFoundException()
+        }
+    }
+
+    fun getSimplePosts(currentlyLoggedUser: User): Set<SimplePostDTO> {
+        val posts: Set<Post> = postRepository.findAll()
+        return posts.asSequence()
+            .map { ForumMapper.mapToSimplePost(it, forumUserClient.getUserById(it.userId), currentlyLoggedUser) }
+            .toSet()
+    }
+
+    private fun getCommentsForPost(post: Post, currentlyLoggedUser: User): Set<CommentDTO> {
+        return post.comments.map {
+            val userFromComment = forumUserClient.getUserById(it.userId)
+            ForumMapper.mapToCommentDTO(it, userFromComment, isCurrentlyLoggedUserAnAuthor(currentlyLoggedUser, it))
+        }.toSet()
     }
 
     fun createPost(post: CreatePostDTO, user: User) {
         LOG.info("[FORUM]: Utworzono post o temacie [${post.topic}] przez użytkownika z id: [${user.userId}]")
         val postToSave: Post = ForumMapper.mapToPost(post, user.userId!!)
         postRepository.save(postToSave)
+    }
+
+    fun updatePost(postWithNewContent: SimplePostDTO) {
+        val post: Post? = postRepository.findByPostId(postWithNewContent.postId)
+        post.let {
+            val updatedComment = ForumMapper.mapToPost(postWithNewContent, post!!)
+            postRepository.save(updatedComment)
+        }
+    }
+
+    fun deletePost(postId: Int) {
+        val post: Post? = postRepository.findByPostId(postId)
+        if (post != null) {
+            postRepository.delete(post)
+        } else {
+            throw PostNotFoundException()
+        }
     }
 
     fun createComment(comment: CreateCommentDTO, user: User) {
@@ -30,32 +77,30 @@ class PostService(private val postRepository: PostRepository, private val forumU
         }
     }
 
-    fun getPost(postId: Int, user: User): PostDTO {
+    fun deleteComment(postId: Int, commentId: Int) {
         val post: Post? = postRepository.findByPostId(postId)
-        if (post != null) {
-            val postDTO = ForumMapper.mapToPostDTO(post, forumUserClient.getUserById(post.userId))
-            postDTO.comments = getCommentsForPost(post, user)
-            return postDTO
+        if (post !== null) {
+            post.deleteComment(commentId)
+            postRepository.save(post)
         } else {
             throw PostNotFoundException()
         }
     }
 
-    fun getSimplePosts(): Set<SimplePostDTO> {
-        val posts: Set<Post> = postRepository.findAll()
-        return posts.asSequence()
-                .map { ForumMapper.mapToSimplePost(it, forumUserClient.getUserById(it.userId)) }
-                .toSet()
+    fun updateComment(postId: Int, commentDTO: CommentDTO) {
+        val post: Post? = postRepository.findByPostId(postId)
+        if (post !== null) {
+            val currentComment = post.comments.find { it.commentId == commentDTO.commentId }!!
+            val updatedComment = ForumMapper.mapToComment(commentDTO, currentComment)
+            post.deleteComment(currentComment.commentId)
+            post.addComment(updatedComment)
+            postRepository.save(post)
+        } else {
+            throw PostNotFoundException()
+        }
     }
 
-    private fun getCommentsForPost(post: Post, currentlyLoggedUser: User): Set<CommentDTO> {
-        return post.comments.map {
-            val userFromComment = forumUserClient.getUserById(it.userId)
-            ForumMapper.mapToCommentDTO(it, userFromComment, isCurrentlyLoggedUserAnAuthor(currentlyLoggedUser, it))
-        }.toSet()
-    }
-
-    private fun isCurrentlyLoggedUserAnAuthor(alreadyLoggedUser: User, comment: Comment): Boolean {
-        return alreadyLoggedUser.userId == comment.userId
+    private fun isCurrentlyLoggedUserAnAuthor(currentlyLoggedUser: User, comment: Comment): Boolean {
+        return currentlyLoggedUser.userId == comment.userId
     }
 }

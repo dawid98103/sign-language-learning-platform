@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import MarginContainer from '../component/MarginContainer';
 import GlobalContentWrapper from '../component/GlobalContentWrapper';
-import { Container, Row, Col, ListGroup, Form, Button, Image } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, Image } from 'react-bootstrap';
 import AxiosClient from '../config/axios/AxiosClient';
 import GlobalSpinner from '../component/GlobalSpinner';
 import CommentListElement from '../component/CommentListElement';
-import history from '../config/history';
+import DeleteCommentModal from '../component/modal/DeleteCommentModal';
+import EditCommentModal from '../component/modal/EditCommentModal';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
-import { set } from 'react-hook-form';
 
 const PostHeader = styled.div`
     display: flex;
@@ -33,10 +34,21 @@ const FittedImage = styled(Image)`
     height: auto;
 `
 
+const PostFooterWrapper = styled.div`
+display: flex;
+width: 100%;
+flex-direction: row;
+justify-content: space-between;
+`
+
 function PostPage({ match }) {
-    const [post, setPost] = useState(null)
+    const [post, setPost] = useState(null);
     const [refresh, setRefresh] = useState(false);
-    const [comment, setComment] = useState("")
+    const [comment, setComment] = useState("");
+    const [selectedCommentId, setSelectedCommentId] = useState(null);
+    const [selectedComment, setSelectedComment] = useState(null)
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     useEffect(() => {
         fetchPost()
@@ -47,17 +59,65 @@ function PostPage({ match }) {
         setPost(data)
     }
 
-    const addComment = async () => { 
-        console.log(comment)   
-        if(comment.length > 0){
-            await AxiosClient.patch(`/forum/post/comment`, {content: comment, postId: match.params.postId})
+    const addComment = async () => {
+        if (comment.length > 0) {
+            const responseMessage = await AxiosClient.patch(`/forum/post/${match.params.postId}/comment`, { content: comment, postId: match.params.postId })
             setRefresh(!refresh)
+
+            toast.success(responseMessage.data.message, {
+                position: "bottom-right"
+            })
         }
+    }
+
+    const editComment = async (newContent) => {
+        const responseMessage = await AxiosClient.put(`/forum/post/${match.params.postId}/comment`, {
+            commentId: selectedComment.commentId,
+            content: newContent,
+            creationDate: selectedComment.creationDate,
+            avatarUrl: selectedComment.avatarUrl,
+            author: selectedComment.author,
+            editable: selectedComment.editable
+        })
+        setShowEditModal(false)
+        setRefresh(!refresh)
+
+        toast.success(responseMessage.data.message, {
+            position: "bottom-right"
+        })
+    }
+
+    const deleteComment = async () => {
+        const responseMessage = await AxiosClient.delete(`/forum/post/${match.params.postId}/comment/${selectedCommentId}`)
+        setShowDeleteModal(false)
+        setRefresh(!refresh)
+
+        toast.success(responseMessage.data.message, {
+            position: "bottom-right"
+        })
+    }
+
+    const handleOpenDeleteModal = (commentId) => {
+        setSelectedCommentId(commentId);
+        setShowDeleteModal(true);
+    }
+
+    const handleOpenEditModal = (commentBody) => {
+        setSelectedComment(commentBody);
+        setShowEditModal(true)
     }
 
     const handleChangeComment = (event) => {
         const commentContent = event.target.value;
         setComment(commentContent)
+    }
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+    }
+
+    const handleCloseEditModal = () => {
+        setShowEditModal(false);
     }
 
     return (
@@ -70,21 +130,23 @@ function PostPage({ match }) {
                         <>
                             <Container>
                                 <PostHeader>
-                                    <Row>
+                                    <Row style={{ 'width': '100%' }}>
                                         <Col xs={2}>
                                             <ImageWrapper>
                                                 <FittedImage src={post.simplePostDTO.avatarUrl} rounded />
                                             </ImageWrapper>
                                         </Col>
                                         <Col xs={10}>
-                                            <h4>{post.simplePostDTO.topic}</h4>
+                                            <h3>{post.simplePostDTO.topic}</h3>
                                             <ContentWrapper>
                                                 {post.simplePostDTO.content}
                                             </ContentWrapper>
                                             <hr />
                                             <Row>
-                                                <Col>Autor: {post.simplePostDTO.author}</Col>
-                                                <Col>Data utworzenia: {post.simplePostDTO.creationDate}</Col>
+                                                <PostFooterWrapper>
+                                                    <p>Autor: {post.simplePostDTO.author}</p>
+                                                    <p>Data utworzenia: {post.simplePostDTO.creationDate}</p>
+                                                </PostFooterWrapper>
                                             </Row>
                                         </Col>
                                     </Row>
@@ -95,7 +157,7 @@ function PostPage({ match }) {
                                         <Form.Group className="mb-3">
                                             <Form.Control as="textarea" rows={3} value={comment} onChange={handleChangeComment} placeholder="Dodaj komentarz..." />
                                         </Form.Group>
-                                        <Button onClick={addComment}>Dodaj komentarz +</Button>
+                                        <Button type="submit" onClick={addComment}>Dodaj komentarz +</Button>
                                     </Form>
                                 </Row>
                             </Container>
@@ -104,17 +166,18 @@ function PostPage({ match }) {
                                 post.comments.map(comment => {
                                     return (
                                         <CommentListElement
-                                            content={comment.content}
-                                            author={comment.author}
-                                            creationDate={comment.creationDate}
-                                            avatar={comment.avatarUrl}
+                                            key={comment.commentId}
+                                            {...comment}
+                                            openDeleteModal={handleOpenDeleteModal}
+                                            openEditModal={handleOpenEditModal}
                                         />
                                     )
                                 })
                             }
                         </>
                 }
-
+                <DeleteCommentModal modalShow={showDeleteModal} closeModal={handleCloseDeleteModal} deleteComment={deleteComment} />
+                <EditCommentModal modalShow={showEditModal} closeModal={handleCloseEditModal} content={selectedComment?.content} editComment={editComment} />
             </GlobalContentWrapper>
         </MarginContainer>
     )

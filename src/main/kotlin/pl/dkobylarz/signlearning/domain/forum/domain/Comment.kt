@@ -12,12 +12,12 @@ import java.time.LocalDateTime
 data class Comment(
     @Id
     val commentId: Int,
-    val content: String,
+    var content: String,
     @JsonSerialize(using = CustomLocalDateTimeSerializer::class)
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
-    val creationDate: LocalDateTime,
+    var creationDate: LocalDateTime,
     @JsonSerialize(using = CustomLocalDateTimeSerializer::class)
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
-    val updateDate: LocalDateTime,
+    var updateDate: LocalDateTime,
     val userId: Int
 )

@@ -9,6 +9,10 @@ import java.time.LocalDateTime
 @Service
 class QuizProcessFacade(private val quizProcessService: QuizProcessService) {
 
+    fun terminateTimeoutQuizProcesses() {
+        quizProcessService.terminateTimeoutQuizProcesses()
+    }
+
     fun getQuizProcess(): Map<Pair<Int, Int>, QuizProcessDTO> {
         return quizProcessService.getMapState()
     }

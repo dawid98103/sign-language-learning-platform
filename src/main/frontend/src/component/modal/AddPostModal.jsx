@@ -29,7 +29,7 @@ function AddPostModal({ modalShow, closeModal, refreshPosts }) {
                 <Form>
                     <Form.Group className="mb-3">
                         <Form.Label>Temat</Form.Label>
-                        <Form.Control type="email" placeholder="Temat" value={topic} onChange={handleTopicChange} />
+                        <Form.Control type="text" placeholder="Temat" value={topic} onChange={handleTopicChange} />
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Treść pytania</Form.Label>

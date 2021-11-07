@@ -1,5 +1,6 @@
 package pl.dkobylarz.signlearning.domain.quizprocess.domain
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.quiz.domain.QuizQuestionService
@@ -14,8 +15,10 @@ import java.util.logging.Logger
 @Service
 class QuizProcessService(
     private val quizCompletedFacade: QuizCompletedFacade,
-    private val quizQuestionService: QuizQuestionService
+    private val quizQuestionService: QuizQuestionService,
 ) {
+    @Value("\${signlearning.job.quiz-timeout-in-minutes}")
+    lateinit var quizTimeout: String
     private val quizProcess: ConcurrentHashMap<Pair<Int, Int>, QuizProcessDTO> = ConcurrentHashMap()
 
     companion object {
@@ -40,6 +43,15 @@ class QuizProcessService(
         return LocalDateTime.now()
     }
 
+    fun terminateTimeoutQuizProcesses() {
+        quizProcess.asSequence()
+            .filter { it.value.startDate.plusMinutes(quizTimeout.toLong()).isBefore(LocalDateTime.now()) }
+            .forEach {
+                LOG.info("[QUIZ PROCESS]: AUTOMAT")
+                finishQuizForUser(it.key.first, it.key.second)
+            }
+    }
+
     fun processUserAnswer(quizId: Int, quizQuestionId: Int, answerId: Int): Boolean {
         val answerCorrectness = quizQuestionService.isAnswerCorrect(quizId, quizQuestionId, answerId)
         val currentUser = SecurityContextHolder.getContext().authentication.principal as User
@@ -55,17 +67,6 @@ class QuizProcessService(
         }
     }
 
-    private fun getActiveQuizProcess(userId: Int): ActiveQuizProcessDTO? {
-        val activeQuizProcess = quizProcess.asSequence()
-            .find { it.key.first == userId }
-
-        return if (activeQuizProcess != null) {
-            ActiveQuizProcessDTO(activeQuizProcess.key.second, activeQuizProcess.value.startDate)
-        } else {
-            null
-        }
-    }
-
     fun hasActiveQuizzes(userId: Int): Boolean {
         return quizProcess.asSequence()
             .map { it.key }
@@ -76,6 +77,18 @@ class QuizProcessService(
 
     fun getMapState(): Map<Pair<Int, Int>, QuizProcessDTO> {
         return quizProcess
+    }
+
+
+    private fun getActiveQuizProcess(userId: Int): ActiveQuizProcessDTO? {
+        val activeQuizProcess = quizProcess.asSequence()
+            .find { it.key.first == userId }
+
+        return if (activeQuizProcess != null) {
+            ActiveQuizProcessDTO(activeQuizProcess.key.second, activeQuizProcess.value.startDate)
+        } else {
+            null
+        }
     }
 
     private fun process(userId: Int, quizId: Int, quizQuestionId: Int, answerCorrectness: Boolean) {
