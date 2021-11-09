@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
+import HrefWrapper from './HrefWrapper';
 import styled from 'styled-components';
+import history from '../config/history';
 
 const PostWrapper = styled.div`
     display: flex,
@@ -12,6 +14,14 @@ const PostWrapper = styled.div`
 const ContentWrapper = styled.div`
     display: flex,
     padding: 10px;
+
+`
+
+const ContentColumn = styled(Col)`
+&:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+}
 `
 
 const ImageWrapper = styled.div`
@@ -31,6 +41,10 @@ const TitleWrapper = styled.div`
     width: 100%;
     font-size: 1.2em;
     font-weight: bold;
+    &:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
 `
 
 const FittedImage = styled(Image)`
@@ -48,13 +62,6 @@ const ActionButtonWrapper = styled.div`
     button > img {
         filter: invert(98%) sepia(44%) saturate(8%) hue-rotate(209deg) brightness(100%) contrast(103%);
     }
-`
-
-const ContentCol = styled(Col)`
-&:hover {
-    background-color: #f8f9fa;
-    cursor: pointer;
-}
 `
 
 const PostFooterWrapper = styled.div`
@@ -86,7 +93,7 @@ function PostListElement({ postId, topic, content, author, creationDate, avatarU
         <PostWrapper >
             <Container>
                 <Row>
-                    <ContentCol xs={editable ? 10 : 12}>
+                    <Col xs={editable ? 10 : 12}>
                         <Row>
                             <Col xs={2}>
                                 <ImageWrapper>
@@ -95,7 +102,7 @@ function PostListElement({ postId, topic, content, author, creationDate, avatarU
                             </Col>
                             <Col xs={10}>
                                 <Row>
-                                    <Col xs={11} onClick={openPost}>
+                                    <ContentColumn xs={11} onClick={openPost}>
                                         <Row>
                                             <TitleWrapper>
                                                 {topic}
@@ -106,7 +113,7 @@ function PostListElement({ postId, topic, content, author, creationDate, avatarU
                                                 {content}
                                             </ContentWrapper>
                                         </Row>
-                                    </Col>
+                                    </ContentColumn>
                                     <Col xs={1}>
                                         <PostInfoBarWrapper onClick={() => userAddLike ? deleteLike(postId) : addLike(postId)} userAddLike={userAddLike}>
                                             {userAddLike ?
@@ -120,20 +127,21 @@ function PostListElement({ postId, topic, content, author, creationDate, avatarU
                                                     <span>{likeQuantity}</span>
                                                 </>
                                             }
-
                                         </PostInfoBarWrapper>
                                     </Col>
                                 </Row>
                                 <hr />
                                 <Row>
                                     <PostFooterWrapper>
-                                        <p>Autor: {author}</p>
+                                        <HrefWrapper hrefAction={() => history.push(`/profile/${author}`)}>
+                                            <p>Autor: {author}</p>
+                                        </HrefWrapper>
                                         <p>Data utworzenia: {creationDate}</p>
                                     </PostFooterWrapper>
                                 </Row>
                             </Col>
                         </Row>
-                    </ContentCol>
+                    </Col>
                     {editable ?
                         <Col xs={2}>
                             <FullHeightRow>

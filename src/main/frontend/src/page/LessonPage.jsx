@@ -25,7 +25,7 @@ const UserCard = styled(Card)`
     margin: 1rem 10px 1rem 10px;
 `
 
-function LessonPage() {
+const LessonPage = () => {
     const [lessons, setLessons] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
     const [userInfo, setUserInfo] = useState(null);
@@ -117,25 +117,25 @@ function LessonPage() {
                                 <Card.Text>
                                     <Card body>
                                         <ListGroup variant="flush">
-                                            {userInfo == null ? 
-                                            <>
-                                                <Placeholder as={ListGroup.Item} animation="glow"> 
-                                                    <Placeholder xs={12} />
-                                                </Placeholder>
-                                                <Placeholder as={ListGroup.Item} animation="glow"> 
-                                                    <Placeholder xs={12} />
-                                                </Placeholder>
-                                                <Placeholder as={ListGroup.Item} animation="glow"> 
-                                                    <Placeholder xs={12} />
-                                                </Placeholder>
-                                                
-                                            </>
-                                            : 
-                                            <>
-                                                <ListGroup.Item>Ostatnia aktywność: {userInfo.lastActivityDateTime}</ListGroup.Item>
-                                                <ListGroup.Item>Dni nauki z rzędu: {userInfo.consecutiveDays}</ListGroup.Item>
-                                                <ListGroup.Item>Zdobytych punktów: {userInfo.gainedPoints}</ListGroup.Item>      
-                                            </>
+                                            {userInfo == null ?
+                                                <>
+                                                    <Placeholder as={ListGroup.Item} animation="glow">
+                                                        <Placeholder xs={12} />
+                                                    </Placeholder>
+                                                    <Placeholder as={ListGroup.Item} animation="glow">
+                                                        <Placeholder xs={12} />
+                                                    </Placeholder>
+                                                    <Placeholder as={ListGroup.Item} animation="glow">
+                                                        <Placeholder xs={12} />
+                                                    </Placeholder>
+
+                                                </>
+                                                :
+                                                <>
+                                                    <ListGroup.Item>Ostatnia aktywność: {userInfo.lastActivityDateTime}</ListGroup.Item>
+                                                    <ListGroup.Item>Dni nauki z rzędu: {userInfo.consecutiveDays}</ListGroup.Item>
+                                                    <ListGroup.Item>Zdobytych punktów: {userInfo.gainedPoints}</ListGroup.Item>
+                                                </>
                                             }
                                         </ListGroup>
                                     </Card>

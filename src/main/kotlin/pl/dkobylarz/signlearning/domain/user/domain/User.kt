@@ -1,13 +1,12 @@
 package pl.dkobylarz.signlearning.domain.user.domain
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.annotation.Transient
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import pl.dkobylarz.signlearning.domain.user.constant.UserRole
 import java.time.LocalDateTime
-import java.util.*
 import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 import kotlin.collections.ArrayList

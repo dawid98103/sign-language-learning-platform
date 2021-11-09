@@ -10,6 +10,8 @@ import EditCommentModal from '../component/modal/EditCommentModal';
 import { GlobalContext } from '../context/GlobalContext';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import history from '../config/history';
+import HrefWrapper from '../component/HrefWrapper';
 
 const PostHeader = styled.div`
     display: flex;
@@ -55,7 +57,7 @@ const PostInfoBarWrapper = styled.div`
     }
 `
 
-function PostPage({ match }) {
+const PostPage = ({ match }) => {
     const [post, setPost] = useState(null);
     const [refresh, setRefresh] = useState(false);
     const [comment, setComment] = useState("");
@@ -63,16 +65,16 @@ function PostPage({ match }) {
     const [selectedComment, setSelectedComment] = useState(null)
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
-    const { state, dispatch } = useContext(GlobalContext);
+    const { state } = useContext(GlobalContext);
 
     useEffect(() => {
+        const fetchPost = async () => {
+            const { data } = await AxiosClient.get(`/forum/post/${match.params.postId}`)
+            setPost(data)
+        }
+
         fetchPost()
     }, [refresh])
-
-    const fetchPost = async () => {
-        const { data } = await AxiosClient.get(`/forum/post/${match.params.postId}`)
-        setPost(data)
-    }
 
     const addComment = async () => {
         if (comment.length > 0) {
@@ -145,6 +147,15 @@ function PostPage({ match }) {
         setShowEditModal(false);
     }
 
+    const isUserAlreadyAddLike = ({ simplePostDTO: { likes } }) => {
+        const userId = state.userId
+        return likes.filter(like => like.userId === userId).length > 0
+    }
+
+    const calculatePostLikes = ({ simplePostDTO: { likes } }) => {
+        return likes.length;
+    }
+
     return (
         <MarginContainer>
             <GlobalContentWrapper>
@@ -156,6 +167,7 @@ function PostPage({ match }) {
                             <Container>
                                 <PostHeader>
                                     <Row style={{ 'width': '100%' }}>
+
                                         <Col xs={2}>
                                             <ImageWrapper>
                                                 <FittedImage src={post.simplePostDTO.avatarUrl} rounded />
@@ -170,18 +182,27 @@ function PostPage({ match }) {
                                                     </ContentWrapper>
                                                 </Col>
                                                 <Col xs={1}>
-                                                    <PostInfoBarWrapper>
-                                                        <>
-                                                            <Image src={process.env.PUBLIC_URL + "/icons/up.svg"} width={25} />
-                                                            <span>1</span>
-                                                        </>
+                                                    <PostInfoBarWrapper userAddLike={isUserAlreadyAddLike(post)}>
+                                                        {isUserAlreadyAddLike(post) ?
+                                                            <>
+                                                                <span>{calculatePostLikes(post)}</span>
+                                                                <Image src={process.env.PUBLIC_URL + "/icons/down.svg"} width={25} onClick={() => deleteLike(post.simplePostDTO.postId)} />
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <Image src={process.env.PUBLIC_URL + "/icons/up.svg"} width={25} onClick={() => addLike(post.simplePostDTO.postId)} />
+                                                                <span>{calculatePostLikes(post)}</span>
+                                                            </>
+                                                        }
                                                     </PostInfoBarWrapper>
                                                 </Col>
                                             </Row>
                                             <hr />
                                             <Row>
                                                 <PostFooterWrapper>
-                                                    <p>Autor: {post.simplePostDTO.author}</p>
+                                                    <HrefWrapper hrefAction={() => history.push(`/profile/${post.simplePostDTO.author}`)}>
+                                                        <p>Autor: {post.simplePostDTO.author}</p>
+                                                    </HrefWrapper>
                                                     <p>Data utworzenia: {post.simplePostDTO.creationDate}</p>
                                                 </PostFooterWrapper>
                                             </Row>
@@ -215,8 +236,8 @@ function PostPage({ match }) {
                 }
                 <DeleteCommentModal modalShow={showDeleteModal} closeModal={handleCloseDeleteModal} deleteComment={deleteComment} />
                 <EditCommentModal modalShow={showEditModal} closeModal={handleCloseEditModal} content={selectedComment?.content} editComment={editComment} />
-            </GlobalContentWrapper>
-        </MarginContainer>
+            </GlobalContentWrapper >
+        </MarginContainer >
     )
 }
 

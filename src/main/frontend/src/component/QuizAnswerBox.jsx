@@ -24,8 +24,8 @@ const Separator = styled.div`
     width: 10px;
 `
 
-function QuizAnswerBox({ optionId, selectedId, content, onSelect }) {
-    const [id, setId] = useState(optionId)
+const QuizAnswerBox = ({ optionId, selectedId, content, onSelect }) => {
+    const [id] = useState(optionId)
 
     return (
         <AnswerBox onClick={() => onSelect(id)} selected={id === selectedId}>

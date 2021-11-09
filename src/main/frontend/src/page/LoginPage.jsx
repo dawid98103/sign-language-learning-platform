@@ -1,7 +1,6 @@
-import React, { useState, useRef ,useContext } from 'react'
-import { Image, Form, Button, Row, Col } from 'react-bootstrap'
+import React, { useState, useContext } from 'react'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import history from '../config/history';
 import AxiosClient from '../config/axios/AxiosClient'
 import CenteredMarginContainer from '../component/CenteredMarginContainer';
@@ -33,7 +32,7 @@ const CloseButtonWrapper = styled.div`
     cursor: pointer;
 `
 
-function LoginPage() {
+const LoginPage = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [processing, setIsProcessing] = useState(false);
@@ -82,9 +81,9 @@ function LoginPage() {
                     <>
                         <HeaderTextBlock>
                             <CloseButtonWrapper>
-                            <CloseButtonWrapper>
-                                <Button onClick={() => history.push("/")}>X</Button>
-                            </CloseButtonWrapper>
+                                <CloseButtonWrapper>
+                                    <Button onClick={() => history.push("/")}>X</Button>
+                                </CloseButtonWrapper>
                             </CloseButtonWrapper>
                             <span style={{ margin: "auto" }}>
                                 Zaloguj się

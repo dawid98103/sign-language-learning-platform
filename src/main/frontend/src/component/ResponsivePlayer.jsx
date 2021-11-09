@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactPlayer from 'react-player';
 import styled from 'styled-components';
 
@@ -13,12 +13,14 @@ const StyledReactPlayer = styled(ReactPlayer)`
     left: 0;
 `
 
-function ResponsivePlayer({ url }) {
+const ResponsivePlayer = ({ url }) => {
 
     return (
         <PlayerWrapper>
             <StyledReactPlayer
                 url={url}
+                controls={true}
+                playing={true}
                 width='100%'
                 height='100%'
             />

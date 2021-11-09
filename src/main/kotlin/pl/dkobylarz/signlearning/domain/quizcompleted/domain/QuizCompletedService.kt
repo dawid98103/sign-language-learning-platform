@@ -2,6 +2,7 @@ package pl.dkobylarz.signlearning.domain.quizcompleted.domain
 
 import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.quiz.dto.QuizQuestionDTO
+import pl.dkobylarz.signlearning.domain.quizcompleted.dto.QuizCompletedShortDTO
 import pl.dkobylarz.signlearning.domain.quizcompleted.infrastructure.QuizCompletedRepository
 import pl.dkobylarz.signlearning.domain.quizprocess.dto.QuizProcessDTO
 import java.time.LocalDateTime
@@ -23,6 +24,13 @@ class QuizCompletedService(
                 LocalDateTime.now()
             )
         )
+    }
+
+    fun getCompletedQuizzesForUser(userId: Int): Set<QuizCompletedShortDTO> {
+        val completedQuizzes = quizCompletedRepository.findByUserId(userId)
+        return completedQuizzes.asSequence()
+            .map { QuizCompletedMapper.toDto(it) }
+            .toSet()
     }
 
     fun isQuizCompletedByUser(userId: Int, quizId: Int): Boolean {

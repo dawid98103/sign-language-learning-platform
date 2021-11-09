@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.user.constant.PointsToGain
 import pl.dkobylarz.signlearning.domain.user.domain.*
 import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoDTO
+import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoWithFriendListDTO
 
 @Service
 class UserFacade(
@@ -28,6 +29,10 @@ class UserFacade(
         return basicInfoService.getUserBasicInfo(userId)
     }
 
+    fun getUserBasicInfoWithFriendsList(username: String, currentLoggedUser: User): UserBasicInfoWithFriendListDTO? {
+        return basicInfoService.getUserBasicInfoWithFriendsList(username, currentLoggedUser)
+    }
+
     fun assignPointsToAccount(userId: Int, pointsToGain: PointsToGain) {
         userPointsService.addPointsToAccount(userId, pointsToGain)
     }
@@ -38,5 +43,13 @@ class UserFacade(
 
     fun isSamePasswords(password: String, repeatPassword: String): Boolean {
         return password == repeatPassword
+    }
+
+    fun addUserToFriends(username: String, user: User) {
+        userService.addUserToFriends(username, user);
+    }
+
+    fun deleteUserFromFriends(username: String, user: User) {
+        userService.deleteUserFromFriends(username, user);
     }
 }

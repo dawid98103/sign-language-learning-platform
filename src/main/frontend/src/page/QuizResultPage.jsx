@@ -5,7 +5,7 @@ import AxiosClient from '../config/axios/AxiosClient';
 import QuizResultContainer from '../component/QuizResultContainer';
 import GlobalSpinner from '../component/GlobalSpinner';
 
-function QuizResultPage({ match }) {
+function QuizResultPage({ match: { params: { quizId, lessonId } } }) {
     const [quizResult, setQuizResult] = useState(null)
 
     useEffect(() => {
@@ -13,7 +13,7 @@ function QuizResultPage({ match }) {
     }, [])
 
     const fetchQuizResult = async () => {
-        const { data } = await AxiosClient.get(`/quizzes/${match.params.lessonId}/quiz/${match.params.quizId}/result`)
+        const { data } = await AxiosClient.get(`/quizzes/${lessonId}/quiz/${quizId}/result`)
         setQuizResult(data)
     }
 

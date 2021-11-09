@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
 
-function NotificationModal({ headerText, contentText, modalShow, closeModal }) {
+const NotificationModal = ({ headerText, contentText, modalShow, closeModal }) => {
     return (
         <Modal centered size="lg" aria-labelledby="contained-modal-title-vcenter" show={modalShow} onHide={closeModal}>
             <Modal.Header closeButton>

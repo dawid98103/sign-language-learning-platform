@@ -6,20 +6,20 @@ import GlobalSpinner from '../component/GlobalSpinner';
 import { GlobalContext } from '../context/GlobalContext';
 import history from '../config/history';
 
-function LearnPage({ match }) {
+const LearnPage = ({ match }) => {
 
     const [currentElement, setCurrentElement] = useState(0)
-    const { state, dispatch } = useContext(GlobalContext);
+    const { dispatch } = useContext(GlobalContext);
     const [elements, setElements] = useState([]);
 
     useEffect(() => {
+        const fetchElements = async () => {
+            const { data } = await AxiosClient.get(`/lessons/${match.params.lessonId}/stage/${match.params.stageId}/element`)
+            setElements(data);
+        }
+
         fetchElements();
     }, []);
-
-    const fetchElements = async () => {
-        const { data } = await AxiosClient.get(`/lessons/${match.params.lessonId}/stage/${match.params.stageId}/element`)
-        setElements(data);
-    }
 
     const nextElement = () => {
         if (elements.length > currentElement + 1) {

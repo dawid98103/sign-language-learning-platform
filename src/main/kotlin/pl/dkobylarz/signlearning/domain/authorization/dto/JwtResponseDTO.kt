@@ -1,6 +1,6 @@
 package pl.dkobylarz.signlearning.domain.authorization.dto
 
-import pl.dkobylarz.signlearning.domain.user.domain.UserRole
+import pl.dkobylarz.signlearning.domain.user.constant.UserRole
 
 data class JwtResponseDTO(
     val token: String,

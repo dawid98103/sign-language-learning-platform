@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import HrefWrapper from './HrefWrapper';
+import history from '../config/history';
 
 const CommentWrapper = styled.div`
     display: flex,
@@ -8,10 +10,6 @@ const CommentWrapper = styled.div`
     margin-top: 10px;
     border: 2px solid #e5e5e5;
     border-radius: 15px;
-    &:hover {
-        background-color: #f8f9fa;
-        cursor: pointer;
-    }
 `
 
 const ContentWrapper = styled.div`
@@ -107,7 +105,9 @@ function CommentListElement({ commentId, content, author, creationDate, avatarUr
                         <hr />
                         <Row>
                             <CommentFooterWrapper>
-                                <p>Autor: {author}</p>
+                                <HrefWrapper hrefAction={() => history.push(`/profile/${author}`)}>
+                                    <p>Autor: {author}</p>
+                                </HrefWrapper>
                                 <p>Data utworzenia: {creationDate}</p>
                             </CommentFooterWrapper>
                         </Row>

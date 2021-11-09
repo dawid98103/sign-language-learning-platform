@@ -22,7 +22,7 @@ const ColWithoutPadding = styled(Col)`
     padding: 0px;
 `
 
-function ForumPage() {
+const ForumPage = () => {
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [showEditModal, setShowEditModal] = useState(false)
@@ -32,7 +32,7 @@ function ForumPage() {
     const [loading, setLoading] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const oldValues = useRef([])
-    const { state, dispatch } = useContext(GlobalContext);
+    const { state } = useContext(GlobalContext);
 
     useEffect(() => {
         fetchPosts()

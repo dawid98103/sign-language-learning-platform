@@ -8,7 +8,7 @@ const instance = axios.create({
 instance.interceptors.response.use((response) => {
     return response;
 }, error => {
-    if (error == undefined || error.response.status === 500) {
+    if (error === undefined || error === null || error.response.status === 500) {
         toast.warn("Błąd połączenia z serwerem!", {
             position: "bottom-right"
         })

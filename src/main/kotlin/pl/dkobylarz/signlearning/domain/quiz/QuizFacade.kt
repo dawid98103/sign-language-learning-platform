@@ -5,10 +5,7 @@ import org.springframework.transaction.annotation.Transactional
 import pl.dkobylarz.signlearning.domain.quiz.domain.Quiz
 import pl.dkobylarz.signlearning.domain.quiz.domain.QuizQuestionService
 import pl.dkobylarz.signlearning.domain.quiz.domain.QuizService
-import pl.dkobylarz.signlearning.domain.quiz.dto.QuizCompletionStatusDTO
-import pl.dkobylarz.signlearning.domain.quiz.dto.QuizDTO
-import pl.dkobylarz.signlearning.domain.quiz.dto.QuizQuestionDTO
-import pl.dkobylarz.signlearning.domain.quiz.dto.QuizResultDTO
+import pl.dkobylarz.signlearning.domain.quiz.dto.*
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
 @Service
@@ -38,7 +35,11 @@ class QuizFacade(
         return quizService.getQuizzesWithCompletionStatus(userId)
     }
 
-    fun getQuizResult(quizId: Int,lessonId: Int ,userId: Int): QuizResultDTO? {
-        return quizService.getQuizResult(quizId,lessonId ,userId)
+    fun getQuizResult(quizId: Int, lessonId: Int, userId: Int): QuizResultDTO? {
+        return quizService.getQuizResult(quizId, lessonId, userId)
+    }
+
+    fun getQuizzesWithCompletionStatusForUser(user: User): Set<QuizCompletedResultShortDTO> {
+        return quizService.getQuizzesWithCompletionStatusForUser(user)
     }
 }

@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
-import { LESSON_PAGE, FORUM_PAGE } from '../constants/Pages';
+import { LESSON_PAGE, FORUM_PAGE, RESULT_PAGE } from '../constants/Pages';
 import history from '../config/history'
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
@@ -29,7 +29,6 @@ const NavDropdownBlack = styled(NavDropdown)`
 `
 
 const MenuText = styled.span`
-    font-family: ${props => props.theme.fontFamily};
     font-size: 1.2rem;
     font-weight: 600;
 `
@@ -75,6 +74,18 @@ function AppNavbar() {
             payload: { page: FORUM_PAGE }
         })
         history.push("/forum")
+    }
+
+    const handleChangeToResultPage = () => {
+        dispatch({
+            type: "SET_PAGE",
+            payload: { page: RESULT_PAGE }
+        })
+        history.push("/result")
+    }
+
+    const handleChangeToUserProfile = () => {
+        history.push(`/profile/${state.user}`)
     }
 
     function pushToLogin() {
@@ -140,7 +151,7 @@ function AppNavbar() {
                             </NavButton>
                         </NavLink>
                         <NavLink>
-                            <NavButton href="" disabled={!state.isAuthenticated}>
+                            <NavButton href="" onClick={!state.isAuthenticated ? null : handleChangeToResultPage} disabled={!state.isAuthenticated} active={state.currentPage === RESULT_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         src={process.env.PUBLIC_URL + "/icons/results.svg"}
@@ -159,7 +170,7 @@ function AppNavbar() {
                         <NavDropdownBlack title="" id="navbarScrollingDropdown">
                             {state.isAuthenticated ?
                                 <>
-                                    <NavDropdown.Item>
+                                    <NavDropdown.Item onClick={() => handleChangeToUserProfile()}>
                                         Konto
                                     </NavDropdown.Item>
                                     <NavDropdown.Item onClick={() => logout()}>

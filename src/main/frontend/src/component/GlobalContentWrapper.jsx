@@ -7,8 +7,8 @@ const LessonContentWrapper = styled.div`
     width: 100%;
 `
 
-function GlobalContentWrapper({children}){
-    return(
+const GlobalContentWrapper = ({ children }) => {
+    return (
         <LessonContentWrapper>
             {children}
         </LessonContentWrapper>

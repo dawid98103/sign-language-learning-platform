@@ -8,10 +8,12 @@ import LearnPage from './page/LearnPage';
 import QuizPage from './page/QuizPage';
 import PostPage from './page/PostPage';
 import QuizResultPage from './page/QuizResultPage';
+import ResultPage from './page/ResultPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import history from './config/history';
 import { Router, Switch, Route } from 'react-router-dom'
+import ProfilePage from './page/ProfilePage';
 
 function App() {
   return (
@@ -50,6 +52,8 @@ const RoutesWithNav = () => {
         <Route path="/learn/:lessonId/:stageId" exact component={LearnPage} />
         <Route path="/quiz/:lessonId/result/:quizId" exact component={QuizResultPage} />
         <Route path="/quiz/:lessonId/:quizId" exact component={QuizPage} />
+        <Route path="/profile/:username" exact component={ProfilePage} />
+        <Route path="/result" exact component={ResultPage} />
       </Switch>
     </>
   )

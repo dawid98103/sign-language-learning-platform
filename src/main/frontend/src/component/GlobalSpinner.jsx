@@ -2,6 +2,13 @@ import React from 'react'
 import styled from 'styled-components';
 import { Spinner } from 'react-bootstrap'
 
+const SpinnerContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+`
+
 const PageSpinner = styled(Spinner)`
     color: #e5e5e5;
     margin: auto;
@@ -11,7 +18,9 @@ const PageSpinner = styled(Spinner)`
 
 function GlobalSpinner() {
     return (
-        <PageSpinner animation="border" role="status" />
+        <SpinnerContainer>
+            <PageSpinner animation="border" role="status" />
+        </SpinnerContainer>
     )
 }
 

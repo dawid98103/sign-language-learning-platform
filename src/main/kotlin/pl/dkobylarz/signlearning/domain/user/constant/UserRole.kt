@@ -1,4 +1,4 @@
-package pl.dkobylarz.signlearning.domain.user.domain
+package pl.dkobylarz.signlearning.domain.user.constant
 
 import com.fasterxml.jackson.annotation.JsonFormat
 

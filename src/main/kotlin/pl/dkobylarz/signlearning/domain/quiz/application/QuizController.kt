@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import pl.dkobylarz.signlearning.domain.quiz.QuizFacade
+import pl.dkobylarz.signlearning.domain.quiz.dto.QuizCompletedResultShortDTO
 import pl.dkobylarz.signlearning.domain.quiz.dto.QuizCompletionStatusDTO
 import pl.dkobylarz.signlearning.domain.quiz.dto.QuizQuestionDTO
 import pl.dkobylarz.signlearning.domain.quiz.dto.QuizResultDTO
-import pl.dkobylarz.signlearning.domain.quizprocess.QuizProcessFacade
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
 @RestController
@@ -28,6 +28,12 @@ class QuizController(
         } else {
             ResponseEntity.ok(null)
         }
+    }
+
+    @GetMapping("/finished")
+    fun getQuizzesWithCompletionStatusForUser(@AuthenticationPrincipal user: User): ResponseEntity<Set<QuizCompletedResultShortDTO>> {
+        val quizzesWithCompletionStatus = quizFacade.getQuizzesWithCompletionStatusForUser(user)
+        return ResponseEntity.ok(quizzesWithCompletionStatus)
     }
 
     @GetMapping("/{lessonId}/quiz/{quizId}/result")

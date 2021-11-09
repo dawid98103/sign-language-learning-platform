@@ -14,7 +14,7 @@ import pl.dkobylarz.signlearning.domain.authorization.exception.PasswordsNotSame
 import pl.dkobylarz.signlearning.domain.authorization.exception.UsernameAlreadyExistsException
 import pl.dkobylarz.signlearning.domain.user.UserFacade
 import pl.dkobylarz.signlearning.domain.user.domain.User
-import pl.dkobylarz.signlearning.domain.user.domain.UserRole
+import pl.dkobylarz.signlearning.domain.user.constant.UserRole
 import pl.dkobylarz.signlearning.domain.userlogging.UserLoginLogFacade
 import pl.dkobylarz.signlearning.infrastructure.security.JwtTokenUtils
 import java.util.logging.Logger

@@ -2,6 +2,9 @@ package pl.dkobylarz.signlearning.domain.user.domain
 
 import org.springframework.stereotype.Service
 import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoDTO
+import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoWithFriendListDTO
+import pl.dkobylarz.signlearning.domain.user.exception.UserNotFoundException
+import pl.dkobylarz.signlearning.domain.user.infrastructure.FriendRepository
 import pl.dkobylarz.signlearning.domain.user.infrastructure.UserLoggingClient
 import pl.dkobylarz.signlearning.domain.user.infrastructure.UserRepository
 import pl.dkobylarz.signlearning.domain.userlogging.dto.UserLoginLogDTO
@@ -9,7 +12,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Service
-class BasicInfoService(private val userRepository: UserRepository, private val userLoggingClient: UserLoggingClient) {
+class BasicInfoService(
+    private val userRepository: UserRepository,
+    private val friendRepository: FriendRepository,
+    private val userLoggingClient: UserLoggingClient
+) {
 
     fun getUserBasicInfo(userId: Int): UserBasicInfoDTO? {
         val userLoginLogs: Set<UserLoginLogDTO> = userLoggingClient.getLoginLogsForUser(userId)
@@ -19,10 +26,54 @@ class BasicInfoService(private val userRepository: UserRepository, private val u
         val gainedPoints = user.points
 
         return UserBasicInfoDTO(
+            user.username,
+            user.name,
+            user.surname,
+            user.avatarUrl,
+            user.creationDate,
             lastLogged,
             learningDaysInRow,
             gainedPoints
         )
+    }
+
+    fun getUserBasicInfoWithFriendsList(username: String, currentLoggedUser: User): UserBasicInfoWithFriendListDTO? {
+        val user: UserPlatform? = userRepository.findUserPlatformByUsername(username)
+        if (user != null) {
+            val userLoginLogs: Set<UserLoginLogDTO> = userLoggingClient.getLoginLogsForUser(user.userId)
+            val lastLogged: LocalDateTime = getLastLoggedDate(userLoginLogs)
+            val learningDaysInRow: Int = calculateConsecutiveLearningDays(userLoginLogs)
+            val gainedPoints = user.points
+            val userFriends = getFriendsForUser(user.userId)
+            val isCurrentLoggedUser = isCurrentLoggedUser(user, currentLoggedUser)
+
+            return UserMapper.mapToUserBasicInfoWithFriendsList(
+                user,
+                lastLogged,
+                learningDaysInRow,
+                gainedPoints,
+                userFriends,
+                isCurrentLoggedUser
+            )
+        } else {
+            throw UserNotFoundException()
+        }
+    }
+
+    private fun isCurrentLoggedUser(user: UserPlatform, currentLoggedUser: User): Boolean {
+        return user.userId == currentLoggedUser.userId
+    }
+
+    private fun getFriendsForUser(userId: Int): Set<UserBasicInfoDTO> {
+        val userLoginLogs: Set<UserLoginLogDTO> = userLoggingClient.getLoginLogsForUser(userId)
+        val lastLogged: LocalDateTime = getLastLoggedDate(userLoginLogs)
+        val learningDaysInRow: Int = calculateConsecutiveLearningDays(userLoginLogs)
+
+        val friends = friendRepository.findByFirstUserId(userId)
+        return friends.asSequence()
+            .map { userRepository.findByUserId(it.secondUserId) }
+            .map { UserMapper.mapToUserBasicInfo(it, lastLogged, learningDaysInRow, it.points) }
+            .toSet()
     }
 
     private fun getLastLoggedDate(userLoginLogs: Set<UserLoginLogDTO>): LocalDateTime {
@@ -48,9 +99,9 @@ class BasicInfoService(private val userRepository: UserRepository, private val u
             .sortedDescending()
             .toList()
 
-        if(userLoginDates.size < 2){
+        if (userLoginDates.size < 2) {
             return 0
-        }else {
+        } else {
             if (userLoginDates[0].equals(currentDate)) {
                 for (i in userLoginLogs.indices) {
                     if (i == userLoginLogs.size - 1) {
@@ -64,9 +115,9 @@ class BasicInfoService(private val userRepository: UserRepository, private val u
                     }
                 }
             }
-            return if(daysCount > 0){
+            return if (daysCount > 0) {
                 daysCount + 1
-            }else {
+            } else {
                 daysCount
             }
         }
