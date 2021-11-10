@@ -33,6 +33,16 @@ class PostService(
         }
     }
 
+    fun getPostsForUser(user: User): Set<PostDTO> {
+        return postRepository.findByUserId(user.userId!!).asSequence()
+            .map {
+                val postAuthor = forumUserClient.getUserById(it.userId)
+                val postLikes = postLikeClient.getLikesForPost(it.postId)
+                ForumMapper.mapToPostDTO(it, postAuthor, user, postLikes)
+            }
+            .toSet()
+    }
+
     fun getSimplePosts(currentlyLoggedUser: User): Set<SimplePostDTO> {
         val posts: Set<Post> = postRepository.findAll()
         return posts.asSequence()

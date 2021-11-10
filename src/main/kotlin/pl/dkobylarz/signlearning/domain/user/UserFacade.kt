@@ -46,10 +46,18 @@ class UserFacade(
     }
 
     fun addUserToFriends(username: String, user: User) {
-        userService.addUserToFriends(username, user);
+        userService.addUserToFriends(username, user)
     }
 
     fun deleteUserFromFriends(username: String, user: User) {
-        userService.deleteUserFromFriends(username, user);
+        userService.deleteUserFromFriends(username, user)
+    }
+
+    fun getUserFriends(userId: Int): Set<Friend> {
+        return userService.getUserFriends(userId)
+    }
+
+    fun getConsecutiveLearningDaysForUser(userId: Int): Int {
+        return basicInfoService.calculateConsecutiveLearningDays(userId)
     }
 }

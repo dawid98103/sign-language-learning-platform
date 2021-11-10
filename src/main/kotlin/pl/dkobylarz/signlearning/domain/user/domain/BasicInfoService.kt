@@ -22,7 +22,7 @@ class BasicInfoService(
         val userLoginLogs: Set<UserLoginLogDTO> = userLoggingClient.getLoginLogsForUser(userId)
         val user: UserPlatform = userRepository.findByUserId(userId)
         val lastLogged: LocalDateTime = getLastLoggedDate(userLoginLogs)
-        val learningDaysInRow: Int = calculateConsecutiveLearningDays(userLoginLogs)
+        val learningDaysInRow: Int = calculateConsecutiveLearningDays(userId, userLoginLogs)
         val gainedPoints = user.points
 
         return UserBasicInfoDTO(
@@ -41,8 +41,8 @@ class BasicInfoService(
         val user: UserPlatform? = userRepository.findUserPlatformByUsername(username)
         if (user != null) {
             val userLoginLogs: Set<UserLoginLogDTO> = userLoggingClient.getLoginLogsForUser(user.userId)
+            val learningDaysInRow: Int = calculateConsecutiveLearningDays(user.userId, userLoginLogs)
             val lastLogged: LocalDateTime = getLastLoggedDate(userLoginLogs)
-            val learningDaysInRow: Int = calculateConsecutiveLearningDays(userLoginLogs)
             val gainedPoints = user.points
             val userFriends = getFriendsForUser(user.userId)
             val isCurrentLoggedUser = isCurrentLoggedUser(user, currentLoggedUser)
@@ -60,6 +60,41 @@ class BasicInfoService(
         }
     }
 
+    fun calculateConsecutiveLearningDays(userId: Int, userLoginLogs: Set<UserLoginLogDTO> = emptySet()): Int {
+        val baseUserLoginLogSet = userLoginLogs.ifEmpty { userLoggingClient.getLoginLogsForUser(userId) }
+
+        var daysCount = 0
+        val currentDate = LocalDate.now()
+        val userLoginDates = baseUserLoginLogSet.asSequence()
+            .map { it.loginDateTime.toLocalDate() }
+            .distinct()
+            .sortedDescending()
+            .toList()
+
+        if (userLoginDates.size < 2) {
+            return 0
+        } else {
+            if (userLoginDates[0].equals(currentDate)) {
+                for (i in baseUserLoginLogSet.indices) {
+                    if (i == baseUserLoginLogSet.size - 1) {
+                        break
+                    } else {
+                        if (userLoginDates[i].minusDays(1).equals(userLoginDates[i + 1])) {
+                            daysCount += 1
+                        } else {
+                            break
+                        }
+                    }
+                }
+            }
+            return if (daysCount > 0) {
+                daysCount + 1
+            } else {
+                daysCount
+            }
+        }
+    }
+
     private fun isCurrentLoggedUser(user: UserPlatform, currentLoggedUser: User): Boolean {
         return user.userId == currentLoggedUser.userId
     }
@@ -67,7 +102,7 @@ class BasicInfoService(
     private fun getFriendsForUser(userId: Int): Set<UserBasicInfoDTO> {
         val userLoginLogs: Set<UserLoginLogDTO> = userLoggingClient.getLoginLogsForUser(userId)
         val lastLogged: LocalDateTime = getLastLoggedDate(userLoginLogs)
-        val learningDaysInRow: Int = calculateConsecutiveLearningDays(userLoginLogs)
+        val learningDaysInRow: Int = calculateConsecutiveLearningDays(userId, userLoginLogs)
 
         val friends = friendRepository.findByFirstUserId(userId)
         return friends.asSequence()
@@ -87,39 +122,6 @@ class BasicInfoService(
             userLoginDateTimes[1]
         } else {
             LocalDateTime.now()
-        }
-    }
-
-    private fun calculateConsecutiveLearningDays(userLoginLogs: Set<UserLoginLogDTO>): Int {
-        var daysCount = 0
-        val currentDate = LocalDate.now()
-        val userLoginDates = userLoginLogs.asSequence()
-            .map { it.loginDateTime.toLocalDate() }
-            .distinct()
-            .sortedDescending()
-            .toList()
-
-        if (userLoginDates.size < 2) {
-            return 0
-        } else {
-            if (userLoginDates[0].equals(currentDate)) {
-                for (i in userLoginLogs.indices) {
-                    if (i == userLoginLogs.size - 1) {
-                        break
-                    } else {
-                        if (userLoginDates[i].minusDays(1).equals(userLoginDates[i + 1])) {
-                            daysCount += 1
-                        } else {
-                            break
-                        }
-                    }
-                }
-            }
-            return if (daysCount > 0) {
-                daysCount + 1
-            } else {
-                daysCount
-            }
         }
     }
 }

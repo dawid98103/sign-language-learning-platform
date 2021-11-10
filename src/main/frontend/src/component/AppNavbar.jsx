@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
-import { LESSON_PAGE, FORUM_PAGE, RESULT_PAGE } from '../constants/Pages';
+import { LESSON_PAGE, FORUM_PAGE, RESULT_PAGE, ACHIEVEMENT_PAGE } from '../constants/Pages';
 import history from '../config/history'
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
@@ -84,6 +84,14 @@ function AppNavbar() {
         history.push("/result")
     }
 
+    const handleChangeToAchievementPage = () => {
+        dispatch({
+            type: "SET_PAGE",
+            payload: { page: ACHIEVEMENT_PAGE }
+        })
+        history.push("/achievement")
+    }
+
     const handleChangeToUserProfile = () => {
         history.push(`/profile/${state.user}`)
     }
@@ -137,7 +145,7 @@ function AppNavbar() {
                             </NavButton>
                         </NavLink>
                         <NavLink>
-                            <NavButton href="" disabled={!state.isAuthenticated}>
+                            <NavButton href="" onClick={!state.isAuthenticated ? null : handleChangeToAchievementPage} disabled={!state.isAuthenticated} active={state.currentPage === ACHIEVEMENT_PAGE}>
                                 <div style={{ paddingRight: 10 }}>
                                     <NavIcon
                                         alt=""

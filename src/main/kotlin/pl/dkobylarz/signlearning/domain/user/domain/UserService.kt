@@ -46,6 +46,10 @@ class UserService(private val userRepository: UserRepository, private val friend
         return userRepository.existsByUsername(username)
     }
 
+    fun getUserFriends(userId: Int): Set<Friend> {
+        return friendRepository.findByFirstUserId(userId)
+    }
+
     fun addUserToFriends(username: String, user: User) {
         val userToAdd = userRepository.findUserPlatformByUsername(username)
         if (userToAdd != null) {

@@ -3,3 +3,4 @@ export const LEARN_PAGE = "LEARN_PAGE";
 export const FORUM_PAGE = "FORUM_PAGE";
 export const RESULT_PAGE = "RESULT_PAGE";
 export const OTHER_PAGE = "OTHER_PAGE";
+export const ACHIEVEMENT_PAGE = "ACHIEVEMENT_PAGE";

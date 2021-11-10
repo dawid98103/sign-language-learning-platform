@@ -5,5 +5,6 @@ import pl.dkobylarz.signlearning.domain.forum.domain.Post
 
 interface PostRepository : CrudRepository<Post, Int> {
     override fun findAll(): Set<Post>
+    fun findByUserId(userId: Int): Set<Post>
     fun findByPostId(postId: Int): Post?
 }

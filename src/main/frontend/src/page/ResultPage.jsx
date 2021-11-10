@@ -41,7 +41,6 @@ const ResultPage = () => {
                             }
                         </ListGroup>
                     </Container>
-
                 }
             </GlobalContentWrapper>
         </MarginContainer >

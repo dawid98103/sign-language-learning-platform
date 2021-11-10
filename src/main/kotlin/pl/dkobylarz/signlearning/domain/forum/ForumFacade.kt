@@ -2,6 +2,7 @@ package pl.dkobylarz.signlearning.domain.forum
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import pl.dkobylarz.signlearning.domain.forum.domain.Post
 import pl.dkobylarz.signlearning.domain.forum.domain.PostService
 import pl.dkobylarz.signlearning.domain.forum.dto.*
 import pl.dkobylarz.signlearning.domain.user.domain.User
@@ -16,6 +17,9 @@ class ForumFacade(private val postService: PostService) {
 
     fun getSimplePosts(user: User): Set<SimplePostDTO> {
         return postService.getSimplePosts(user)
+    }
+    fun getPostsForUser(user: User): Set<PostDTO> {
+        return postService.getPostsForUser(user)
     }
 
     fun getPost(postId: Int, user: User): PostDTO {
