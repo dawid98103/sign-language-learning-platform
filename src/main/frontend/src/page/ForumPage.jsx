@@ -155,7 +155,7 @@ const ForumPage = () => {
                                                     author={post.author}
                                                     creationDate={post.creationDate}
                                                     avatarUrl={post.avatarUrl}
-                                                    editable={post.editable}
+                                                    editable={post.editable || state.isAdmin}
                                                     likeQuantity={calculatePostLikes(post)}
                                                     openDeleteModal={handleOpenDeleteModal}
                                                     openEditModal={handleOpenEditModal}

@@ -1,7 +1,10 @@
 package pl.dkobylarz.signlearning.domain.user.application
 
 import lombok.RequiredArgsConstructor
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.annotation.Secured
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import pl.dkobylarz.signlearning.domain.authorization.dto.MessageResponseDTO
@@ -15,6 +18,19 @@ import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoWithFriendListDTO
 @RequiredArgsConstructor
 @RequestMapping("/users")
 class UserController(private val userFacade: UserFacade) {
+
+    @GetMapping("")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun getUsers(): ResponseEntity<Set<UserPlatform>>{
+        return ResponseEntity.ok(userFacade.getUsers())
+    }
+
+    @DeleteMapping("/user/{userId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun deleteUserById(@PathVariable userId: Int): ResponseEntity<Any> {
+        userFacade.deleteUserById(userId)
+        return ResponseEntity(HttpStatus.OK)
+    }
 
     @GetMapping("/user/info")
     fun getBasicInfo(@AuthenticationPrincipal user: User): ResponseEntity<UserBasicInfoDTO> {

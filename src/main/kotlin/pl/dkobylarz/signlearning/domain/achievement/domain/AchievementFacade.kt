@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import pl.dkobylarz.signlearning.domain.achievement.dto.AchievementDTO
-import pl.dkobylarz.signlearning.domain.achievementuser.dto.AchievementUserDTO
 import pl.dkobylarz.signlearning.domain.user.domain.User
 
 @Service

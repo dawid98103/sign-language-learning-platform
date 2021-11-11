@@ -144,6 +144,14 @@ const ProfilePage = ({ match: { params } }) => {
                                         </IconWithTextWrapper>
                                     </Col>
                                 </Row>
+                                <Row>
+                                    <Col>
+                                        <IconWithTextWrapper>
+                                            <Image src={process.env.PUBLIC_URL + "/icons/user1.svg"} width={25} />&nbsp;
+                                            Rola {user.roleId === 1 ? "UŻYTKOWNIK" : "ADMINISTRATOR"}
+                                        </IconWithTextWrapper>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                         <div>

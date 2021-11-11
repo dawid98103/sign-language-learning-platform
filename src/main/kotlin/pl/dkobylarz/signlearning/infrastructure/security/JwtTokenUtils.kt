@@ -20,7 +20,7 @@ class JwtTokenUtils {
             .setExpiration(Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
             .signWith(SignatureAlgorithm.HS512, secretKey)
             .claim("userId", userPrincipal.userId)
-            .claim("roles", 1)
+            .claim("roles", userPrincipal.roleId)
             .compact()
     }
 

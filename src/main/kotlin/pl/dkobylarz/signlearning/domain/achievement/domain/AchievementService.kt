@@ -90,6 +90,7 @@ class AchievementService(
         val quizzesCompletedByUserQuantity = quizzesCompletedByUser.size
         if (quizzesQuantity == quizzesCompletedByUserQuantity) {
             achievementUserClient.save(achievement, userId)
+            userClient.addPoints(userId, achievement.pointsToGain)
         }
     }
 
@@ -100,24 +101,28 @@ class AchievementService(
     ) {
         if (quizzesCompletedByUser.isNotEmpty()) {
             achievementUserClient.save(achievement, userId)
+            userClient.addPoints(userId, achievement.pointsToGain)
         }
     }
 
     private fun checkFirstObserver(userFriends: Set<Friend>, userId: Int, achievement: Achievement) {
         if (userFriends.isNotEmpty()) {
             achievementUserClient.save(achievement, userId)
+            userClient.addPoints(userId, achievement.pointsToGain)
         }
     }
 
     private fun checkFiveLoginsInARow(loginsInRow: Int, userId: Int, achievement: Achievement) {
         if (loginsInRow >= 5) {
             achievementUserClient.save(achievement, userId)
+            userClient.addPoints(userId, achievement.pointsToGain)
         }
     }
 
     private fun checkTenLoginsInRow(loginsInRow: Int, userId: Int, achievement: Achievement) {
         if (loginsInRow >= 10) {
             achievementUserClient.save(achievement, userId)
+            userClient.addPoints(userId, achievement.pointsToGain)
         }
     }
 
@@ -126,18 +131,21 @@ class AchievementService(
         val currentDate = LocalDateTime.now()
         if (registerDate.plusYears(1).isBefore(currentDate)) {
             achievementUserClient.save(achievement, user.userId!!)
+            userClient.addPoints(user.userId!!, achievement.pointsToGain)
         }
     }
 
     private fun checkFirstAddedPost(userPosts: Set<PostDTO>, userId: Int, achievement: Achievement) {
         if (userPosts.isNotEmpty()) {
             achievementUserClient.save(achievement, userId)
+            userClient.addPoints(userId, achievement.pointsToGain)
         }
     }
 
     private fun checkTenAddedPost(userPosts: Set<PostDTO>, userId: Int, achievement: Achievement) {
         if (userPosts.size > 10) {
             achievementUserClient.save(achievement, userId)
+            userClient.addPoints(userId, achievement.pointsToGain)
         }
     }
 

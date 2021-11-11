@@ -1,7 +1,6 @@
 package pl.dkobylarz.signlearning.domain.user.domain
 
 import org.springframework.stereotype.Service
-import pl.dkobylarz.signlearning.domain.user.constant.PointsToGain
 import pl.dkobylarz.signlearning.domain.user.infrastructure.UserRepository
 import java.util.logging.Logger
 
@@ -12,11 +11,11 @@ class UserPointsService(private val userRepository: UserRepository) {
         val LOG = Logger.getLogger(UserPointsService::class.java.name)
     }
 
-    fun addPointsToAccount(userId: Int, pointsToGain: PointsToGain) {
-        LOG.info("[USER POINTS]: Added ${pointsToGain.points} to user with ID: ${userId}")
+    fun addPointsToAccount(userId: Int, pointsToGain: Int) {
+        LOG.info("[USER POINTS]: Added $pointsToGain to user with ID: $userId")
 
         val user = userRepository.findUserByUserId(userId)
-        user.points = (user.points!! + pointsToGain.points)
+        user.points = (user.points!! + pointsToGain)
         userRepository.save(user)
     }
 }

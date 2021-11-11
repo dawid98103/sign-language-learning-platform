@@ -10,6 +10,7 @@ import PostPage from './page/PostPage';
 import QuizResultPage from './page/QuizResultPage';
 import ResultPage from './page/ResultPage';
 import AchievementPage from './page/AchievementPage';
+import AdminPage from './page/AdminPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import history from './config/history';
@@ -56,6 +57,7 @@ const RoutesWithNav = () => {
         <Route path="/profile/:username" exact component={ProfilePage} />
         <Route path="/result" exact component={ResultPage} />
         <Route path="/achievement" exact component={AchievementPage} />
+        <Route path="/admin/management" exact component={AdminPage} />
       </Switch>
     </>
   )

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { GlobalContext } from '../context/GlobalContext';
 import { Link } from 'react-router-dom';
-import { LESSON_PAGE, FORUM_PAGE, RESULT_PAGE, ACHIEVEMENT_PAGE } from '../constants/Pages';
+import { LESSON_PAGE, FORUM_PAGE, RESULT_PAGE, ACHIEVEMENT_PAGE, ADMIN_PAGE } from '../constants/Pages';
 import history from '../config/history'
 import { Navbar, Container, Nav, NavDropdown } from 'react-bootstrap';
 
@@ -92,6 +92,14 @@ function AppNavbar() {
         history.push("/achievement")
     }
 
+    const handleChangeToAdminPage = () => {
+        dispatch({
+            type: "SET_PAGE",
+            payload: { page: ADMIN_PAGE }
+        })
+        history.push("/admin/management")
+    }
+
     const handleChangeToUserProfile = () => {
         history.push(`/profile/${state.user}`)
     }
@@ -171,6 +179,20 @@ function AppNavbar() {
                                 </MenuText>
                             </NavButton>
                         </NavLink>
+                        {state.isAdmin &&
+                            <NavLink>
+                                <NavButton href="" onClick={handleChangeToAdminPage} active={state.currentPage === ADMIN_PAGE}>
+                                    <div style={{ paddingRight: 10 }}>
+                                        <NavIcon
+                                            src={process.env.PUBLIC_URL + "/icons/admin.svg"}
+                                            className="d-inline-block align-top"
+                                        />
+                                    </div>
+                                    <MenuText>
+                                        Zarządzanie
+                                    </MenuText>
+                                </NavButton>
+                            </NavLink>}
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Collapse className="justify-content-end">

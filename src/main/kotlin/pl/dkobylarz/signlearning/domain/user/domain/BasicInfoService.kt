@@ -33,7 +33,8 @@ class BasicInfoService(
             user.creationDate,
             lastLogged,
             learningDaysInRow,
-            gainedPoints
+            gainedPoints,
+            user.roleId
         )
     }
 

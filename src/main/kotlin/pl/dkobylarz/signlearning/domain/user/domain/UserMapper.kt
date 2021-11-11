@@ -7,6 +7,24 @@ import java.time.LocalDateTime
 class UserMapper {
 
     companion object {
+        fun mapToUserPlatform(
+            user: User
+        ): UserPlatform {
+            return UserPlatform(
+                user.userId!!,
+                user.username,
+                user.password,
+                user.name!!,
+                user.surname!!,
+                user.email!!,
+                user.roleId!!,
+                user.points!!,
+                user.active!!,
+                user.avatarUrl,
+                user.creationDate!!
+            )
+        }
+
         fun mapToUserBasicInfo(
             user: UserPlatform,
             lastLogged: LocalDateTime,
@@ -21,7 +39,8 @@ class UserMapper {
                 user.creationDate,
                 lastLogged,
                 learningDaysInRow,
-                gainedPoints
+                gainedPoints,
+                user.roleId
             )
         }
 

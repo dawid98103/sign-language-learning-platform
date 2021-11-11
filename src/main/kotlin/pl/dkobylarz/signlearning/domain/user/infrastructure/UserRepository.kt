@@ -9,6 +9,8 @@ import java.util.*
 
 interface UserRepository : CrudRepository<User, Int> {
 
+    override fun findAll(): Set<User>
+
     fun existsByUsername(username: String): Boolean
 
     fun findByUsername(username: String): Optional<User>

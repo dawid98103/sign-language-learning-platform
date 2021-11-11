@@ -35,7 +35,7 @@ const ResultPage = () => {
                             {
                                 quizzesWithCompletion.map(quizCompletion => {
                                     return (
-                                        <ResultListElement quizCompletion={quizCompletion} openQuizResultPage={openQuizResultPage} />
+                                        <ResultListElement key={quizCompletion.lessonId} quizCompletion={quizCompletion} openQuizResultPage={openQuizResultPage} />
                                     )
                                 })
                             }

@@ -9,6 +9,7 @@ data class Achievement(
     val achievementId: Int,
     val name: String,
     val localeName: String,
-    val description: String
+    val description: String,
+    val pointsToGain: Int
 )
 

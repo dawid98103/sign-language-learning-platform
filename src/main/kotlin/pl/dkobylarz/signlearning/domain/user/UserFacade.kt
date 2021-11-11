@@ -1,7 +1,6 @@
 package pl.dkobylarz.signlearning.domain.user
 
 import org.springframework.stereotype.Service
-import pl.dkobylarz.signlearning.domain.user.constant.PointsToGain
 import pl.dkobylarz.signlearning.domain.user.domain.*
 import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoDTO
 import pl.dkobylarz.signlearning.domain.user.dto.UserBasicInfoWithFriendListDTO
@@ -33,7 +32,7 @@ class UserFacade(
         return basicInfoService.getUserBasicInfoWithFriendsList(username, currentLoggedUser)
     }
 
-    fun assignPointsToAccount(userId: Int, pointsToGain: PointsToGain) {
+    fun assignPointsToAccount(userId: Int, pointsToGain: Int) {
         userPointsService.addPointsToAccount(userId, pointsToGain)
     }
 
@@ -59,5 +58,13 @@ class UserFacade(
 
     fun getConsecutiveLearningDaysForUser(userId: Int): Int {
         return basicInfoService.calculateConsecutiveLearningDays(userId)
+    }
+
+    fun getUsers(): Set<UserPlatform> {
+        return userService.getUsers()
+    }
+
+    fun deleteUserById(userId: Int) {
+        userService.deleteUserById(userId)
     }
 }

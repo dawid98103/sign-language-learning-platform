@@ -8,12 +8,20 @@ const getUserIdClaimFromToken = () => {
     return claims.userId;
 }
 
+const getIsUserAdminClaimFromToken = () => {
+    const token = localStorage.getItem("token") == null ? null : localStorage.getItem("token")
+    const claims = jwt_decode(token)
+    console.log(claims.roles);
+    return claims.roles === 2
+}
+
 const initalState = {
     isAuthenticated: localStorage.getItem("token") == null ? false : true,
     user: localStorage.getItem("user") == null ? null : localStorage.getItem("user"),
     avatarUrl: localStorage.getItem("avatarUrl") == null ? null : localStorage.getItem("avatarUrl"),
     token: localStorage.getItem("token") == null ? null : localStorage.getItem("token"),
     roles: localStorage.getItem("roles") == null ? null : localStorage.getItem("roles"),
+    isAdmin: localStorage.getItem("token") == null ? false : getIsUserAdminClaimFromToken(),
     userId: localStorage.getItem("token") == null ? null : getUserIdClaimFromToken(),
     currentPage: "",
     globalNotification: null
@@ -40,7 +48,8 @@ const reducer = (state, action) => {
                 avatarUrl: action.payload.userAvatar,
                 token: action.payload.token,
                 roles: action.payload.roles,
-                userId: getUserIdClaimFromToken()
+                userId: getUserIdClaimFromToken(),
+                isAdmin: getIsUserAdminClaimFromToken()
             };
 
         case "REGISTER":
@@ -57,7 +66,8 @@ const reducer = (state, action) => {
                 ...state,
                 isAuthenticated: false,
                 user: null,
-                token: null
+                token: null,
+                avatarUrl: null
             };
         case "CHANGE_AUTHENTICATION":
             return {

@@ -22,7 +22,9 @@ class LessonStageCompletedController(private val lessonCompletedFacade: LessonCo
         @PathVariable stageId: Int,
         @AuthenticationPrincipal user: User?
     ): ResponseEntity<Any> {
-        lessonCompletedFacade.setLessonStageAsCompletedByUser(stageId, user!!)
+        if (user != null) {
+            lessonCompletedFacade.setLessonStageAsCompletedByUser(stageId, user)
+        }
         return ResponseEntity(HttpStatus.OK)
     }
 }

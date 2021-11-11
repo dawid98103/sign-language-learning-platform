@@ -4,3 +4,4 @@ export const FORUM_PAGE = "FORUM_PAGE";
 export const RESULT_PAGE = "RESULT_PAGE";
 export const OTHER_PAGE = "OTHER_PAGE";
 export const ACHIEVEMENT_PAGE = "ACHIEVEMENT_PAGE";
+export const ADMIN_PAGE = "ADMIN_PAGE";

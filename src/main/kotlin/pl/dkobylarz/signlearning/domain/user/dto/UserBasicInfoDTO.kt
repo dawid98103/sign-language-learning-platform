@@ -18,5 +18,6 @@ data class UserBasicInfoDTO(
     @JsonDeserialize(using = CustomLocalDateTimeDeserializer::class)
     val lastActivityDateTime: LocalDateTime,
     val consecutiveDays: Int,
-    val gainedPoints: Int
+    val gainedPoints: Int,
+    val roleId: Int
 )

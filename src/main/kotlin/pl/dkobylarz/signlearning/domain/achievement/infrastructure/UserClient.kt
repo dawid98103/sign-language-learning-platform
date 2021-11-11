@@ -9,6 +9,10 @@ import pl.dkobylarz.signlearning.domain.user.domain.Friend
 @RequiredArgsConstructor
 class UserClient(private val userFacade: UserFacade) {
 
+    fun addPoints(userId: Int, points: Int) {
+        userFacade.assignPointsToAccount(userId, points)
+    }
+
     fun getUserFriends(userId: Int): Set<Friend> {
         return userFacade.getUserFriends(userId)
     }

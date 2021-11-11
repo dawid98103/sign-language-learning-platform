@@ -226,6 +226,7 @@ const PostPage = ({ match }) => {
                                         <CommentListElement
                                             key={comment.commentId}
                                             {...comment}
+                                            editable={comment.editable || state.isAdmin}
                                             openDeleteModal={handleOpenDeleteModal}
                                             openEditModal={handleOpenEditModal}
                                         />

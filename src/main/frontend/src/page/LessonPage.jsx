@@ -43,10 +43,6 @@ const LessonPage = () => {
         fetchQuizzes();
     }, []);
 
-    const terminateActiveQuizzes = async () => {
-        await AxiosClient.post(`/quizzes/process/quiz/terminate`)
-    }
-
     const fetchUserBasicInfo = async () => {
         const { data } = await AxiosClient.get(`/users/user/info`)
         setUserInfo(data);
@@ -60,6 +56,12 @@ const LessonPage = () => {
     const fetchQuizzes = async () => {
         const { data } = await AxiosClient.get(`/quizzes`)
         setQuizzes(data)
+    }
+
+    const terminateActiveQuizzes = async () => {
+        if (state.isAuthenticated) {
+            await AxiosClient.post(`/quizzes/process/quiz/terminate`)
+        }
     }
 
     const getQuizForLesson = (idToFind) => {
@@ -107,17 +109,21 @@ const LessonPage = () => {
                         <UserCard>
                             <Card.Body>
                                 <ImageContainer>
-                                    <Image src={state.avatarUrl} />
+                                    {state.isAuthenticated ?
+                                        <Image src={state.avatarUrl} />
+                                        :
+                                        <Image src={process.env.PUBLIC_URL + "/pictures/user_mockup.png"} />
+                                    }
                                 </ImageContainer>
                                 <Card.Title>
                                     <Card body>
-                                        {state.user}
+                                        {state.isAuthenticated ? state.user : "Gość"}
                                     </Card>
                                 </Card.Title>
                                 <Card.Text>
                                     <Card body>
                                         <ListGroup variant="flush">
-                                            {userInfo == null ?
+                                            {userInfo == null && state.isAuthenticated ?
                                                 <>
                                                     <Placeholder as={ListGroup.Item} animation="glow">
                                                         <Placeholder xs={12} />
@@ -132,9 +138,15 @@ const LessonPage = () => {
                                                 </>
                                                 :
                                                 <>
-                                                    <ListGroup.Item>Ostatnia aktywność: {userInfo.lastActivityDateTime}</ListGroup.Item>
-                                                    <ListGroup.Item>Dni nauki z rzędu: {userInfo.consecutiveDays}</ListGroup.Item>
-                                                    <ListGroup.Item>Zdobytych punktów: {userInfo.gainedPoints}</ListGroup.Item>
+                                                    {state.isAuthenticated ?
+                                                        <>
+                                                            <ListGroup.Item>Ostatnia aktywność: {userInfo.lastActivityDateTime}</ListGroup.Item>
+                                                            <ListGroup.Item>Dni nauki z rzędu: {userInfo.consecutiveDays}</ListGroup.Item>
+                                                            <ListGroup.Item>Zdobytych punktów: {userInfo.gainedPoints}</ListGroup.Item>
+                                                        </>
+                                                        :
+                                                        <ListGroup.Item>Zaloguj się</ListGroup.Item>
+                                                    }
                                                 </>
                                             }
                                         </ListGroup>

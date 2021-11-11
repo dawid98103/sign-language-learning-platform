@@ -34,6 +34,10 @@ class UserService(private val userRepository: UserRepository, private val friend
         userRepository.save(user)
     }
 
+    fun deleteUserById(userId: Int) {
+        userRepository.deleteById(userId)
+    }
+
     fun getUserByUsername(username: String): User {
         return userRepository.findByUsername(username).orElseGet { null }
     }
@@ -66,11 +70,18 @@ class UserService(private val userRepository: UserRepository, private val friend
 
     fun deleteUserFromFriends(username: String, user: User) {
         val userToDelete = userRepository.findUserPlatformByUsername(username)
-        if(userToDelete != null){
+        if (userToDelete != null) {
             val friend = friendRepository.findByFirstUserIdAndSecondUserId(user.userId!!, userToDelete.userId)
             friendRepository.delete(friend)
-        }else {
+        } else {
             throw UserNotFoundException()
         }
+    }
+
+    fun getUsers(): Set<UserPlatform> {
+        val allUsers = userRepository.findAll()
+        return allUsers.asSequence()
+            .map { UserMapper.mapToUserPlatform(it) }
+            .toSet()
     }
 }
